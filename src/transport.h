@@ -27,8 +27,6 @@ class Transport : public juce::AudioSource,
 
     TransportState getState() { return currentState; }
 
-    std::string getStateString() { return stateMap[currentState]; }
-
     void changeState(TransportState newState);
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
@@ -56,14 +54,6 @@ class Transport : public juce::AudioSource,
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     std::unordered_map<TransportState, std::function<void()>> handlers;
-    std::unordered_map<TransportState, std::string> stateMap = {
-        {TransportState::STOPPED, "Stopped"},
-        {TransportState::STARTING, "Starting"},
-        {TransportState::PLAYING, "Playing"},
-        {TransportState::STOPPING, "Stopping"},
-        {TransportState::PAUSING, "Pausing"},
-        {TransportState::PAUSED, "Paused"},
-        {TransportState::READY, "Ready"}};
 
     void stoppedHandler();
     void startingHandler();

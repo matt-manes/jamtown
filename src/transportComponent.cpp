@@ -45,7 +45,6 @@ void TransportComponent::configureInterface() {
     display.setText("??????", {});
 
     addAndMakeVisible(&stateLabel);
-    stateLabel.setText("State: " + transport.getStateString(), {});
 }
 
 void TransportComponent::resized() {
@@ -71,7 +70,7 @@ void TransportComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
 void TransportComponent::updateUIState() {
     if (handlers.contains(transport.getState()))
         handlers[transport.getState()]();
-    stateLabel.setText("State: " + transport.getStateString(), {});
+    stateLabel.setText("State: " + getStateString(), {});
 }
 
 void TransportComponent::playButtonClicked() {
