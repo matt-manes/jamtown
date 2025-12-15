@@ -1,0 +1,7 @@
+.vs
+.vscode
+build
+images
+*.txt
+!CMakeLists.txt
+*.bat
