@@ -57,25 +57,78 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
     std::string getStateString() { return stateMap[transport.getState()]; }
 
  private:
+    /**
+     * @brief Update GUI elements.
+     * Typically called from `changeListenerCallback()`.
+     *
+     */
     void updateUI();
 
     // TODO repurpose this for selecting folder to sync to library
     void openButtonClicked();
+
+    /**
+     * @brief Callback for handling play button click.
+     *
+     */
     void playButtonClicked();
+
+    /**
+     * @brief Callback for handling stop button click.
+     *
+     */
     void stopButtonClicked();
 
+    /*
+    None of these '*Handler' functions are called directly.
+    They are stored in the `stateChangeHandlers` map and are
+    called by `updateUI()`.
+    */
+
+    /**
+     * @brief Update UI for STOPPED state.
+     *
+     */
     void stoppedHandler();
+
+    /**
+     * @brief Update UI for STARTING state.
+     *
+     */
     void startingHandler();
+
+    /**
+     * @brief Update UI for PLAYING state.
+     *
+     */
     void playingHandler();
+
+    /**
+     * @brief Update UI for PAUSED state.
+     *
+     */
     void pausedHandler();
+
+    /**
+     * @brief Update UI for READY state.
+     *
+     */
     void readyHandler();
 
+    /**
+     * @brief Maps `TransportState` enums to handler functions.
+     *
+     */
     void configureHandlers();
 
     void configureOpenButton();
     void configurePlayButton();
     void configureStopButton();
 
+    /**
+     * @brief Any UI element setup functions should be called here.
+     *
+     */
     void configureInterface();
 
     void startPlayback();

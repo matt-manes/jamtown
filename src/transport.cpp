@@ -78,7 +78,7 @@ void Transport::setTrackInfo(juce::File file) {
     currentTrack = TrackInfo{artist, album, title, length, file};
 }
 
-bool Transport::setSource(juce::File file) {
+bool Transport::loadTrack(juce::File file) {
     auto* reader = formatManager.createReaderFor(file);
     if (reader == nullptr)
         return false;

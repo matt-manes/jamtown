@@ -25,6 +25,11 @@ class Transport : public juce::AudioSource,
  public:
     Transport();
 
+    /**
+     * @brief Get the current transport state.
+     *
+     * @return TransportState
+     */
     TransportState getState() { return state; }
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
@@ -37,24 +42,76 @@ class Transport : public juce::AudioSource,
 
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
+    /**
+     * @brief Set the playback gain.
+     *
+     * @param gain The gain to apply, 1.0 is unity.
+     */
     void setGain(float gain) { transportSource.setGain(gain); }
 
+    /**
+     * @brief Whether a playable track has been loaded.
+     *
+     * @return true
+     * @return false
+     */
     bool hasPlayableSource() { return readerSource.get() != nullptr; }
 
-    bool setSource(juce::File);
+    /**
+     * @brief Load the given file for playback and return whether it was successful.
+     *
+     * @return true
+     * @return false
+     */
+    bool loadTrack(juce::File);
 
+    /**
+     * @brief Get the currently loaded track.
+     *
+     * @return const TrackInfo&
+     */
     const TrackInfo& getCurrentTrack() { return currentTrack; }
 
+    /**
+     * @brief Start playback if able.
+     *
+     */
     void start();
 
+    /**
+     * @brief Stop playback if able.
+     *
+     */
     void stop();
 
+    /**
+     * @brief Pause playback if able.
+     *
+     */
     void pause();
 
+    /**
+     * @brief Whether playback can be started or not.
+     *
+     * @return true
+     * @return false
+     */
     bool canStart() { return hasPlayableSource() && !isPlaying(); }
 
+    /**
+     * @brief Whether playback can be stopped or not.
+     *
+     * @return true
+     * @return false
+     */
     bool canStop() { return isPlaying() || isPaused(); }
 
+    /**
+     * @brief Whether playback can be paused or not.
+     *
+     * @return true
+     * @return false
+     */
     bool canPause() { return isPlaying(); }
 
     bool isPlaying() { return getState() == PLAYING; }
@@ -70,7 +127,16 @@ class Transport : public juce::AudioSource,
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
 
+    /**
+     * @brief Populate `currentTrack` using the given file.
+     *
+     */
     void setTrackInfo(juce::File);
 
+    /**
+     * @brief Update the transport state tracker and send a notification to any listeners.
+     *
+     * @param newState
+     */
     void setState(TransportState newState);
 };

@@ -93,7 +93,7 @@ void TransportComponent::openButtonClicked() {
         auto file = fc.getResult();
         if (file == juce::File{})
             return;
-        if (transport.setSource(file)) {
+        if (transport.loadTrack(file)) {
             display.setText((transport.getCurrentTrack().toString()), {});
         } else {
             juce::NativeMessageBox::showMessageBoxAsync(
