@@ -6,29 +6,38 @@
 
 Transport::Transport() {
     transportSource.addChangeListener(this);
-    configureHandlers();
     formatManager.registerBasicFormats();
-    changeState(STOPPED);
+    setState(STOPPED);
 }
 
-void Transport::stoppedHandler() { transportSource.setPosition(0.0); }
+void Transport::start() {
+    if (!canStart())
+        return;
+    transportSource.start();
+    setState(STARTING);
+}
 
-void Transport::startingHandler() { transportSource.start(); }
-
-void Transport::stoppingHandler() {
-    if (transportSource.isPlaying())
+void Transport::stop() {
+    if (!canStop())
+        return;
+    transportSource.setPosition(0.0);
+    // transportSource.stop() doesn't broadcast a state change
+    // message if it isn't actually playing
+    // If we don't differentiate here, transport gets stuck in STOPPING
+    // when stopping while paused
+    if (isPlaying()) {
         transportSource.stop();
-    else
-        changeState(STOPPED);
+        setState(STOPPING);
+    } else if (isPaused()) {
+        setState(STOPPED);
+    }
 }
 
-void Transport::pausingHandler() { transportSource.stop(); }
-
-void Transport::configureHandlers() {
-    handlers.emplace(STOPPED, [this] { stoppedHandler(); });
-    handlers.emplace(STARTING, [this] { startingHandler(); });
-    handlers.emplace(STOPPING, [this] { stoppingHandler(); });
-    handlers.emplace(PAUSING, [this] { pausingHandler(); });
+void Transport::pause() {
+    if (!canPause())
+        return;
+    transportSource.stop();
+    setState(PAUSING);
 }
 
 void Transport::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) {
@@ -39,13 +48,9 @@ void Transport::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFi
     transportSource.getNextAudioBlock(bufferToFill);
 }
 
-void Transport::changeState(TransportState newState) {
+void Transport::setState(TransportState newState) {
     if (newState != getState()) {
-        currentState = newState;
-        // may not need to do anything for a given state
-        if (handlers.contains(currentState))
-            handlers[currentState]();
-        // but somebody else may so send change message
+        state = newState;
         sendChangeMessage();
     }
 }
@@ -53,11 +58,11 @@ void Transport::changeState(TransportState newState) {
 void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
     if (source == &transportSource) {
         if (transportSource.isPlaying())
-            changeState(TransportState::PLAYING);
+            setState(TransportState::PLAYING);
         else if (getState() == TransportState::PAUSING)
-            changeState(TransportState::PAUSED);
+            setState(TransportState::PAUSED);
         else
-            changeState(TransportState::STOPPED);
+            setState(TransportState::STOPPED);
     }
 }
 
@@ -82,6 +87,6 @@ bool Transport::setSource(juce::File file) {
     setTrackInfo(file);
     currentTrack.setMetadata(reader->metadataValues);
     readerSource.reset(newSource.release());
-    changeState(TransportState::READY);
+    setState(TransportState::READY);
     return true;
 }

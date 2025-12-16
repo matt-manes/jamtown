@@ -9,7 +9,7 @@ TransportComponent::TransportComponent() {
     setAudioChannels(0, 2);
     // normally called by the listener callback
     // but here transport state is already set so make manual call
-    updateUIState();
+    updateUI();
 }
 
 void TransportComponent::configureOpenButton() {
@@ -63,31 +63,25 @@ void TransportComponent::paint(juce::Graphics& g) {
 
 void TransportComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
     if (source == &transport) {
-        updateUIState();
+        updateUI();
     }
 }
 
-void TransportComponent::updateUIState() {
-    if (handlers.contains(transport.getState()))
-        handlers[transport.getState()]();
+void TransportComponent::updateUI() {
+    if (stateChangeHandlers.contains(transport.getState()))
+        stateChangeHandlers[transport.getState()]();
     stateLabel.setText("State: " + getStateString(), {});
 }
 
 void TransportComponent::playButtonClicked() {
-    TransportState currentState = transport.getState();
-    if (currentState == TransportState::PLAYING)
-        changeState(TransportState::PAUSING);
-    else
-        changeState(TransportState::STARTING);
+    if (transport.isPlaying()) {
+        pausePlayback();
+    } else {
+        startPlayback();
+    }
 }
 
-void TransportComponent::stopButtonClicked() {
-    TransportState currentState = transport.getState();
-    if (currentState == TransportState::PLAYING)
-        changeState(TransportState::STOPPING);
-    else if (currentState == TransportState::PAUSED)
-        changeState(TransportState::STOPPED);
-}
+void TransportComponent::stopButtonClicked() { stopPlayback(); }
 
 void TransportComponent::openButtonClicked() {
     chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...",
@@ -135,9 +129,15 @@ void TransportComponent::readyHandler() {
 }
 
 void TransportComponent::configureHandlers() {
-    handlers.emplace(TransportState::STOPPED, [this] { stoppedHandler(); });
-    handlers.emplace(TransportState::STARTING, [this] { startingHandler(); });
-    handlers.emplace(TransportState::PLAYING, [this] { playingHandler(); });
-    handlers.emplace(TransportState::PAUSED, [this] { pausedHandler(); });
-    handlers.emplace(TransportState::READY, [this] { readyHandler(); });
+    stateChangeHandlers.emplace(TransportState::STOPPED, [this] { stoppedHandler(); });
+    stateChangeHandlers.emplace(TransportState::STARTING, [this] { startingHandler(); });
+    stateChangeHandlers.emplace(TransportState::PLAYING, [this] { playingHandler(); });
+    stateChangeHandlers.emplace(TransportState::PAUSED, [this] { pausedHandler(); });
+    stateChangeHandlers.emplace(TransportState::READY, [this] { readyHandler(); });
 }
+
+void TransportComponent::startPlayback() { transport.start(); }
+
+void TransportComponent::pausePlayback() { transport.pause(); }
+
+void TransportComponent::stopPlayback() { transport.stop(); }

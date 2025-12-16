@@ -8,10 +8,22 @@
 #include <unordered_map>
 #include "transport.h"
 
+/**
+ * @brief The transport UI component.
+ *
+ */
 class TransportComponent : public juce::AudioAppComponent, public juce::ChangeListener {
  public:
+    /**
+     * @brief Construct a new Transport Component object
+     *
+     */
     TransportComponent();
 
+    /**
+     * @brief Destroy the Transport Component object
+     *
+     */
     ~TransportComponent() override { shutdownAudio(); }
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
@@ -28,16 +40,24 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
 
     void paint(juce::Graphics& g) override;
 
+    /**
+     * @brief Set the playback volume.
+     *
+     * @param gain The gain to apply, 1.0 is unity.
+     */
     void setGain(float gain) { transport.setGain(gain); }
 
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
+    /**
+     * @brief Convert transport state enum into a string.
+     *
+     * @return std::string The current transport state as a string.
+     */
     std::string getStateString() { return stateMap[transport.getState()]; }
 
  private:
-    void changeState(TransportState state) { transport.changeState(state); }
-
-    void updateUIState();
+    void updateUI();
 
     // TODO repurpose this for selecting folder to sync to library
     void openButtonClicked();
@@ -58,6 +78,10 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
 
     void configureInterface();
 
+    void startPlayback();
+    void pausePlayback();
+    void stopPlayback();
+
     //==========================================================================
     juce::TextButton openButton;
     juce::TextButton playButton;
@@ -69,7 +93,7 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
 
     Transport transport;
 
-    std::unordered_map<TransportState, std::function<void()>> handlers;
+    std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;
     std::unordered_map<TransportState, std::string> stateMap = {
         {TransportState::STOPPED, "Stopped"},
         {TransportState::STARTING, "Starting"},

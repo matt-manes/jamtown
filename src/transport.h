@@ -25,9 +25,7 @@ class Transport : public juce::AudioSource,
  public:
     Transport();
 
-    TransportState getState() { return currentState; }
-
-    void changeState(TransportState newState);
+    TransportState getState() { return state; }
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
         transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
@@ -47,20 +45,32 @@ class Transport : public juce::AudioSource,
 
     const TrackInfo& getCurrentTrack() { return currentTrack; }
 
+    void start();
+
+    void stop();
+
+    void pause();
+
+    bool canStart() { return hasPlayableSource() && !isPlaying(); }
+
+    bool canStop() { return isPlaying() || isPaused(); }
+
+    bool canPause() { return isPlaying(); }
+
+    bool isPlaying() { return getState() == PLAYING; }
+
+    bool isPaused() { return getState() == PAUSED; }
+
+    bool isStopped() { return getState() == STOPPED; }
+
  private:
-    TransportState currentState;
+    TransportState state;
     TrackInfo currentTrack;
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
-    std::unordered_map<TransportState, std::function<void()>> handlers;
-
-    void stoppedHandler();
-    void startingHandler();
-    void stoppingHandler();
-    void pausingHandler();
-
-    void configureHandlers();
 
     void setTrackInfo(juce::File);
+
+    void setState(TransportState newState);
 };
