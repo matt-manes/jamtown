@@ -10,12 +10,13 @@ std::vector<TrackInfo> FileProcessor::processFiles(juce::Array<juce::File> files
             continue;
         double lengthInSeconds =
             static_cast<double>(reader->lengthInSamples) / reader->sampleRate;
-        delete reader;
         std::string artist =
             file.getParentDirectory().getParentDirectory().getFileName().toStdString();
         std::string album = file.getParentDirectory().getFileName().toStdString();
         std::string title = file.getFileNameWithoutExtension().toStdString();
         tracks.emplace_back(TrackInfo(artist, album, title, lengthInSeconds, file));
+        tracks[tracks.size() - 1].setMetadata(reader->metadataValues);
+        delete reader;
     }
     return tracks;
 }
