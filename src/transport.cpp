@@ -90,3 +90,15 @@ bool Transport::loadTrack(juce::File file) {
     setState(TransportState::READY);
     return true;
 }
+
+bool Transport::loadTrack(TrackInfo track) {
+    auto* reader = formatManager.createReaderFor(track.getPath());
+    if (reader == nullptr)
+        return false;
+    auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
+    transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+    readerSource.reset(newSource.release());
+    setTrackInfo(track);
+    setState(TransportState::READY);
+    return true;
+}

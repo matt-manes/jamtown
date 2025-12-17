@@ -65,6 +65,8 @@ class Transport : public juce::AudioSource,
      */
     bool loadTrack(juce::File);
 
+    bool loadTrack(TrackInfo track);
+
     /**
      * @brief Get the currently loaded track.
      *
@@ -136,6 +138,8 @@ class Transport : public juce::AudioSource,
      *
      */
     void setTrackInfo(juce::File);
+
+    void setTrackInfo(TrackInfo track) { currentTrack = track; }
 
     /**
      * @brief Update the transport state tracker and send a notification to any listeners.
