@@ -8,6 +8,8 @@ std::string TrackInfo::toString() const {
     std::string info = artist + " - " + album + " - " + title + " - ";
     if (seconds == 0)
         info += std::format("{0}:00", minutes);
+    else if (seconds < 10)
+        info += std::format("{0}:0{1}", minutes, seconds);
     else
         info += std::format("{0}:{1}", minutes, seconds);
     if (metadata.size() > 0) {
