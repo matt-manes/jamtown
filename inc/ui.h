@@ -25,8 +25,13 @@ class MainContentComponent : public juce::Component, public juce::ChangeListener
     }
 
     void resized() override {
-        trackAdder.setBounds(0, 0, getWidth(), 20);
-        transport.setBounds(0, 30, getWidth(), getHeight());
+        trackAdder.setSize(getWidth() / 5, 20);
+        trackAdder.setTopLeftPosition(5, 0);
+        transport.setSize(getWidth() - (2 * transportPadding),
+                          (getHeight() - trackAdder.getHeight()) -
+                              (2 * transportPadding));
+        transport.setTopLeftPosition(transportPadding,
+                                     trackAdder.getBottom() + transportPadding);
     }
 
     void changeListenerCallback(juce::ChangeBroadcaster* source) {
@@ -43,6 +48,7 @@ class MainContentComponent : public juce::Component, public juce::ChangeListener
     TransportComponent transport;
     AddTracksComponent trackAdder;
     FileProcessor fileProcessor;
+    int transportPadding = 10;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };

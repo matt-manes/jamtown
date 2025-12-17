@@ -18,8 +18,6 @@ void TransportComponent::configureOpenButton() {
 }
 
 void TransportComponent::configurePlayButton() {
-    playButton.setColour(juce::TextButton::textColourOnId, juce::Colours::magenta);
-    playButton.setColour(juce::TextButton::textColourOffId, juce::Colours::magenta);
     playButton.onClick = [this] { playButtonClicked(); };
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::green);
     playButton.setButtonText("Play");
@@ -32,7 +30,7 @@ void TransportComponent::configureStopButton() {
 }
 
 void TransportComponent::configureInterface() {
-    addAndMakeVisible(&openButton);
+    // addAndMakeVisible(&openButton);
     configureOpenButton();
 
     addAndMakeVisible(&playButton);
@@ -44,16 +42,20 @@ void TransportComponent::configureInterface() {
     addAndMakeVisible(&display);
     display.setText("??????", {});
 
-    addAndMakeVisible(&stateLabel);
+    // addAndMakeVisible(&stateLabel);
 }
 
 void TransportComponent::resized() {
     // TODO read these values from a file on start up
-    openButton.setBounds(10, 10, getWidth() - 20, 20);
-    playButton.setBounds(10, 40, getWidth() - 20, 20);
-    stopButton.setBounds(10, 70, getWidth() - 20, 20);
-    display.setBounds(10, 100, getWidth() - 20, getBottom() - 130);
-    stateLabel.setBounds(10, 130, getWidth() - 20, 20);
+    // openButton.setBounds(10, 10, getWidth() - 20, 20);
+    int halfWidth = getWidth() / 2;
+    stopButton.setSize(halfWidth - 10, 20);
+    stopButton.setTopLeftPosition(0, getBottom() - stopButton.getHeight());
+    playButton.setSize(halfWidth - 20, 20);
+    playButton.setTopLeftPosition(halfWidth + 10, getBottom() - playButton.getHeight());
+    display.setSize(getWidth() - 20, getHeight() - stopButton.getHeight());
+    display.setTopLeftPosition(0, 0);
+    // stateLabel.setBounds(10, 130, getWidth() - 20, 20);
 }
 
 void TransportComponent::paint(juce::Graphics& g) {
@@ -86,8 +88,10 @@ void TransportComponent::stopButtonClicked() { stopPlayback(); }
 void TransportComponent::openButtonClicked() {
     chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...",
                                                   juce::File{});
-    auto chooserFlags =
-        juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
+    auto chooserFlags = juce::FileBrowserComponent::openMode |
+                        juce::FileBrowserComponent::canSelectFiles |
+                        // juce::FileBrowserComponent::canSelectDirectories |
+                        juce::FileBrowserComponent::canSelectMultipleItems;
 
     chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc) {
         auto file = fc.getResult();
