@@ -1,7 +1,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <memory>
 #include <utility>
-#include "ui.h"
+#include "mainComponent.h"
 
 class App : public juce::JUCEApplication {
  public:
@@ -11,7 +11,7 @@ class App : public juce::JUCEApplication {
 
     void initialise(const juce::String&) override {
         mainWindow.reset(
-            new MainWindow("JamTown", std::make_unique<MainContentComponent>(), *this));
+            new MainWindow("JamTown", std::make_unique<MainComponent>(), *this));
     }
 
     void shutdown() override { mainWindow = nullptr; }

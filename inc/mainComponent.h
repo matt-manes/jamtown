@@ -8,9 +8,9 @@
 #include <memory>
 #include "fileProcessor.h"
 
-class MainContentComponent : public juce::Component, public juce::ChangeListener {
+class MainComponent : public juce::Component, public juce::ChangeListener {
  public:
-    MainContentComponent() {
+    MainComponent() {
         addAndMakeVisible(transport);
         transport.setGain(0.25f);
         addAndMakeVisible(trackAdder);
@@ -50,5 +50,5 @@ class MainContentComponent : public juce::Component, public juce::ChangeListener
     FileProcessor fileProcessor;
     int transportPadding = 10;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };
