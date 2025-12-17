@@ -3,6 +3,7 @@ project(jamtown)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_C_STANDARD 23)
 find_package(JUCE CONFIG REQUIRED)
+
 juce_add_gui_app(jamtown
     VERSION 0.0.0)
 
@@ -11,7 +12,12 @@ target_sources(jamtown
     src/app.cpp
     src/transport.cpp
     src/transportComponent.cpp
-    src/trackInfo.cpp)
+    src/trackInfo.cpp
+    src/fileScanner.cpp
+    src/addTracksComponent.cpp
+    src/fileProcessor.cpp)
+
+target_include_directories(jamtown PUBLIC inc)
 
 # add_subdirectory(images)
 target_link_libraries(jamtown
