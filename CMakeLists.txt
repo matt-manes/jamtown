@@ -15,7 +15,10 @@ target_sources(jamtown
     src/trackInfo.cpp
     src/fileScanner.cpp
     src/addTracksComponent.cpp
-    src/fileProcessor.cpp)
+    src/fileProcessor.cpp
+    src/library.cpp
+    src/inMemLibrary.cpp
+    src/mainComponent.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 

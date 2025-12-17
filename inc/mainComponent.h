@@ -7,48 +7,24 @@
 #include <juce_core/juce_core.h>
 #include <memory>
 #include "fileProcessor.h"
+#include "inMemLibrary.h"
 
 class MainComponent : public juce::Component, public juce::ChangeListener {
  public:
-    MainComponent() {
-        addAndMakeVisible(transport);
-        transport.setGain(0.25f);
-        addAndMakeVisible(trackAdder);
-        trackAdder.addChangeListener(this);
-        trackAdder.setScannerWildcard(transport.getWildcardForAllFormats());
-        setSize(666, 666);
-    }
+    MainComponent();
 
-    void paint(juce::Graphics& g) override {
-        g.setColour(juce::Colours::black);
-        g.fillAll();
-    }
+    void paint(juce::Graphics& g) override;
 
-    void resized() override {
-        trackAdder.setSize(getWidth() / 5, 20);
-        trackAdder.setTopLeftPosition(5, 0);
-        transport.setSize(getWidth() - (2 * transportPadding),
-                          (getHeight() - trackAdder.getHeight()) -
-                              (2 * transportPadding));
-        transport.setTopLeftPosition(transportPadding,
-                                     trackAdder.getBottom() + transportPadding);
-    }
+    void resized() override;
 
-    void changeListenerCallback(juce::ChangeBroadcaster* source) {
-        if (source == &trackAdder) {
-            auto files = trackAdder.getResults();
-            auto tracks = fileProcessor.processFiles(files);
-            for (auto track : tracks) {
-                std::cout << track.toString() << std::endl;
-            }
-        }
-    }
+    void changeListenerCallback(juce::ChangeBroadcaster* source);
 
  private:
     TransportComponent transport;
     AddTracksComponent trackAdder;
     FileProcessor fileProcessor;
     int transportPadding = 10;
+    InMemLibrary library;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };
