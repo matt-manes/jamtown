@@ -60,6 +60,8 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
         return transport.getWildcardForAllFormats();
     }
 
+    void loadTrack(TrackInfo track) { transport.loadTrack(track); }
+
  private:
     /**
      * @brief Update GUI elements.
@@ -67,9 +69,6 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
      *
      */
     void updateUI();
-
-    // TODO repurpose this for selecting folder to sync to library
-    void openButtonClicked();
 
     /**
      * @brief Callback for handling play button click.
@@ -125,7 +124,6 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
      */
     void configureHandlers();
 
-    void configureOpenButton();
     void configurePlayButton();
     void configureStopButton();
 
@@ -139,14 +137,14 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
     void pausePlayback();
     void stopPlayback();
 
+    int getDisplayLineCount();
+    void setDisplayText(std::string text);
+
     //==========================================================================
-    juce::TextButton openButton;
     juce::TextButton playButton;
     juce::TextButton stopButton;
     juce::Label display;
     juce::Label stateLabel;
-
-    std::unique_ptr<juce::FileChooser> chooser;
 
     Transport transport;
 

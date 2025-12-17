@@ -12,11 +12,6 @@ TransportComponent::TransportComponent() {
     updateUI();
 }
 
-void TransportComponent::configureOpenButton() {
-    openButton.setButtonText("Open...");
-    openButton.onClick = [this] { openButtonClicked(); };
-}
-
 void TransportComponent::configurePlayButton() {
     playButton.onClick = [this] { playButtonClicked(); };
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::green);
@@ -30,9 +25,6 @@ void TransportComponent::configureStopButton() {
 }
 
 void TransportComponent::configureInterface() {
-    // addAndMakeVisible(&openButton);
-    configureOpenButton();
-
     addAndMakeVisible(&playButton);
     configurePlayButton();
 
@@ -40,22 +32,23 @@ void TransportComponent::configureInterface() {
     configureStopButton();
 
     addAndMakeVisible(&display);
-    display.setText("??????", {});
+    setDisplayText("??????");
 
     // addAndMakeVisible(&stateLabel);
 }
 
 void TransportComponent::resized() {
     // TODO read these values from a file on start up
-    // openButton.setBounds(10, 10, getWidth() - 20, 20);
     int halfWidth = getWidth() / 2;
     stopButton.setSize(halfWidth - 10, 20);
-    stopButton.setTopLeftPosition(0, getBottom() - stopButton.getHeight());
-    playButton.setSize(halfWidth - 20, 20);
-    playButton.setTopLeftPosition(halfWidth + 10, getBottom() - playButton.getHeight());
-    display.setSize(getWidth() - 20, getHeight() - stopButton.getHeight());
-    display.setTopLeftPosition(0, 0);
-    // stateLabel.setBounds(10, 130, getWidth() - 20, 20);
+    stopButton.setTopLeftPosition(0, getHeight() - stopButton.getHeight());
+    playButton.setSize(halfWidth - 10, 20);
+    playButton.setTopLeftPosition(halfWidth + 10, getHeight() - playButton.getHeight());
+    auto font = display.getFont();
+    float displayHeight = font.getHeight() * getDisplayLineCount();
+    display.setSize(getWidth(), displayHeight);
+    display.setTopLeftPosition(0, stopButton.getY() - displayHeight);
+    //  stateLabel.setBounds(10, 130, getWidth() - 20, 20);
 }
 
 void TransportComponent::paint(juce::Graphics& g) {
@@ -85,27 +78,6 @@ void TransportComponent::playButtonClicked() {
 
 void TransportComponent::stopButtonClicked() { stopPlayback(); }
 
-void TransportComponent::openButtonClicked() {
-    chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...",
-                                                  juce::File{});
-    auto chooserFlags = juce::FileBrowserComponent::openMode |
-                        juce::FileBrowserComponent::canSelectFiles |
-                        // juce::FileBrowserComponent::canSelectDirectories |
-                        juce::FileBrowserComponent::canSelectMultipleItems;
-
-    chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc) {
-        auto file = fc.getResult();
-        if (file == juce::File{})
-            return;
-        if (transport.loadTrack(file)) {
-            display.setText((transport.getCurrentTrack().toString()), {});
-        } else {
-            juce::NativeMessageBox::showMessageBoxAsync(
-                juce::MessageBoxIconType::WarningIcon, "Error", "Unable to read file.");
-        }
-    });
-}
-
 void TransportComponent::stoppedHandler() {
     stopButton.setEnabled(false);
     playButton.setButtonText("Play");
@@ -130,6 +102,7 @@ void TransportComponent::readyHandler() {
     playButton.setButtonText("Play");
     playButton.setEnabled(true);
     stopButton.setEnabled(false);
+    setDisplayText(transport.getCurrentTrack().toString());
 }
 
 void TransportComponent::configureHandlers() {
@@ -145,3 +118,18 @@ void TransportComponent::startPlayback() { transport.start(); }
 void TransportComponent::pausePlayback() { transport.pause(); }
 
 void TransportComponent::stopPlayback() { transport.stop(); }
+
+int TransportComponent::getDisplayLineCount() {
+    auto text = display.getText();
+    int count = 1;
+    int pos = -1;
+    while ((pos = text.indexOf(pos + 1, "\n")) != -1) {
+        ++count;
+    }
+    return count;
+}
+
+void TransportComponent::setDisplayText(std::string text) {
+    display.setText(text, {});
+    resized();
+}
