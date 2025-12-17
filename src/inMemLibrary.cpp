@@ -1,9 +1,9 @@
 #include "inMemLibrary.h"
 
 void InMemLibrary::addTrack(TrackInfo track) {
-    titleToTrackMap[track.getArtist()] = track;
-    albumToTrackTitleMap[track.getAlbum()].push_back(track.getTitle());
-    artistToAlbumMap[track.getArtist()].push_back(track.getAlbum());
+    titleToTrackMap[track.getTitle()] = track;
+    albumToTrackTitleMap[track.getAlbum()].insert(track.getTitle());
+    artistToAlbumMap[track.getArtist()].insert(track.getAlbum());
 }
 
 std::unordered_map<std::string, std::vector<TrackInfo>> InMemLibrary::getAlbums(
@@ -26,3 +26,11 @@ std::vector<TrackInfo> InMemLibrary::getAlbum(std::string album) {
 }
 
 TrackInfo InMemLibrary::getTrack(std::string title) { return titleToTrackMap[title]; }
+
+std::vector<TrackInfo> InMemLibrary::getAllTracks() {
+    std::vector<TrackInfo> tracks;
+    for (auto i = titleToTrackMap.cbegin(); i != titleToTrackMap.cend(); ++i) {
+        tracks.push_back(i->second);
+    }
+    return tracks;
+}

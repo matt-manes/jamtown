@@ -25,4 +25,6 @@ class Library {
     virtual std::vector<TrackInfo> getTracks(std::string artist);
 
     virtual TrackInfo getTrack(std::string title) = 0;
+
+    virtual std::vector<TrackInfo> getAllTracks() = 0;
 };

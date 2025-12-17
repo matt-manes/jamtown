@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include "trackInfo.h"
 #include "library.h"
 
@@ -21,8 +22,10 @@ class InMemLibrary : public Library {
 
     TrackInfo getTrack(std::string title) override;
 
+    std::vector<TrackInfo> getAllTracks() override;
+
  private:
     std::unordered_map<std::string, TrackInfo> titleToTrackMap;
-    std::unordered_map<std::string, std::vector<std::string>> albumToTrackTitleMap;
-    std::unordered_map<std::string, std::vector<std::string>> artistToAlbumMap;
+    std::unordered_map<std::string, std::unordered_set<std::string>> albumToTrackTitleMap;
+    std::unordered_map<std::string, std::unordered_set<std::string>> artistToAlbumMap;
 };
