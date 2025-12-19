@@ -16,7 +16,7 @@ public:
 
     ~LibraryComponent() = default;
 
-    int getNumRows() override { return trackList.size(); }
+    int getNumRows() override { return static_cast<int>(trackList.size()); }
 
     void paintRowBackground(juce::Graphics& g,
                             int rowNumber,

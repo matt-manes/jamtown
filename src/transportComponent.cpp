@@ -45,7 +45,7 @@ void TransportComponent::resized() {
     playButton.setSize(halfWidth - 10, 20);
     playButton.setTopLeftPosition(halfWidth + 10, getHeight() - playButton.getHeight());
     auto font = display.getFont();
-    float displayHeight = font.getHeight() * getDisplayLineCount();
+    int displayHeight = static_cast<int>(font.getHeight() * getDisplayLineCount());
     display.setSize(getWidth(), displayHeight);
     display.setTopLeftPosition(0, stopButton.getY() - displayHeight);
     //  stateLabel.setBounds(10, 130, getWidth() - 20, 20);

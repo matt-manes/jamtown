@@ -18,8 +18,11 @@ LibraryComponent::LibraryComponent() {
         "Length", 4, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
 }
 
-void LibraryComponent::paintRowBackground(
-    juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) {
+void LibraryComponent::paintRowBackground(juce::Graphics& g,
+                                          int /*rowNumber*/,
+                                          int /*width*/,
+                                          int /*height*/,
+                                          bool rowIsSelected) {
     if (rowIsSelected)
         g.fillAll(juce::Colours::hotpink);
     else
@@ -31,7 +34,7 @@ void LibraryComponent::paintCell(juce::Graphics& g,
                                  int columnId,
                                  int width,
                                  int height,
-                                 bool rowIsSelected) {
+                                 bool /*rowIsSelected*/) {
     g.setColour(juce::Colours::black);
     g.fillRect(width - 1, 0, 1, height);
     g.fillRect(0, height - 1, width, 1);
@@ -40,7 +43,7 @@ void LibraryComponent::paintCell(juce::Graphics& g,
         auto text = getColumnText(columnId, track);
         g.setColour(juce::Colours::black);
         g.setFont(juce::Font(14.5, 0));
-        g.drawText(text, 0, 0, width, height, juce::Justification::centredLeft);
+        g.drawText(text, 1, 0, width - 1, height, juce::Justification::centredLeft);
     }
 }
 
@@ -65,18 +68,17 @@ void LibraryComponent::resized() {
 }
 
 void LibraryComponent::cellDoubleClicked(int rowNumber,
-                                         int columnId,
+                                         int /*columnId*/,
                                          const juce::MouseEvent& me) {
     if (me.mods.isLeftButtonDown() && rowNumber < getNumRows()) {
         selectedTrack = trackList[rowNumber];
         selectedTrackIndex = rowNumber;
         sendActionMessage(playMessage);
-        // sendChangeMessage();
     }
 }
 
 void LibraryComponent::cellClicked(int rowNumber,
-                                   int columnId,
+                                   int /*columnId*/,
                                    const juce::MouseEvent& me) {
     if (me.mods.isRightButtonDown() && rowNumber < getNumRows()) {
         juce::PopupMenu menu;

@@ -63,7 +63,6 @@ void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
             setState(TransportState::PAUSED);
         else {
             setState(TransportState::STOPPED);
-            std::cout << "track finished: " << trackFinished() << std::endl;
             _hasActiveTrack = !trackFinished();
         }
     }

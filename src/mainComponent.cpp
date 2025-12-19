@@ -42,13 +42,13 @@ void MainComponent::resizeTrackAdder() {
 }
 
 void MainComponent::resizeLibrary() {
-    library.setSize(getWidth(), getHeight() * 0.8);
+    library.setSize(getWidth(), static_cast<int>(getHeight() * 0.8));
     library.setTopLeftPosition(0, trackAdder.getBottom() + 2);
 }
 
 void MainComponent::resizeTransport() {
     transport.setSize(getWidth() - (2 * transportPadding),
-                      (getHeight() * .25) - transportPadding);
+                      static_cast<int>(getHeight() * .25) - transportPadding);
     transport.setTopLeftPosition(transportPadding,
                                  getHeight() - transport.getHeight() - 5);
 }
