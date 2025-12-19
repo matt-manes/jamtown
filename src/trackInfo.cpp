@@ -3,15 +3,7 @@
 #include <string>
 
 std::string TrackInfo::toString() const {
-    int minutes = static_cast<int>(static_cast<int>(lengthInSeconds / 60) % 60);
-    int seconds = static_cast<int>(static_cast<int>(lengthInSeconds) % 60);
-    std::string info = artist + " - " + album + " - " + title + " - ";
-    if (seconds == 0)
-        info += std::format("{0}:00", minutes);
-    else if (seconds < 10)
-        info += std::format("{0}:0{1}", minutes, seconds);
-    else
-        info += std::format("{0}:{1}", minutes, seconds);
+    std::string info = artist + " - " + album + " - " + title + " - " + getLengthString();
     if (metadata.size() > 0) {
         info += "\nMETADATA:\n";
         for (juce::String k : metadata.getAllKeys()) {
@@ -20,4 +12,15 @@ std::string TrackInfo::toString() const {
         }
     }
     return info;
+}
+
+std::string TrackInfo::getLengthString() const {
+    int minutes = static_cast<int>(static_cast<int>(lengthInSeconds / 60) % 60);
+    int seconds = static_cast<int>(static_cast<int>(lengthInSeconds) % 60);
+    if (seconds == 0)
+        return std::format("{0}:00", minutes);
+    else if (seconds < 10)
+        return std::format("{0}:0{1}", minutes, seconds);
+    else
+        return std::format("{0}:{1}", minutes, seconds);
 }

@@ -7,7 +7,7 @@
  *
  */
 class TrackInfo {
- public:
+public:
     /**
      * @brief Construct a new Track Info object
      *
@@ -53,7 +53,9 @@ class TrackInfo {
      */
     double getLength() { return lengthInSeconds; }
 
- private:
+    std::string getLengthString() const;
+
+private:
     std::string artist;
     std::string album;
     std::string title;
