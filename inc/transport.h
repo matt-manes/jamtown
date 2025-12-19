@@ -22,7 +22,7 @@ enum TransportState : int {
 class Transport : public juce::AudioSource,
                   public juce::ChangeListener,
                   public juce::ChangeBroadcaster {
- public:
+public:
     Transport();
 
     /**
@@ -126,12 +126,17 @@ class Transport : public juce::AudioSource,
         return formatManager.getWildcardForAllFormats();
     }
 
- private:
+    bool trackFinished() { return transportSource.hasStreamFinished(); }
+
+    bool hasActiveTrack() { return _hasActiveTrack; }
+
+private:
     TransportState state;
     TrackInfo currentTrack;
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
+    bool _hasActiveTrack = false;
 
     /**
      * @brief Populate `currentTrack` using the given file.

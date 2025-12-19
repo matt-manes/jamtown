@@ -14,14 +14,14 @@ TransportComponent::TransportComponent() {
 
 void TransportComponent::configurePlayButton() {
     playButton.onClick = [this] { playButtonClicked(); };
-    playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::green);
+    playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
     playButton.setButtonText("Play");
 }
 
 void TransportComponent::configureStopButton() {
     stopButton.setButtonText("Stop");
     stopButton.onClick = [this] { stopButtonClicked(); };
-    stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
+    stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::deeppink);
 }
 
 void TransportComponent::configureInterface() {
@@ -32,7 +32,7 @@ void TransportComponent::configureInterface() {
     configureStopButton();
 
     addAndMakeVisible(&display);
-    setDisplayText("??????");
+    // setDisplayText("??????");
 
     // addAndMakeVisible(&stateLabel);
 }
@@ -59,6 +59,8 @@ void TransportComponent::paint(juce::Graphics& g) {
 void TransportComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
     if (source == &transport) {
         updateUI();
+        if (transport.trackFinished())
+            sendChangeMessage();
     }
 }
 
@@ -90,6 +92,7 @@ void TransportComponent::playingHandler() {
     stopButton.setEnabled(true);
     playButton.setButtonText("Pause");
     playButton.setEnabled(true);
+    setDisplayText(transport.getCurrentTrack().toString());
 }
 
 void TransportComponent::pausedHandler() {

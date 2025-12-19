@@ -61,8 +61,11 @@ void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
             setState(TransportState::PLAYING);
         else if (getState() == TransportState::PAUSING)
             setState(TransportState::PAUSED);
-        else
+        else {
             setState(TransportState::STOPPED);
+            std::cout << "track finished: " << trackFinished() << std::endl;
+            _hasActiveTrack = !trackFinished();
+        }
     }
 }
 
@@ -88,6 +91,7 @@ bool Transport::loadTrack(juce::File file) {
     currentTrack.setMetadata(reader->metadataValues);
     readerSource.reset(newSource.release());
     setState(TransportState::READY);
+    _hasActiveTrack = true;
     return true;
 }
 
@@ -100,5 +104,6 @@ bool Transport::loadTrack(TrackInfo track) {
     readerSource.reset(newSource.release());
     setTrackInfo(track);
     setState(TransportState::READY);
+    _hasActiveTrack = true;
     return true;
 }

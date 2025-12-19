@@ -12,8 +12,10 @@
  * @brief The transport UI component.
  *
  */
-class TransportComponent : public juce::AudioAppComponent, public juce::ChangeListener {
- public:
+class TransportComponent : public juce::AudioAppComponent,
+                           public juce::ChangeListener,
+                           public juce::ChangeBroadcaster {
+public:
     /**
      * @brief Construct a new Transport Component object
      *
@@ -62,7 +64,15 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
 
     void loadTrack(TrackInfo track) { transport.loadTrack(track); }
 
- private:
+    void startPlayback();
+    void pausePlayback();
+    void stopPlayback();
+
+    bool trackFinished() { return transport.trackFinished(); }
+
+    bool hasActiveTrack() { return transport.hasActiveTrack(); }
+
+private:
     /**
      * @brief Update GUI elements.
      * Typically called from `changeListenerCallback()`.
@@ -132,10 +142,6 @@ class TransportComponent : public juce::AudioAppComponent, public juce::ChangeLi
      *
      */
     void configureInterface();
-
-    void startPlayback();
-    void pausePlayback();
-    void stopPlayback();
 
     int getDisplayLineCount();
     void setDisplayText(std::string text);

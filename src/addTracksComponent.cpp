@@ -4,6 +4,8 @@ AddTracksComponent::AddTracksComponent() : fileScanner("*") {
     addAndMakeVisible(addTracksButton);
     addTracksButton.setButtonText("Add Tracks");
     addTracksButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
+    addTracksButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    addTracksButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
     addTracksButton.onClick = [this] { onClick(); };
 }
 

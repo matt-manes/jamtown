@@ -18,7 +18,9 @@ target_sources(jamtown
     src/fileProcessor.cpp
     src/library.cpp
     src/inMemLibrary.cpp
-    src/mainComponent.cpp)
+    src/mainComponent.cpp
+    src/libraryComponent.cpp
+    src/playQueue.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 
