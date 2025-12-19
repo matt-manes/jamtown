@@ -38,7 +38,7 @@ void MainComponent::playTrack(TrackInfo track) {
 
 void MainComponent::resizeTrackAdder() {
     trackAdder.setSize(getWidth() / 10, 20);
-    trackAdder.setTopLeftPosition(5, 1);
+    trackAdder.setTopLeftPosition(1, 1);
 }
 
 void MainComponent::resizeLibrary() {

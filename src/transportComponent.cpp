@@ -15,6 +15,8 @@ TransportComponent::TransportComponent() {
 void TransportComponent::configurePlayButton() {
     playButton.onClick = [this] { playButtonClicked(); };
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
+    playButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    playButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
     playButton.setButtonText("Play");
 }
 
@@ -22,6 +24,8 @@ void TransportComponent::configureStopButton() {
     stopButton.setButtonText("Stop");
     stopButton.onClick = [this] { stopButtonClicked(); };
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::deeppink);
+    stopButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    stopButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
 }
 
 void TransportComponent::configureInterface() {
@@ -32,6 +36,7 @@ void TransportComponent::configureInterface() {
     configureStopButton();
 
     addAndMakeVisible(&display);
+    display.setColour(juce::Label::textColourId, juce::Colours::hotpink);
     // setDisplayText("??????");
 
     // addAndMakeVisible(&stateLabel);
