@@ -7,12 +7,12 @@
 #include "trackInfo.h"
 
 class FileScanner {
- public:
+public:
     FileScanner(juce::String wildcards);
 
     juce::Array<juce::File> scan(juce::File dir);
 
- private:
+private:
     juce::String wildcards;
     juce::WildcardFileFilter filter;
 };

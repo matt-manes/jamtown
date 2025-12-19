@@ -8,12 +8,12 @@
 #include "trackInfo.h"
 
 class FileProcessor {
- public:
+public:
     FileProcessor();
 
     std::vector<TrackInfo> processFiles(juce::Array<juce::File> files);
 
- private:
+private:
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
 };

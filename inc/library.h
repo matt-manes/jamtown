@@ -10,7 +10,7 @@
  *
  */
 class Library {
- public:
+public:
     virtual ~Library() = default;
 
     virtual void addTrack(TrackInfo track) = 0;

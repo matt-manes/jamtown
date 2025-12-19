@@ -6,7 +6,7 @@
 #include "fileScanner.h"
 
 class AddTracksComponent : public juce::Component, public juce::ChangeBroadcaster {
- public:
+public:
     AddTracksComponent();
 
     ~AddTracksComponent() override = default;
@@ -19,7 +19,7 @@ class AddTracksComponent : public juce::Component, public juce::ChangeBroadcaste
 
     void setScannerWildcard(juce::String wildcard);
 
- private:
+private:
     juce::TextButton addTracksButton;
     juce::Array<juce::File> gatheredFiles;
     std::unique_ptr<juce::FileChooser> chooser;

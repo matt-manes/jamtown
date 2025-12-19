@@ -12,7 +12,7 @@
  *
  */
 class InMemLibrary : public Library {
- public:
+public:
     void addTrack(TrackInfo track) override;
 
     std::unordered_map<std::string, std::vector<TrackInfo>> getAlbums(
@@ -24,7 +24,7 @@ class InMemLibrary : public Library {
 
     std::vector<TrackInfo> getAllTracks() override;
 
- private:
+private:
     std::unordered_map<std::string, TrackInfo> titleToTrackMap;
     std::unordered_map<std::string, std::unordered_set<std::string>> albumToTrackTitleMap;
     std::unordered_map<std::string, std::unordered_set<std::string>> artistToAlbumMap;
