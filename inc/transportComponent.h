@@ -72,6 +72,8 @@ public:
 
     bool hasActiveTrack() { return transport.hasActiveTrack(); }
 
+    TrackInfo getCurrentTrack() { return transport.getCurrentTrack(); }
+
 private:
     /**
      * @brief Update GUI elements.

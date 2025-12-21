@@ -1,0 +1,71 @@
+#include "libraryView.h"
+#include "actionMessages.h"
+#include <stdexcept>
+void LibraryView::configureHeaders() {
+    addAndMakeVisible(table);
+    table.getHeader().setStretchToFitActive(true);
+    table.setColour(juce::ListBox::backgroundColourId, juce::Colours::black);
+    table.setColour(juce::ListBox::textColourId, juce::Colours::black);
+    table.getHeader().setColour(juce::TableHeaderComponent::backgroundColourId,
+                                juce::Colours::aquamarine);
+    table.setHeaderHeight(24);
+    table.getHeader().addColumn(
+        "Title", 1, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+    table.getHeader().addColumn(
+        "Album", 2, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+    table.getHeader().addColumn(
+        "Artist", 3, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+    table.getHeader().addColumn(
+        "Length", 4, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+    table.setMultipleSelectionEnabled(true);
+}
+
+void LibraryView::cellDoubleClicked(int rowNumber,
+                                    int /*columnId*/,
+                                    const juce::MouseEvent& mouseEvent) {
+    if (mouseEvent.mods.isLeftButtonDown() && rowNumber < getNumRows()) {
+        sendActionMessage(ActionMessages::playTrack);
+    }
+}
+
+void LibraryView::cellClicked(int rowNumber,
+                              int /*columnId*/,
+                              const juce::MouseEvent& mouseEvent) {
+    if (mouseEvent.mods.isRightButtonDown() && rowNumber < getNumRows()) {
+        juce::PopupMenu menu;
+        menu.addItem(1, "Play");
+        menu.addItem(2, "Add to queue");
+        menu.addItem(3, "Add to playlist", false);
+        menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
+            switch (result) {
+            case 1:
+                sendActionMessage(ActionMessages::playTrack);
+                break;
+            case 2:
+                sendActionMessage(ActionMessages::queueTrack);
+                break;
+            // TODO implement other options
+            default:
+                break;
+            }
+        });
+    }
+}
+
+TrackInfo LibraryView::getNextTrack(TrackInfo currentTrack) {
+    // Doing this here so that the next track depends on
+    // the current sort order of the table.
+    // Not sure if the table column sorting will change
+    // the underlying tracklist order, so may need to
+    // update manually when table sorting changes
+
+    // TODO improve big O by keeping like a trackname to index mapping or w/e
+    if (tracklist.back().getPath() == currentTrack.getPath())
+        return tracklist[0];
+    for (auto i = tracklist.cbegin(); i != tracklist.cend(); ++i) {
+        if (*i == currentTrack)
+            return *(i + 1);
+    }
+    throw std::invalid_argument(std::format("Could not find {} in LibraryView tracklist.",
+                                            currentTrack.toString()));
+}

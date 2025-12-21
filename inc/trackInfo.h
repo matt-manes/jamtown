@@ -55,6 +55,8 @@ public:
 
     std::string getLengthString() const;
 
+    bool operator==(const TrackInfo& track);
+
 private:
     std::string artist;
     std::string album;

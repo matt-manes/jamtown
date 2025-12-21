@@ -19,8 +19,12 @@ target_sources(jamtown
     src/library.cpp
     src/inMemLibrary.cpp
     src/mainComponent.cpp
-    src/libraryComponent.cpp
-    src/playQueue.cpp)
+    src/playQueue.cpp
+    src/browserView.cpp
+    src/browserComponent.cpp
+    src/libraryView.cpp
+    src/topBarComponent.cpp
+    src/playQueueView.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 

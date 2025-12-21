@@ -24,3 +24,5 @@ std::string TrackInfo::getLengthString() const {
     else
         return std::format("{0}:{1}", minutes, seconds);
 }
+
+bool TrackInfo::operator==(const TrackInfo& track) { return path == track.path; }

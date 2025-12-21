@@ -1,10 +1,10 @@
 #pragma once
 
-#include <juce_events/juce_events.h>
-#include <queue>
+#include <deque>
+#include <vector>
 #include "trackInfo.h"
 
-class PlayQueue : public juce::ChangeBroadcaster {
+class PlayQueue {
 public:
     ~PlayQueue() = default;
 
@@ -14,8 +14,10 @@ public:
 
     bool empty() { return queue.empty(); }
 
-    void clear() { queue = std::queue<TrackInfo>{}; }
+    void clear() { queue.clear(); }
+
+    std::vector<TrackInfo> getTrackList();
 
 private:
-    std::queue<TrackInfo> queue;
+    std::deque<TrackInfo> queue;
 };

@@ -5,6 +5,10 @@
 #include <juce_core/juce_core.h>
 #include "fileScanner.h"
 
+/**
+ * @brief Button for selecting folder to add tracks from.
+ *
+ */
 class AddTracksComponent : public juce::Component, public juce::ChangeBroadcaster {
 public:
     AddTracksComponent();
@@ -15,8 +19,18 @@ public:
 
     void resized() override;
 
+    /**
+     * @brief Get the files from folder scanning.
+     *
+     * @return juce::Array<juce::File>
+     */
     juce::Array<juce::File> getResults();
 
+    /**
+     * @brief Set the wildcard pattern for playable files.
+     *
+     * @param wildcard
+     */
     void setScannerWildcard(juce::String wildcard);
 
 private:

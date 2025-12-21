@@ -34,8 +34,6 @@ void AddTracksComponent::onClick() {
         "Select folder", lastOpened, supportedFormatsWildcard);
     auto chooserFlags = juce::FileBrowserComponent::openMode |
                         juce::FileBrowserComponent::canSelectDirectories;
-    // juce::FileBrowserComponent::canSelectFiles;
-    // juce::FileBrowserComponent::canSelectMultipleItems;
 
     chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc) {
         auto entry = fc.getResult();

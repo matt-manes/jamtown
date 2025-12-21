@@ -9,13 +9,17 @@
 #include "playQueue.h"
 #include "fileProcessor.h"
 #include "inMemLibrary.h"
-#include "libraryComponent.h"
+#include "browserComponent.h"
+#include "topBarComponent.h"
 
 class MainComponent : public juce::Component,
                       public juce::ChangeListener,
-                      public juce::ActionListener {
+                      public juce::ActionListener,
+                      public juce::ActionBroadcaster {
 public:
     MainComponent();
+
+    ~MainComponent() = default;
 
     void paint(juce::Graphics& g) override;
 
@@ -29,19 +33,20 @@ public:
 
 private:
     TransportComponent transport;
-    AddTracksComponent trackAdder;
     FileProcessor fileProcessor;
     int transportPadding = 10;
-    LibraryComponent library;
+    BrowserComponent browser;
+    InMemLibrary library;
     PlayQueue playQueue;
+    TopBarComponent topBar;
 
     void configureTransport();
-    void configureTrackAdder();
-    void configureLibrary();
+    void configureTopBar();
+    void configureBrowser();
     void configureElements();
-    void resizeTrackAdder();
-    void resizeLibrary();
+    void resizeBrowser();
     void resizeTransport();
+    void resizeTopBar();
     void handleTracksAdded();
     void handleTransportChange();
     void handlePlayMessage();
