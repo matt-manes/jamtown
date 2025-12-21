@@ -5,3 +5,4 @@ images
 *.txt
 !CMakeLists.txt
 *.bat
+*.gaphor
