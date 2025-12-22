@@ -6,15 +6,15 @@ MainComponent::MainComponent() {
 }
 
 void MainComponent::configureTransport() {
-    addAndMakeVisible(transport);
-    transport.setGain(0.25f);
-    transport.addChangeListener(this);
+    addAndMakeVisible(transportComponent);
+    transportComponent.setGain(0.25f);
+    transportComponent.addChangeListener(this);
 }
 
 void MainComponent::configureTopBar() {
     addAndMakeVisible(topBar);
     topBar.addActionListener(this);
-    topBar.setTrackAdderWildcard(transport.getWildcardForAllFormats());
+    topBar.setTrackAdderWildcard(transportComponent.getWildcardForAllFormats());
 }
 
 void MainComponent::configureBrowser() {
@@ -37,8 +37,8 @@ void MainComponent::paint(juce::Graphics& g) {
 }
 
 void MainComponent::playTrack(TrackInfo track) {
-    transport.loadTrack(track);
-    transport.startPlayback();
+    transportComponent.loadTrack(track);
+    transportComponent.startPlayback();
 }
 
 void MainComponent::resizeTopBar() {
@@ -52,10 +52,10 @@ void MainComponent::resizeBrowser() {
 }
 
 void MainComponent::resizeTransport() {
-    transport.setSize(getWidth() - (2 * transportPadding),
-                      static_cast<int>(getHeight() * .25) - transportPadding);
-    transport.setTopLeftPosition(transportPadding,
-                                 getHeight() - transport.getHeight() - 5);
+    transportComponent.setSize(getWidth() - (2 * transportPadding),
+                               static_cast<int>(getHeight() * .25) - transportPadding);
+    transportComponent.setTopLeftPosition(
+        transportPadding, getHeight() - transportComponent.getHeight() - 5);
 }
 
 void MainComponent::resized() {
@@ -73,21 +73,21 @@ void MainComponent::handleTracksAdded() {
 
 void MainComponent::handleTransportChange() {
     // TODO This will need to change when skips are added, probably to action callback
-    if (!transport.hasActiveTrack()) {
+    if (!transportComponent.hasActiveTrack()) {
         if (!playQueue.empty()) {
             playTrack(playQueue.getNextTrack());
             sendActionMessage(ActionMessages::playQueueUpdated);
         } else {
             // playTrack(library.getNextTrack());
             //  TODO add browser next track method
-            playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
+            playTrack(browser.getNextLibraryTrack(transportComponent.getCurrentTrack()));
             // playTrack(browser.getSelectedTrack());
         }
     }
 }
 
 void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
-    if (source == &transport) {
+    if (source == &transportComponent) {
         handleTransportChange();
     }
 }
@@ -110,7 +110,7 @@ void MainComponent::handleQueueMessage() {
     }
     // playQueue.addTrack(browser.getSelectedTrack());
     //  If nothing is playing, play track added to queue
-    if (!transport.hasActiveTrack())
+    if (!transportComponent.hasActiveTrack())
         playTrack(playQueue.getNextTrack());
     sendActionMessage(ActionMessages::playQueueUpdated);
 }

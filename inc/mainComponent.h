@@ -32,7 +32,7 @@ public:
     void playTrack(TrackInfo track);
 
 private:
-    TransportComponent transport;
+    TransportComponent transportComponent;
     FileProcessor fileProcessor;
     int transportPadding = 10;
     BrowserComponent browser;
