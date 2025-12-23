@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include "transport.h"
+#include "timeFormatter.h"
 
 /**
  * @brief The transport UI component.
@@ -138,6 +139,7 @@ private:
 
     void configurePlayButton();
     void configureStopButton();
+    void configureElapsedTimeLabel();
 
     /**
      * @brief Any UI element setup functions should be called here.
@@ -148,12 +150,33 @@ private:
     int getDisplayLineCount();
     void setDisplayText(std::string text);
 
+    class ElapsedTime : public juce::AnimatedAppComponent {
+    public:
+        ElapsedTime(Transport* transport) : transport(transport) {
+            label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
+            addAndMakeVisible(label);
+            setFramesPerSecond(2);
+        }
+        ~ElapsedTime() = default;
+
+        void resized() override { label.setBounds(0, 0, getWidth(), getHeight()); }
+        void update() override {
+            if (transport->hasActiveTrack()) {
+                label.setText(formatSeconds(transport->getCurrentPosition()), {});
+            } else {
+                label.setText("", {});
+            }
+        }
+        Transport* transport;
+        juce::Label label;
+    };
+
     //==========================================================================
     juce::TextButton playButton;
     juce::TextButton stopButton;
-    juce::Label display;
+    juce::Label currentTrackInfo;
     juce::Label stateLabel;
-
+    ElapsedTime elapsedTime;
     Transport transport;
 
     std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;

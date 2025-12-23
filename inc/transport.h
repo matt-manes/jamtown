@@ -130,6 +130,8 @@ public:
 
     bool hasActiveTrack() { return _hasActiveTrack; }
 
+    double getCurrentPosition() { return transportSource.getCurrentPosition(); }
+
 private:
     TransportState state;
     TrackInfo currentTrack;

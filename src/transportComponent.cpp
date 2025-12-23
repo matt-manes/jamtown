@@ -1,8 +1,9 @@
 #include <juce_graphics/juce_graphics.h>
 #include <memory>
 #include "transportComponent.h"
+#include "timeFormatter.h"
 
-TransportComponent::TransportComponent() {
+TransportComponent::TransportComponent() : elapsedTime(&transport) {
     configureInterface();
     configureHandlers();
     transport.addChangeListener(this);
@@ -28,6 +29,10 @@ void TransportComponent::configureStopButton() {
     stopButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
 }
 
+void TransportComponent::configureElapsedTimeLabel() {
+    elapsedTime.label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
+}
+
 void TransportComponent::configureInterface() {
     addAndMakeVisible(&playButton);
     configurePlayButton();
@@ -35,8 +40,10 @@ void TransportComponent::configureInterface() {
     addAndMakeVisible(&stopButton);
     configureStopButton();
 
-    addAndMakeVisible(&display);
-    display.setColour(juce::Label::textColourId, juce::Colours::hotpink);
+    addAndMakeVisible(&currentTrackInfo);
+    currentTrackInfo.setColour(juce::Label::textColourId, juce::Colours::hotpink);
+    addAndMakeVisible(elapsedTime);
+    configureElapsedTimeLabel();
     // setDisplayText("??????");
 
     // addAndMakeVisible(&stateLabel);
@@ -49,10 +56,12 @@ void TransportComponent::resized() {
     stopButton.setTopLeftPosition(0, getHeight() - stopButton.getHeight());
     playButton.setSize(halfWidth - 10, 20);
     playButton.setTopLeftPosition(halfWidth + 10, getHeight() - playButton.getHeight());
-    auto font = display.getFont();
+    auto font = currentTrackInfo.getFont();
     int displayHeight = static_cast<int>(font.getHeight() * getDisplayLineCount());
-    display.setSize(getWidth(), displayHeight);
-    display.setTopLeftPosition(0, stopButton.getY() - displayHeight);
+    currentTrackInfo.setSize(getWidth() / 2, displayHeight);
+    currentTrackInfo.setTopLeftPosition(0, stopButton.getY() - displayHeight);
+    elapsedTime.setSize(getWidth() / 2, 20);
+    elapsedTime.setTopLeftPosition((getWidth() / 2) + 1, stopButton.getY() - 20);
     //  stateLabel.setBounds(10, 130, getWidth() - 20, 20);
 }
 
@@ -128,7 +137,7 @@ void TransportComponent::pausePlayback() { transport.pause(); }
 void TransportComponent::stopPlayback() { transport.stop(); }
 
 int TransportComponent::getDisplayLineCount() {
-    auto text = display.getText();
+    auto text = currentTrackInfo.getText();
     int count = 1;
     int pos = -1;
     while ((pos = text.indexOf(pos + 1, "\n")) != -1) {
@@ -138,6 +147,6 @@ int TransportComponent::getDisplayLineCount() {
 }
 
 void TransportComponent::setDisplayText(std::string text) {
-    display.setText(text, {});
+    currentTrackInfo.setText(text, {});
     resized();
 }
