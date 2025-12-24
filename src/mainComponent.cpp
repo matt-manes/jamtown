@@ -1,6 +1,7 @@
 #include "mainComponent.h"
 
 MainComponent::MainComponent() : transportComponent(&transport) {
+    configureActionHandlers();
     configureElements();
     setSize(666, 666);
 }
@@ -81,10 +82,7 @@ void MainComponent::handleTransportChange() {
             playTrack(playQueue.getNextTrack());
             sendActionMessage(ActionMessages::playQueueUpdated);
         } else {
-            // playTrack(library.getNextTrack());
-            //  TODO add browser next track method
             playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
-            // playTrack(browser.getSelectedTrack());
         }
     }
 }
@@ -118,23 +116,32 @@ void MainComponent::handleQueueMessage() {
     sendActionMessage(ActionMessages::playQueueUpdated);
 }
 
+void MainComponent::handlePauseMessage() { transport.pause(); }
+
+void MainComponent::handlePlayMessage() { transport.start(); }
+
+void MainComponent::handleStopMessage() { transport.stop(); }
+
+void MainComponent::handleViewLibraryMessage() { browser.setView(View::LIBRARY); }
+
+void MainComponent::handleViewPlayQueueMessage() { browser.setView(View::PLAYQUEUE); }
+
+void MainComponent::configureActionHandlers() {
+    actionHandlers.emplace(ActionMessages::loadSelectedTracks,
+                           [this] { handleLoadSelectedMessage(); });
+    actionHandlers.emplace(ActionMessages::pauseTrack, [this] { handlePauseMessage(); });
+    actionHandlers.emplace(ActionMessages::playTrack, [this] { handlePlayMessage(); });
+    actionHandlers.emplace(ActionMessages::stopTrack, [this] { handleStopMessage(); });
+    actionHandlers.emplace(ActionMessages::queueTrack, [this] { handleQueueMessage(); });
+    actionHandlers.emplace(ActionMessages::filesForLibrary,
+                           [this] { handleTracksAdded(); });
+    actionHandlers.emplace(ActionMessages::viewLibrary,
+                           [this] { handleViewLibraryMessage(); });
+    actionHandlers.emplace(ActionMessages::viewPlayQueue,
+                           [this] { handleViewPlayQueueMessage(); });
+}
+
 void MainComponent::actionListenerCallback(const juce::String& message) {
-    // TODO replace with map
-    if (message == ActionMessages::loadSelectedTracks) {
-        handleLoadSelectedMessage();
-    } else if (message == ActionMessages::pauseTrack) {
-        transport.pause();
-    } else if (message == ActionMessages::playTrack) {
-        transport.start();
-    } else if (message == ActionMessages::stopTrack) {
-        transport.stop();
-    } else if (message == ActionMessages::queueTrack) {
-        handleQueueMessage();
-    } else if (message == ActionMessages::filesForLibrary) {
-        handleTracksAdded();
-    } else if (message == ActionMessages::viewLibrary) {
-        browser.setView(View::LIBRARY);
-    } else if (message == ActionMessages::viewPlayQueue) {
-        browser.setView(View::PLAYQUEUE);
-    }
+    if (actionHandlers.contains(message))
+        actionHandlers[message]();
 }

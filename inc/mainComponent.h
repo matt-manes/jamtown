@@ -6,6 +6,7 @@
 #include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
 #include <memory>
+#include <unordered_map>
 #include "playQueue.h"
 #include "fileProcessor.h"
 #include "inMemLibrary.h"
@@ -41,18 +42,27 @@ private:
     InMemLibrary library;
     PlayQueue playQueue;
     TopBarComponent topBar;
-
+    std::unordered_map<juce::String, std::function<void()>> actionHandlers;
+    // =================================
     void configureTransport();
     void configureTopBar();
     void configureBrowser();
     void configureElements();
+    // =================================
     void resizeBrowser();
     void resizeTransport();
     void resizeTopBar();
+    // =================================
     void handleTracksAdded();
     void handleTransportChange();
     void handleLoadSelectedMessage();
     void handleQueueMessage();
+    void handlePauseMessage();
+    void handlePlayMessage();
+    void handleStopMessage();
+    void handleViewLibraryMessage();
+    void handleViewPlayQueueMessage();
+    void configureActionHandlers();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

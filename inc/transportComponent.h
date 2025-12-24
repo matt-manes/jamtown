@@ -158,14 +158,6 @@ private:
     Transport* transport;
 
     std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;
-    std::unordered_map<TransportState, std::string> stateMap = {
-        {TransportState::STOPPED, "Stopped"},
-        {TransportState::STARTING, "Starting"},
-        {TransportState::PLAYING, "Playing"},
-        {TransportState::STOPPING, "Stopping"},
-        {TransportState::PAUSING, "Pausing"},
-        {TransportState::PAUSED, "Paused"},
-        {TransportState::READY, "Ready"}};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TransportComponent)
 };
