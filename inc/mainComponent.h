@@ -10,6 +10,7 @@
 #include "fileProcessor.h"
 #include "inMemLibrary.h"
 #include "browserComponent.h"
+#include "transport.h"
 #include "topBarComponent.h"
 
 class MainComponent : public juce::Component,
@@ -32,6 +33,7 @@ public:
     void playTrack(TrackInfo track);
 
 private:
+    Transport transport;
     TransportComponent transportComponent;
     FileProcessor fileProcessor;
     int transportPadding = 10;
@@ -49,7 +51,7 @@ private:
     void resizeTopBar();
     void handleTracksAdded();
     void handleTransportChange();
-    void handlePlayMessage();
+    void handleLoadSelectedMessage();
     void handleQueueMessage();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)

@@ -15,13 +15,14 @@
  */
 class TransportComponent : public juce::AudioAppComponent,
                            public juce::ChangeListener,
-                           public juce::ChangeBroadcaster {
+                           public juce::ChangeBroadcaster,
+                           public juce::ActionBroadcaster {
 public:
     /**
      * @brief Construct a new Transport Component object
      *
      */
-    TransportComponent();
+    TransportComponent(Transport* transport);
 
     /**
      * @brief Destroy the Transport Component object
@@ -30,50 +31,20 @@ public:
     ~TransportComponent() override { shutdownAudio(); }
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
-        transport.prepareToPlay(samplesPerBlockExpected, sampleRate);
+        transport->prepareToPlay(samplesPerBlockExpected, sampleRate);
     }
 
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override {
-        transport.getNextAudioBlock(bufferToFill);
+        transport->getNextAudioBlock(bufferToFill);
     }
 
-    void releaseResources() override { transport.releaseResources(); }
+    void releaseResources() override { transport->releaseResources(); }
 
     void resized() override;
 
     void paint(juce::Graphics& g) override;
 
-    /**
-     * @brief Set the playback volume.
-     *
-     * @param gain The gain to apply, 1.0 is unity.
-     */
-    void setGain(float gain) { transport.setGain(gain); }
-
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
-
-    /**
-     * @brief Convert transport state enum into a string.
-     *
-     * @return std::string The current transport state as a string.
-     */
-    std::string getStateString() { return stateMap[transport.getState()]; }
-
-    juce::String getWildcardForAllFormats() {
-        return transport.getWildcardForAllFormats();
-    }
-
-    void loadTrack(TrackInfo track) { transport.loadTrack(track); }
-
-    void startPlayback();
-    void pausePlayback();
-    void stopPlayback();
-
-    bool trackFinished() { return transport.trackFinished(); }
-
-    bool hasActiveTrack() { return transport.hasActiveTrack(); }
-
-    TrackInfo getCurrentTrack() { return transport.getCurrentTrack(); }
 
 private:
     /**
@@ -155,17 +126,24 @@ private:
         ElapsedTime(Transport* transport) : transport(transport) {
             label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
             addAndMakeVisible(label);
-            setFramesPerSecond(2);
+            setFramesPerSecond(5);
         }
+
         ~ElapsedTime() = default;
 
         void resized() override { label.setBounds(0, 0, getWidth(), getHeight()); }
+
         void update() override {
             if (transport->hasActiveTrack()) {
                 label.setText(formatSeconds(transport->getCurrentPosition()), {});
             } else {
                 label.setText("", {});
             }
+        }
+
+        void paint(juce::Graphics& g) override {
+            g.setColour(juce::Colours::black);
+            g.fillAll();
         }
         Transport* transport;
         juce::Label label;
@@ -177,7 +155,7 @@ private:
     juce::Label currentTrackInfo;
     juce::Label stateLabel;
     ElapsedTime elapsedTime;
-    Transport transport;
+    Transport* transport;
 
     std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;
     std::unordered_map<TransportState, std::string> stateMap = {

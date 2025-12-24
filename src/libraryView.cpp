@@ -24,7 +24,7 @@ void LibraryView::cellDoubleClicked(int rowNumber,
                                     int /*columnId*/,
                                     const juce::MouseEvent& mouseEvent) {
     if (mouseEvent.mods.isLeftButtonDown() && rowNumber < getNumRows()) {
-        sendActionMessage(ActionMessages::playTrack);
+        sendActionMessage(ActionMessages::loadSelectedTracks);
     }
 }
 
@@ -39,7 +39,7 @@ void LibraryView::cellClicked(int rowNumber,
         menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
             switch (result) {
             case 1:
-                sendActionMessage(ActionMessages::playTrack);
+                sendActionMessage(ActionMessages::loadSelectedTracks);
                 break;
             case 2:
                 sendActionMessage(ActionMessages::queueTrack);

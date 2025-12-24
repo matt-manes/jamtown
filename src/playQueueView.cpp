@@ -26,9 +26,8 @@ void PlayQueueView::cellDoubleClicked(int rowNumber,
                                       int /*columnId*/,
                                       const juce::MouseEvent& mouseEvent) {
     if (mouseEvent.mods.isLeftButtonDown() && rowNumber < getNumRows()) {
-        // selectedTrack = trackList[rowNumber];
-        // selectedTrackIndex = rowNumber;
-        sendActionMessage(ActionMessages::playTrack);
+        // TODO remove selected track from playqueue probably by moving it to the front
+        sendActionMessage(ActionMessages::loadSelectedTracks);
     }
 }
 
@@ -42,8 +41,8 @@ void PlayQueueView::cellClicked(int rowNumber,
         menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
             switch (result) {
             case 1:
-                // selectedTrackIndex = rowNumber;
-                sendActionMessage(ActionMessages::playTrack);
+                // TODO remove selected track from playqueue probably by moving it to the front
+                sendActionMessage(ActionMessages::loadSelectedTracks);
                 break;
             // TODO implement other options
             default:

@@ -1,20 +1,23 @@
 #include "mainComponent.h"
 
-MainComponent::MainComponent() {
+MainComponent::MainComponent() : transportComponent(&transport) {
     configureElements();
     setSize(666, 666);
 }
 
 void MainComponent::configureTransport() {
     addAndMakeVisible(transportComponent);
-    transportComponent.setGain(0.25f);
+    transport.addChangeListener(&transportComponent);
+    transport.setGain(0.25f);
+    transport.stop();
     transportComponent.addChangeListener(this);
+    transportComponent.addActionListener(this);
 }
 
 void MainComponent::configureTopBar() {
     addAndMakeVisible(topBar);
     topBar.addActionListener(this);
-    topBar.setTrackAdderWildcard(transportComponent.getWildcardForAllFormats());
+    topBar.setTrackAdderWildcard(transport.getWildcardForAllFormats());
 }
 
 void MainComponent::configureBrowser() {
@@ -37,8 +40,8 @@ void MainComponent::paint(juce::Graphics& g) {
 }
 
 void MainComponent::playTrack(TrackInfo track) {
-    transportComponent.loadTrack(track);
-    transportComponent.startPlayback();
+    transport.loadTrack(track);
+    transport.start();
 }
 
 void MainComponent::resizeTopBar() {
@@ -73,14 +76,14 @@ void MainComponent::handleTracksAdded() {
 
 void MainComponent::handleTransportChange() {
     // TODO This will need to change when skips are added, probably to action callback
-    if (!transportComponent.hasActiveTrack()) {
+    if (!transport.hasActiveTrack()) {
         if (!playQueue.empty()) {
             playTrack(playQueue.getNextTrack());
             sendActionMessage(ActionMessages::playQueueUpdated);
         } else {
             // playTrack(library.getNextTrack());
             //  TODO add browser next track method
-            playTrack(browser.getNextLibraryTrack(transportComponent.getCurrentTrack()));
+            playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
             // playTrack(browser.getSelectedTrack());
         }
     }
@@ -92,7 +95,7 @@ void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
     }
 }
 
-void MainComponent::handlePlayMessage() {
+void MainComponent::handleLoadSelectedMessage() {
     auto tracks = browser.getSelectedTracks();
     playTrack(tracks[0]);
     // If multiple tracks were selected, add the rest to the queue
@@ -110,15 +113,21 @@ void MainComponent::handleQueueMessage() {
     }
     // playQueue.addTrack(browser.getSelectedTrack());
     //  If nothing is playing, play track added to queue
-    if (!transportComponent.hasActiveTrack())
+    if (!transport.hasActiveTrack())
         playTrack(playQueue.getNextTrack());
     sendActionMessage(ActionMessages::playQueueUpdated);
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {
     // TODO replace with map
-    if (message == ActionMessages::playTrack) {
-        handlePlayMessage();
+    if (message == ActionMessages::loadSelectedTracks) {
+        handleLoadSelectedMessage();
+    } else if (message == ActionMessages::pauseTrack) {
+        transport.pause();
+    } else if (message == ActionMessages::playTrack) {
+        transport.start();
+    } else if (message == ActionMessages::stopTrack) {
+        transport.stop();
     } else if (message == ActionMessages::queueTrack) {
         handleQueueMessage();
     } else if (message == ActionMessages::filesForLibrary) {
