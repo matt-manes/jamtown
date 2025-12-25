@@ -9,7 +9,6 @@ MainComponent::MainComponent() : transportComponent(&transport) {
 void MainComponent::configureTransport() {
     addAndMakeVisible(transportComponent);
     transport.addChangeListener(&transportComponent);
-    transport.setGain(0.25f);
     transport.stop();
     transportComponent.addChangeListener(this);
     transportComponent.addActionListener(this);

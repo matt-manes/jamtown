@@ -16,7 +16,8 @@
 class TransportComponent : public juce::AudioAppComponent,
                            public juce::ChangeListener,
                            public juce::ChangeBroadcaster,
-                           public juce::ActionBroadcaster {
+                           public juce::ActionBroadcaster,
+                           public juce::Slider::Listener {
 public:
     /**
      * @brief Construct a new Transport Component object
@@ -41,6 +42,8 @@ public:
     void paint(juce::Graphics& g) override;
 
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+
+    void sliderValueChanged(juce::Slider* slider) override;
 
 private:
     /**
@@ -107,6 +110,7 @@ private:
     void configurePlayButton();
     void configureStopButton();
     void configureElapsedTimeLabel();
+    void configureVolumeSlider();
 
     /**
      * @brief Any UI element setup functions should be called here.
@@ -139,8 +143,8 @@ private:
     juce::TextButton playButton;
     juce::TextButton stopButton;
     juce::Label currentTrackInfo;
-    juce::Label stateLabel;
     ElapsedTime elapsedTime;
+    juce::Slider volumeSlider;
     Transport* transport;
 
     std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;
