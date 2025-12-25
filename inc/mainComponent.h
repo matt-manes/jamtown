@@ -62,7 +62,11 @@ private:
     void handleStopMessage();
     void handleViewLibraryMessage();
     void handleViewPlayQueueMessage();
+    void handleNextTrackMessage();
+    void handleRestartTrackMessage();
     void configureActionHandlers();
+    // =================================
+    void playNextTrack();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

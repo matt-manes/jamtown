@@ -65,6 +65,10 @@ private:
      */
     void stopButtonClicked();
 
+    void skipButtonClicked();
+
+    void backButtonClicked();
+
     /*
     None of these '*Handler' functions are called directly.
     They are stored in the `stateChangeHandlers` map and are
@@ -111,6 +115,8 @@ private:
     void configureStopButton();
     void configureElapsedTimeLabel();
     void configureVolumeSlider();
+    void configureSkipButton();
+    void configureBackButton();
 
     /**
      * @brief Any UI element setup functions should be called here.
@@ -142,6 +148,8 @@ private:
     //==========================================================================
     juce::TextButton playButton;
     juce::TextButton stopButton;
+    juce::ArrowButton skipButton;
+    juce::ArrowButton backButton;
     juce::Label currentTrackInfo;
     ElapsedTime elapsedTime;
     juce::Slider volumeSlider;

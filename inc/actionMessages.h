@@ -13,6 +13,8 @@ public:
     inline static const juce::String queueTrack = "QUEUE TRACK";
     inline static const juce::String pauseTrack = "PAUSE TRACK";
     inline static const juce::String stopTrack = "STOP TRACK";
+    inline static const juce::String nextTrack = "NEXT TRACK";
+    inline static const juce::String restartTrack = "RESTART TRACK";
     inline static const juce::String libraryUpdated = "LIBRARY UPDATED";
     inline static const juce::String playQueueUpdated = "PLAY QUEUE UPDATED";
     inline static const juce::String filesForLibrary = "FILES FOR LIBRARY";

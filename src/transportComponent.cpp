@@ -5,13 +5,14 @@
 #include "actionMessages.h"
 
 TransportComponent::TransportComponent(Transport* transport)
-    : transport(transport), elapsedTime(transport) {
-    volumeSlider.addListener(this);
+    : transport(transport), elapsedTime(transport),
+      skipButton("ff", 0.0, juce::Colours::turquoise),
+      backButton("rw", 0.5, juce::Colours::hotpink) {
     configureInterface();
     configureHandlers();
     // transport->addChangeListener(this);
     setAudioChannels(0, 2);
-    transport->setGain(volumeSlider.getValue());
+    transport->setGain(static_cast<float>(volumeSlider.getValue()));
     // normally called by the listener callback
     // but here transport state is already set so make manual call
     updateUI();
@@ -44,11 +45,20 @@ void TransportComponent::configureStopButton() {
     stopButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
 }
 
+void TransportComponent::configureSkipButton() {
+    skipButton.onClick = [this] { skipButtonClicked(); };
+}
+
+void TransportComponent::configureBackButton() {
+    backButton.onClick = [this] { backButtonClicked(); };
+}
+
 void TransportComponent::configureElapsedTimeLabel() {
     elapsedTime.label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
 }
 
 void TransportComponent::configureVolumeSlider() {
+    volumeSlider.addListener(this);
     volumeSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     volumeSlider.setRange(0, 1, 0.000001);
     volumeSlider.setValue(0);
@@ -68,6 +78,12 @@ void TransportComponent::configureInterface() {
     addAndMakeVisible(&stopButton);
     configureStopButton();
 
+    addAndMakeVisible(&skipButton);
+    configureSkipButton();
+
+    addAndMakeVisible(&backButton);
+    configureBackButton();
+
     addAndMakeVisible(&currentTrackInfo);
     currentTrackInfo.setColour(juce::Label::textColourId, juce::Colours::hotpink);
 
@@ -81,12 +97,19 @@ void TransportComponent::configureInterface() {
 void TransportComponent::resized() {
     // TODO read these values from a file on start up
     int width = getWidth() / 4;
+    backButton.setSize(20, 20);
+    backButton.setTopLeftPosition(0, getHeight() - backButton.getHeight());
     stopButton.setSize(width - 10, 20);
-    stopButton.setTopLeftPosition(0, getHeight() - stopButton.getHeight());
+    stopButton.setTopLeftPosition(backButton.getRight() + 10,
+                                  getHeight() - stopButton.getHeight());
     playButton.setSize(width - 10, 20);
-    playButton.setTopLeftPosition(width + 10, getHeight() - playButton.getHeight());
+    playButton.setTopLeftPosition(stopButton.getRight() + 10,
+                                  getHeight() - playButton.getHeight());
+    skipButton.setSize(20, 20);
+    skipButton.setTopLeftPosition(playButton.getRight() + 10,
+                                  getHeight() - skipButton.getHeight());
     volumeSlider.setSize(width, 20);
-    volumeSlider.setTopLeftPosition(2 * (width + 10),
+    volumeSlider.setTopLeftPosition(skipButton.getRight() + 10,
                                     getHeight() - volumeSlider.getHeight());
     auto font = currentTrackInfo.getFont();
     int displayHeight = static_cast<int>(font.getHeight() * getDisplayLineCount());
@@ -111,7 +134,7 @@ void TransportComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
 
 void TransportComponent::sliderValueChanged(juce::Slider* slider) {
     if (slider == &volumeSlider) {
-        transport->setGain(volumeSlider.getValue());
+        transport->setGain(static_cast<float>(volumeSlider.getValue()));
     }
 }
 
@@ -132,10 +155,22 @@ void TransportComponent::stopButtonClicked() {
     sendActionMessage(ActionMessages::stopTrack);
 }
 
+void TransportComponent::skipButtonClicked() {
+    sendActionMessage(ActionMessages::nextTrack);
+}
+
+void TransportComponent::backButtonClicked() {
+    // TODO send a previous track message if current track playtime is less than 1s
+    sendActionMessage(ActionMessages::restartTrack);
+}
+
 void TransportComponent::stoppedHandler() {
     stopButton.setEnabled(false);
     playButton.setButtonText("Play");
-    playButton.setEnabled(transport->hasPlayableSource() ? true : false);
+    bool shouldBeEnabled = transport->hasPlayableSource();
+    playButton.setEnabled(shouldBeEnabled);
+    skipButton.setEnabled(shouldBeEnabled);
+    backButton.setEnabled(shouldBeEnabled);
 }
 
 void TransportComponent::startingHandler() { playButton.setEnabled(false); }
@@ -144,6 +179,8 @@ void TransportComponent::playingHandler() {
     stopButton.setEnabled(true);
     playButton.setButtonText("Pause");
     playButton.setEnabled(true);
+    skipButton.setEnabled(true);
+    backButton.setEnabled(true);
     setDisplayText(transport->getCurrentTrack().toString());
 }
 
@@ -151,12 +188,16 @@ void TransportComponent::pausedHandler() {
     playButton.setButtonText("Play");
     playButton.setEnabled(true);
     stopButton.setEnabled(true);
+    skipButton.setEnabled(true);
+    backButton.setEnabled(true);
 }
 
 void TransportComponent::readyHandler() {
     playButton.setButtonText("Play");
     playButton.setEnabled(true);
     stopButton.setEnabled(false);
+    skipButton.setEnabled(true);
+    backButton.setEnabled(false);
     setDisplayText(transport->getCurrentTrack().toString());
 }
 

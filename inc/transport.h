@@ -128,6 +128,8 @@ public:
 
     double getCurrentPosition();
 
+    void setPosition(double position);
+
 private:
     TransportState state;
     TrackInfo currentTrack;

@@ -58,7 +58,7 @@ void Transport::start() {
 void Transport::stop() {
     if (!canStop())
         return;
-    transportSource.setPosition(0.0);
+    setPosition(0.0);
     // transportSource.stop() doesn't broadcast a state change
     // message if it isn't actually playing
     // If we don't differentiate here, transport gets stuck in STOPPING
@@ -77,6 +77,8 @@ void Transport::pause() {
     transportSource.stop();
     setState(PAUSING);
 }
+
+void Transport::setPosition(double position) { transportSource.setPosition(position); }
 
 void Transport::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) {
     if (!hasPlayableSource()) {

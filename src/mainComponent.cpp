@@ -74,15 +74,19 @@ void MainComponent::handleTracksAdded() {
     sendActionMessage(ActionMessages::libraryUpdated);
 }
 
+void MainComponent::playNextTrack() {
+    if (!playQueue.empty()) {
+        playTrack(playQueue.getNextTrack());
+        sendActionMessage(ActionMessages::playQueueUpdated);
+    } else {
+        playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
+    }
+}
+
 void MainComponent::handleTransportChange() {
     // TODO This will need to change when skips are added, probably to action callback
     if (!transport.hasActiveTrack()) {
-        if (!playQueue.empty()) {
-            playTrack(playQueue.getNextTrack());
-            sendActionMessage(ActionMessages::playQueueUpdated);
-        } else {
-            playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
-        }
+        playNextTrack();
     }
 }
 
@@ -125,6 +129,10 @@ void MainComponent::handleViewLibraryMessage() { browser.setView(View::LIBRARY);
 
 void MainComponent::handleViewPlayQueueMessage() { browser.setView(View::PLAYQUEUE); }
 
+void MainComponent::handleNextTrackMessage() { playNextTrack(); }
+
+void MainComponent::handleRestartTrackMessage() { transport.setPosition(0.0); }
+
 void MainComponent::configureActionHandlers() {
     actionHandlers.emplace(ActionMessages::loadSelectedTracks,
                            [this] { handleLoadSelectedMessage(); });
@@ -138,6 +146,10 @@ void MainComponent::configureActionHandlers() {
                            [this] { handleViewLibraryMessage(); });
     actionHandlers.emplace(ActionMessages::viewPlayQueue,
                            [this] { handleViewPlayQueueMessage(); });
+    actionHandlers.emplace(ActionMessages::nextTrack,
+                           [this] { handleNextTrackMessage(); });
+    actionHandlers.emplace(ActionMessages::restartTrack,
+                           [this] { handleRestartTrackMessage(); });
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {
