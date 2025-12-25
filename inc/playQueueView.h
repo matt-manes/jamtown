@@ -11,7 +11,7 @@
  */
 class PlayQueueView : public BrowserView {
 public:
-    PlayQueueView() { configureHeaders(); }
+    PlayQueueView();
     ~PlayQueueView() = default;
 
     void configureHeaders() override;

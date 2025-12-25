@@ -5,8 +5,6 @@
 #include <juce_events/juce_events.h>
 #include <vector>
 #include <string>
-#include <memory>
-#include "inMemLibrary.h"
 #include "trackInfo.h"
 #include "playQueue.h"
 
@@ -20,7 +18,7 @@ class BrowserView : public juce::Component,
 public:
     ~BrowserView() = default;
 
-    virtual int getNumRows() override { return static_cast<int>(tracklist.size()); }
+    virtual int getNumRows() override;
 
     virtual void configureHeaders() = 0;
 
@@ -39,7 +37,7 @@ public:
 
     virtual void setTracklist(std::vector<TrackInfo> tracks);
 
-    virtual TrackInfo getTrack(int index) { return tracklist[index]; }
+    virtual TrackInfo getTrack(int index);
 
     virtual std::vector<TrackInfo> getSelectedTracks();
 
@@ -55,7 +53,7 @@ public:
                              int columnId,
                              const juce::MouseEvent& mouseEvent) override;
 
-    void updateTable() { table.updateContent(); }
+    void updateTable();
 
 protected:
     juce::TableListBox table{{}, this};

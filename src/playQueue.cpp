@@ -8,6 +8,10 @@ TrackInfo PlayQueue::getNextTrack() {
     return track;
 }
 
+bool PlayQueue::empty() { return queue.empty(); }
+
+void PlayQueue::clear() { queue.clear(); }
+
 std::vector<TrackInfo> PlayQueue::getTrackList() {
     return std::vector<TrackInfo>{queue.cbegin(), queue.cend()};
 }

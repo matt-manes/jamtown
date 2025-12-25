@@ -15,6 +15,17 @@ TransportComponent::TransportComponent(Transport* transport)
     updateUI();
 }
 
+void TransportComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
+    transport->prepareToPlay(samplesPerBlockExpected, sampleRate);
+}
+
+void TransportComponent::getNextAudioBlock(
+    const juce::AudioSourceChannelInfo& bufferToFill) {
+    transport->getNextAudioBlock(bufferToFill);
+}
+
+void TransportComponent::releaseResources() { transport->releaseResources(); }
+
 void TransportComponent::configurePlayButton() {
     playButton.onClick = [this] { playButtonClicked(); };
     playButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
@@ -46,9 +57,6 @@ void TransportComponent::configureInterface() {
     currentTrackInfo.setColour(juce::Label::textColourId, juce::Colours::hotpink);
     addAndMakeVisible(elapsedTime);
     configureElapsedTimeLabel();
-    // setDisplayText("??????");
-
-    // addAndMakeVisible(&stateLabel);
 }
 
 void TransportComponent::resized() {
@@ -146,4 +154,28 @@ int TransportComponent::getDisplayLineCount() {
 void TransportComponent::setDisplayText(std::string text) {
     currentTrackInfo.setText(text, {});
     resized();
+}
+
+TransportComponent::ElapsedTime::ElapsedTime(Transport* transport)
+    : transport(transport) {
+    label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
+    addAndMakeVisible(label);
+    setFramesPerSecond(5);
+}
+
+void TransportComponent::ElapsedTime::resized() {
+    label.setBounds(0, 0, getWidth(), getHeight());
+}
+
+void TransportComponent::ElapsedTime::update() {
+    if (transport->hasActiveTrack()) {
+        label.setText(formatSeconds(transport->getCurrentPosition()), {});
+    } else {
+        label.setText("", {});
+    }
+}
+
+void TransportComponent::ElapsedTime::paint(juce::Graphics& g) {
+    g.setColour(juce::Colours::black);
+    g.fillAll();
 }

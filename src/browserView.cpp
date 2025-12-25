@@ -3,6 +3,8 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_events/juce_events.h>
 
+int BrowserView::getNumRows() { return static_cast<int>(tracklist.size()); }
+
 void BrowserView::paintRowBackground(juce::Graphics& g,
                                      int /*rowNumber*/,
                                      int /*width*/,
@@ -49,7 +51,6 @@ std::string BrowserView::getColumnText(int rowNumber, int columnId) {
 }
 
 void BrowserView::resized() {
-    // table.updateContent();
     table.setBounds(0, 0, getWidth(), getHeight());
     table.getHeader().resizeAllColumnsToFit(getWidth());
 }
@@ -78,3 +79,7 @@ std::vector<TrackInfo> BrowserView::getSelectedTracks() {
     }
     return tracks;
 }
+
+TrackInfo BrowserView::getTrack(int index) { return tracklist[index]; }
+
+void BrowserView::updateTable() { table.updateContent(); }

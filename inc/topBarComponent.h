@@ -15,11 +15,9 @@ public:
 
     void resized() override;
 
-    juce::Array<juce::File> getTrackAdderFiles() { return trackAdder.getResults(); }
+    juce::Array<juce::File> getTrackAdderFiles();
 
-    void setTrackAdderWildcard(juce::String wildcard) {
-        trackAdder.setScannerWildcard(wildcard);
-    }
+    void setTrackAdderWildcard(juce::String wildcard);
 
 private:
     AddTracksComponent trackAdder;

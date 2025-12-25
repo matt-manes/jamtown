@@ -2,6 +2,8 @@
 
 #include "actionMessages.h"
 
+PlayQueueView::PlayQueueView() { configureHeaders(); }
+
 // TODO abstract to a "trackListingView" base class inheriting from `BrowserView`
 void PlayQueueView::configureHeaders() {
     addAndMakeVisible(table);

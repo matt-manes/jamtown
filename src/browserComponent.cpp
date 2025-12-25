@@ -29,3 +29,31 @@ void BrowserComponent::setView(View view) {
 TrackInfo BrowserComponent::getNextLibraryTrack(TrackInfo currentTrack) {
     return libraryView->getNextTrack(currentTrack);
 }
+
+void BrowserComponent::resized() {
+    libraryView->setBounds(0, 0, getWidth(), getHeight());
+    playQueueView->setBounds(0, 0, getWidth(), getHeight());
+}
+
+std::vector<TrackInfo> BrowserComponent::getSelectedTracks() {
+    return currentView->getSelectedTracks();
+}
+
+void BrowserComponent::actionListenerCallback(const juce::String& message) {
+    if (message == ActionMessages::libraryUpdated) {
+        libraryView->setTracklist(library->getAllTracks());
+    } else if (message == ActionMessages::playQueueUpdated) {
+        playQueueView->setTracklist(playQueue->getTrackList());
+    } else  // propogate action messages sent from view objects
+        sendActionMessage(message);
+}
+
+void BrowserComponent::setLibrary(Library* newLibrary) {
+    library = newLibrary;
+    libraryView->setTracklist(library->getAllTracks());
+}
+
+void BrowserComponent::setPlayQueue(PlayQueue* newQueue) {
+    playQueue = newQueue;
+    playQueueView->setTracklist(playQueue->getTrackList());
+}

@@ -3,6 +3,14 @@
 
 TopBarComponent::TopBarComponent() { configureElements(); }
 
+juce::Array<juce::File> TopBarComponent::getTrackAdderFiles() {
+    return trackAdder.getResults();
+}
+
+void TopBarComponent::setTrackAdderWildcard(juce::String wildcard) {
+    trackAdder.setScannerWildcard(wildcard);
+}
+
 void TopBarComponent::configureElements() {
     configureTrackAdder();
     configureViewLibrary();

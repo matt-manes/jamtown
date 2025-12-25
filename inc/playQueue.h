@@ -12,9 +12,9 @@ public:
 
     TrackInfo getNextTrack();
 
-    bool empty() { return queue.empty(); }
+    bool empty();
 
-    void clear() { queue.clear(); }
+    void clear();
 
     std::vector<TrackInfo> getTrackList();
 

@@ -10,6 +10,44 @@ Transport::Transport() {
     setState(STOPPED);
 }
 
+TransportState Transport::getState() { return state; }
+
+void Transport::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
+    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+}
+
+void Transport::releaseResources() { transportSource.releaseResources(); }
+
+void Transport::setGain(float gain) { transportSource.setGain(gain); }
+
+bool Transport::hasPlayableSource() { return readerSource.get() != nullptr; }
+
+const TrackInfo& Transport::getCurrentTrack() { return currentTrack; }
+
+bool Transport::canStart() { return hasPlayableSource() && !isPlaying(); }
+
+bool Transport::canStop() { return isPlaying() || isPaused(); }
+
+bool Transport::canPause() { return isPlaying(); }
+
+bool Transport::isPlaying() { return getState() == PLAYING; }
+
+bool Transport::isPaused() { return getState() == PAUSED; }
+
+bool Transport::isStopped() { return getState() == STOPPED; }
+
+juce::String Transport::getWildcardForAllFormats() {
+    return formatManager.getWildcardForAllFormats();
+}
+
+bool Transport::trackFinished() { return transportSource.hasStreamFinished(); }
+
+bool Transport::hasActiveTrack() { return _hasActiveTrack; }
+
+double Transport::getCurrentPosition() { return transportSource.getCurrentPosition(); }
+
+void Transport::setTrackInfo(TrackInfo track) { currentTrack = track; }
+
 void Transport::start() {
     if (!canStart())
         return;

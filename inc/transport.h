@@ -30,13 +30,11 @@ public:
      *
      * @return TransportState
      */
-    TransportState getState() { return state; }
+    TransportState getState();
 
-    void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
-        transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-    }
+    void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
 
-    void releaseResources() override { transportSource.releaseResources(); };
+    void releaseResources() override;
 
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
 
@@ -47,7 +45,7 @@ public:
      *
      * @param gain The gain to apply, 1.0 is unity.
      */
-    void setGain(float gain) { transportSource.setGain(gain); }
+    void setGain(float gain);
 
     /**
      * @brief Whether a playable track has been loaded.
@@ -55,7 +53,7 @@ public:
      * @return true
      * @return false
      */
-    bool hasPlayableSource() { return readerSource.get() != nullptr; }
+    bool hasPlayableSource();
 
     /**
      * @brief Load the given file for playback and return whether it was successful.
@@ -72,7 +70,7 @@ public:
      *
      * @return const TrackInfo&
      */
-    const TrackInfo& getCurrentTrack() { return currentTrack; }
+    const TrackInfo& getCurrentTrack();
 
     /**
      * @brief Start playback if able.
@@ -98,7 +96,7 @@ public:
      * @return true
      * @return false
      */
-    bool canStart() { return hasPlayableSource() && !isPlaying(); }
+    bool canStart();
 
     /**
      * @brief Whether playback can be stopped or not.
@@ -106,7 +104,7 @@ public:
      * @return true
      * @return false
      */
-    bool canStop() { return isPlaying() || isPaused(); }
+    bool canStop();
 
     /**
      * @brief Whether playback can be paused or not.
@@ -114,23 +112,21 @@ public:
      * @return true
      * @return false
      */
-    bool canPause() { return isPlaying(); }
+    bool canPause();
 
-    bool isPlaying() { return getState() == PLAYING; }
+    bool isPlaying();
 
-    bool isPaused() { return getState() == PAUSED; }
+    bool isPaused();
 
-    bool isStopped() { return getState() == STOPPED; }
+    bool isStopped();
 
-    juce::String getWildcardForAllFormats() {
-        return formatManager.getWildcardForAllFormats();
-    }
+    juce::String getWildcardForAllFormats();
 
-    bool trackFinished() { return transportSource.hasStreamFinished(); }
+    bool trackFinished();
 
-    bool hasActiveTrack() { return _hasActiveTrack; }
+    bool hasActiveTrack();
 
-    double getCurrentPosition() { return transportSource.getCurrentPosition(); }
+    double getCurrentPosition();
 
 private:
     TransportState state;
@@ -146,7 +142,7 @@ private:
      */
     void setTrackInfo(juce::File);
 
-    void setTrackInfo(TrackInfo track) { currentTrack = track; }
+    void setTrackInfo(TrackInfo track);
 
     /**
      * @brief Update the transport state tracker and send a notification to any listeners.

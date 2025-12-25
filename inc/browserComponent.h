@@ -29,48 +29,30 @@ public:
 
     ~BrowserComponent() = default;
 
-    void resized() override {
-        libraryView->setBounds(0, 0, getWidth(), getHeight());
-        playQueueView->setBounds(0, 0, getWidth(), getHeight());
-    };
+    void resized() override;
 
     /**
      * @brief Get tracks selected in current view.
      *
      * @return std::vector<TrackInfo>
      */
-    std::vector<TrackInfo> getSelectedTracks() {
-        return currentView->getSelectedTracks();
-    }
+    std::vector<TrackInfo> getSelectedTracks();
 
-    void actionListenerCallback(const juce::String& message) override {
-        if (message == ActionMessages::libraryUpdated) {
-            libraryView->setTracklist(library->getAllTracks());
-        } else if (message == ActionMessages::playQueueUpdated) {
-            playQueueView->setTracklist(playQueue->getTrackList());
-        } else  // propogate action messages sent from view objects
-            sendActionMessage(message);
-    }
+    void actionListenerCallback(const juce::String& message) override;
 
     /**
      * @brief Set the library instance to use.
      *
      * @param newLibrary
      */
-    void setLibrary(Library* newLibrary) {
-        library = newLibrary;
-        libraryView->setTracklist(library->getAllTracks());
-    }
+    void setLibrary(Library* newLibrary);
 
     /**
      * @brief Set the PlayQueue instance to be use.
      *
      * @param newQueue
      */
-    void setPlayQueue(PlayQueue* newQueue) {
-        playQueue = newQueue;
-        playQueueView->setTracklist(playQueue->getTrackList());
-    }
+    void setPlayQueue(PlayQueue* newQueue);
 
     /**
      * @brief Set the view to display.

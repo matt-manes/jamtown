@@ -30,15 +30,11 @@ public:
      */
     ~TransportComponent() override { shutdownAudio(); }
 
-    void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override {
-        transport->prepareToPlay(samplesPerBlockExpected, sampleRate);
-    }
+    void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
 
-    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override {
-        transport->getNextAudioBlock(bufferToFill);
-    }
+    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
 
-    void releaseResources() override { transport->releaseResources(); }
+    void releaseResources() override;
 
     void resized() override;
 
@@ -123,30 +119,20 @@ private:
 
     class ElapsedTime : public juce::AnimatedAppComponent {
     public:
-        ElapsedTime(Transport* transport) : transport(transport) {
-            label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
-            addAndMakeVisible(label);
-            setFramesPerSecond(5);
-        }
+        ElapsedTime(Transport* transport);
 
         ~ElapsedTime() = default;
 
-        void resized() override { label.setBounds(0, 0, getWidth(), getHeight()); }
+        void resized() override;
 
-        void update() override {
-            if (transport->hasActiveTrack()) {
-                label.setText(formatSeconds(transport->getCurrentPosition()), {});
-            } else {
-                label.setText("", {});
-            }
-        }
+        void update() override;
 
-        void paint(juce::Graphics& g) override {
-            g.setColour(juce::Colours::black);
-            g.fillAll();
-        }
-        Transport* transport;
+        void paint(juce::Graphics& g) override;
+
         juce::Label label;
+
+    private:
+        Transport* transport;
     };
 
     //==========================================================================
