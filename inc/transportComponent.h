@@ -4,6 +4,7 @@
 #include <juce_events/juce_events.h>
 #include <iostream>
 #include <memory>
+#include <vector>
 #include <string>
 #include <unordered_map>
 #include "transport.h"
@@ -127,6 +128,10 @@ private:
     int getDisplayLineCount();
     void setDisplayText(std::string text);
 
+    void resizeButtons();
+
+    void orderButtons();
+
     class ElapsedTime : public juce::AnimatedAppComponent {
     public:
         ElapsedTime(Transport* transport);
@@ -146,6 +151,11 @@ private:
     };
 
     //==========================================================================
+    struct {
+        int width = 20;
+        int height = 20;
+    } buttonSize;
+    std::vector<juce::Component*> buttons;
     juce::TextButton playButton;
     juce::TextButton stopButton;
     juce::ArrowButton skipButton;

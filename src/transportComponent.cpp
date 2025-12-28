@@ -10,7 +10,6 @@ TransportComponent::TransportComponent(Transport* transport)
       backButton("rw", 0.5, juce::Colours::hotpink) {
     configureInterface();
     configureHandlers();
-    // transport->addChangeListener(this);
     setAudioChannels(0, 2);
     transport->setGain(static_cast<float>(volumeSlider.getValue()));
     // normally called by the listener callback
@@ -35,6 +34,7 @@ void TransportComponent::configurePlayButton() {
     playButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
     playButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
     playButton.setButtonText("Play");
+    playButton.setName("play");
 }
 
 void TransportComponent::configureStopButton() {
@@ -43,6 +43,7 @@ void TransportComponent::configureStopButton() {
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::deeppink);
     stopButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
     stopButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+    stopButton.setName("stop");
 }
 
 void TransportComponent::configureSkipButton() {
@@ -72,6 +73,7 @@ void TransportComponent::configureVolumeSlider() {
 }
 
 void TransportComponent::configureInterface() {
+    orderButtons();
     addAndMakeVisible(&playButton);
     configurePlayButton();
 
@@ -94,22 +96,21 @@ void TransportComponent::configureInterface() {
     configureVolumeSlider();
 }
 
+void TransportComponent::resizeButtons() {
+    for (auto i = buttons.begin(); i != buttons.end(); ++i) {
+        juce::String name = (*i)->getName();
+        int width = name == "play" || name == "stop" ? 40 : buttonSize.width;
+        (*i)->setSize(width, buttonSize.height);
+        int topLeft = *i == buttons.front() ? 0 : (*(i - 1))->getRight() + 10;
+        (*i)->setTopLeftPosition(topLeft, getHeight() - (*i)->getHeight());
+    }
+}
+
 void TransportComponent::resized() {
     // TODO read these values from a file on start up
-    int width = getWidth() / 4;
-    backButton.setSize(20, 20);
-    backButton.setTopLeftPosition(0, getHeight() - backButton.getHeight());
-    stopButton.setSize(width - 10, 20);
-    stopButton.setTopLeftPosition(backButton.getRight() + 10,
-                                  getHeight() - stopButton.getHeight());
-    playButton.setSize(width - 10, 20);
-    playButton.setTopLeftPosition(stopButton.getRight() + 10,
-                                  getHeight() - playButton.getHeight());
-    skipButton.setSize(20, 20);
-    skipButton.setTopLeftPosition(playButton.getRight() + 10,
-                                  getHeight() - skipButton.getHeight());
-    volumeSlider.setSize(width, 20);
-    volumeSlider.setTopLeftPosition(skipButton.getRight() + 10,
+    resizeButtons();
+    volumeSlider.setSize(getWidth() - (buttons.back()->getRight() - 10), 20);
+    volumeSlider.setTopLeftPosition(buttons.back()->getRight() + 10,
                                     getHeight() - volumeSlider.getHeight());
     auto font = currentTrackInfo.getFont();
     int displayHeight = static_cast<int>(font.getHeight() * getDisplayLineCount());
@@ -246,4 +247,12 @@ void TransportComponent::ElapsedTime::update() {
 void TransportComponent::ElapsedTime::paint(juce::Graphics& g) {
     g.setColour(juce::Colours::black);
     g.fillAll();
+}
+
+void TransportComponent::orderButtons() {
+    buttons.clear();
+    buttons.push_back(&backButton);
+    buttons.push_back(&stopButton);
+    buttons.push_back(&playButton);
+    buttons.push_back(&skipButton);
 }
