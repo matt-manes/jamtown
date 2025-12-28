@@ -14,13 +14,13 @@ void PlayQueueView::configureHeaders() {
                                 juce::Colours::aquamarine);
     table.setHeaderHeight(24);
     table.getHeader().addColumn(
-        "Title", 1, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+        "Title", 1, 100, 10, -1, juce::TableHeaderComponent::notSortable);
     table.getHeader().addColumn(
-        "Album", 2, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+        "Album", 2, 100, 10, -1, juce::TableHeaderComponent::notSortable);
     table.getHeader().addColumn(
-        "Artist", 3, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+        "Artist", 3, 100, 10, -1, juce::TableHeaderComponent::notSortable);
     table.getHeader().addColumn(
-        "Length", 4, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+        "Length", 4, 100, 10, -1, juce::TableHeaderComponent::notSortable);
 }
 
 // TODO abstract to a "trackListingView" base class inheriting from `BrowserView`
