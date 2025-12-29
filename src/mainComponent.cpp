@@ -1,4 +1,5 @@
 #include "mainComponent.h"
+#include <algorithm>
 
 MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
@@ -109,10 +110,7 @@ void MainComponent::handleLoadSelectedMessage() {
 }
 
 void MainComponent::handleQueueMessage() {
-    for (auto i : browser.getSelectedTracks()) {
-        playQueue.addTrack(i);
-    }
-    // playQueue.addTrack(browser.getSelectedTrack());
+    playQueue.addTracks(browser.getSelectedTracks());
     //  If nothing is playing, play track added to queue
     if (!transport.hasActiveTrack())
         playTrack(playQueue.getNextTrack());
@@ -133,6 +131,16 @@ void MainComponent::handleNextTrackMessage() { playNextTrack(); }
 
 void MainComponent::handleRestartTrackMessage() { transport.setPosition(0.0); }
 
+void MainComponent::handlePlayAlbumMessage() {
+    auto tracks = library.getAlbum(browser.getAlbumToPlay());
+    overwritePlayQueue(tracks, "Title");
+}
+
+void MainComponent::handlePlayArtistMessage() {
+    auto tracks = library.getTracks(browser.getArtistToPlay());
+    overwritePlayQueue(tracks, "Album");
+}
+
 void MainComponent::configureActionHandlers() {
     actionHandlers.emplace(ActionMessages::loadSelectedTracks,
                            [this] { handleLoadSelectedMessage(); });
@@ -150,9 +158,24 @@ void MainComponent::configureActionHandlers() {
                            [this] { handleNextTrackMessage(); });
     actionHandlers.emplace(ActionMessages::restartTrack,
                            [this] { handleRestartTrackMessage(); });
+    actionHandlers.emplace(ActionMessages::playAlbum,
+                           [this] { handlePlayAlbumMessage(); });
+    actionHandlers.emplace(ActionMessages::playArtist,
+                           [this] { handlePlayArtistMessage(); });
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {
     if (actionHandlers.contains(message))
         actionHandlers[message]();
+}
+
+void MainComponent::overwritePlayQueue(std::vector<TrackInfo> tracks,
+                                       std::string sortAttribute) {
+    playQueue.clear();
+    if (!sortAttribute.empty()) {
+        TrackSorter::sort(tracks, sortAttribute, true);
+    }
+    playQueue.addTracks(tracks);
+    playTrack(playQueue.getNextTrack());
+    sendActionMessage(ActionMessages::playQueueUpdated);
 }

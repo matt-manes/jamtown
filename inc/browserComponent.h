@@ -65,6 +65,9 @@ public:
 
     void setCurrentlyPlayingTrack(TrackInfo track);
 
+    std::string getAlbumToPlay();
+    std::string getArtistToPlay();
+
 private:
     Library* library;
     PlayQueue* playQueue;

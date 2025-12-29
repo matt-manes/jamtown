@@ -123,3 +123,10 @@ class TrackComparatorFactory {
 public:
     static TrackInfoComparator* getTrackComparator(std::string attribute, bool forwards);
 };
+
+class TrackSorter {
+public:
+    static void sort(std::vector<TrackInfo>& tracks,
+                     std::string attribute,
+                     bool forwards);
+};

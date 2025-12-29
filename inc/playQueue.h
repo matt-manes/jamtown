@@ -10,6 +10,8 @@ public:
 
     void addTrack(TrackInfo track);
 
+    void addTracks(std::vector<TrackInfo> tracks);
+
     TrackInfo getNextTrack();
 
     bool empty();

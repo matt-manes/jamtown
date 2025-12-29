@@ -1,6 +1,7 @@
 #include "trackInfo.h"
 #include <juce_core/juce_core.h>
 #include <string>
+#include <algorithm>
 #include "timeFormatter.h"
 
 std::string TrackInfo::toString() const {
@@ -76,4 +77,15 @@ TrackInfoComparator* TrackComparatorFactory::getTrackComparator(std::string attr
         return new LengthComparator(forwards);
     // Default to artist in case I add a column and forget to make a sorter
     return new ArtistComparator(forwards);
+}
+// ===============================================================================================
+void TrackSorter::sort(std::vector<TrackInfo>& tracks,
+                       std::string attribute,
+                       bool forwards) {
+    auto comparator = TrackComparatorFactory::getTrackComparator(attribute, forwards);
+    std::sort(
+        tracks.begin(), tracks.end(), [comparator](TrackInfo first, TrackInfo second) {
+            return comparator->goesBefore(first, second);
+        });
+    delete comparator;
 }

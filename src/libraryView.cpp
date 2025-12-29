@@ -40,6 +40,8 @@ void LibraryView::cellClicked(int rowNumber,
         menu.addItem(1, "Play");
         menu.addItem(2, "Add to queue");
         menu.addItem(3, "Add to playlist", false);
+        menu.addItem(4, "Play album");
+        menu.addItem(5, "Play artist");
         menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
             switch (result) {
             case 1:
@@ -47,6 +49,14 @@ void LibraryView::cellClicked(int rowNumber,
                 break;
             case 2:
                 sendActionMessage(ActionMessages::queueTrack);
+                break;
+            case 4:
+                albumToPlay = getTrack(rowNumber).getAlbum();
+                sendActionMessage(ActionMessages::playAlbum);
+                break;
+            case 5:
+                artistToPlay = getTrack(rowNumber).getArtist();
+                sendActionMessage(ActionMessages::playArtist);
                 break;
             // TODO implement other options
             default:
@@ -100,3 +110,6 @@ void LibraryView::paintRowBackground(
     }
     BrowserView::paintRowBackground(g, rowNumber, width, height, rowIsSelected);
 }
+
+std::string LibraryView::getAlbumToPlay() { return albumToPlay; }
+std::string LibraryView::getArtistToPlay() { return artistToPlay; }

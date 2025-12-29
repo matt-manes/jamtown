@@ -64,9 +64,12 @@ private:
     void handleViewPlayQueueMessage();
     void handleNextTrackMessage();
     void handleRestartTrackMessage();
+    void handlePlayAlbumMessage();
+    void handlePlayArtistMessage();
     void configureActionHandlers();
     // =================================
     void playNextTrack();
+    void overwritePlayQueue(std::vector<TrackInfo> tracks, std::string sortAttribute);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

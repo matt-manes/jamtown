@@ -61,3 +61,6 @@ void BrowserComponent::setPlayQueue(PlayQueue* newQueue) {
 void BrowserComponent::setCurrentlyPlayingTrack(TrackInfo track) {
     libraryView->setCurrentlyPlayingTrack(track);
 }
+
+std::string BrowserComponent::getAlbumToPlay() { return libraryView->getAlbumToPlay(); }
+std::string BrowserComponent::getArtistToPlay() { return libraryView->getArtistToPlay(); }

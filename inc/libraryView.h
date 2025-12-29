@@ -44,6 +44,11 @@ public:
                             int height,
                             bool rowIsSelected) override;
 
+    std::string getAlbumToPlay();
+    std::string getArtistToPlay();
+
 private:
     TrackInfo currentlyPlayingTrack;
+    std::string albumToPlay;
+    std::string artistToPlay;
 };
