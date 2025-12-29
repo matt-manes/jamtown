@@ -109,7 +109,7 @@ void TransportComponent::resizeButtons() {
 void TransportComponent::resized() {
     // TODO read these values from a file on start up
     resizeButtons();
-    volumeSlider.setSize(getWidth() - (buttons.back()->getRight() - 10), 20);
+    volumeSlider.setSize(static_cast<int>(getWidth() * 0.25), 20);
     volumeSlider.setTopLeftPosition(buttons.back()->getRight() + 10,
                                     getHeight() - volumeSlider.getHeight());
     auto font = currentTrackInfo.getFont();
