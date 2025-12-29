@@ -81,14 +81,10 @@ TrackInfo LibraryView::getNextTrack(TrackInfo currentTrack) {
 }
 
 void LibraryView::sortOrderChanged(int newSortColumnId, bool isForwards) {
-    TrackInfoComparator* sorter = TrackComparatorFactory::getTrackComparator(
-        table.getHeader().getColumnName(newSortColumnId).toStdString(), isForwards);
-    std::sort(
-        tracklist.begin(), tracklist.end(), [sorter](TrackInfo first, TrackInfo second) {
-            return sorter->goesBefore(first, second);
-        });
+    TrackSorter::sort(tracklist,
+                      table.getHeader().getColumnName(newSortColumnId).toStdString(),
+                      isForwards);
     table.updateContent();
-    delete sorter;
 }
 
 void LibraryView::setTracklist(std::vector<TrackInfo> tracks) {
