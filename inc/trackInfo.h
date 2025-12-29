@@ -65,3 +65,61 @@ private:
     juce::File path;
     juce::StringPairArray metadata;
 };
+
+class TrackInfoComparator {
+public:
+    TrackInfoComparator(bool forwards);
+    virtual ~TrackInfoComparator() = default;
+
+    virtual int compare(TrackInfo first, TrackInfo second) const = 0;
+    bool goesBefore(TrackInfo first, TrackInfo second);
+    void setDirection(bool forwards);
+
+protected:
+    int direction;
+};
+
+class TitleComparator : public TrackInfoComparator {
+public:
+    using TrackInfoComparator::TrackInfoComparator;
+    ~TitleComparator() = default;
+
+    int compare(TrackInfo first, TrackInfo second) const override;
+};
+
+class AlbumComparator : public TrackInfoComparator {
+public:
+    AlbumComparator(bool forwards);
+    ~AlbumComparator() = default;
+
+    int compare(TrackInfo first, TrackInfo second) const override;
+
+    void setTrackComparatorDirection(bool forwards);
+
+private:
+    TitleComparator titleComparator;
+};
+
+class ArtistComparator : public TrackInfoComparator {
+public:
+    ArtistComparator(bool forwards);
+    ~ArtistComparator() = default;
+
+    int compare(TrackInfo first, TrackInfo second) const override;
+
+private:
+    AlbumComparator albumComparator;
+};
+
+class LengthComparator : public TrackInfoComparator {
+public:
+    using TrackInfoComparator::TrackInfoComparator;
+    ~LengthComparator() = default;
+
+    int compare(TrackInfo first, TrackInfo second) const override;
+};
+
+class TrackComparatorFactory {
+public:
+    static TrackInfoComparator* getTrackComparator(std::string attribute, bool forwards);
+};

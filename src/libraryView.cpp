@@ -1,6 +1,8 @@
 #include "libraryView.h"
 #include "actionMessages.h"
 #include <stdexcept>
+#include <algorithm>
+
 void LibraryView::configureHeaders() {
     addAndMakeVisible(table);
     table.getHeader().setStretchToFitActive(true);
@@ -18,6 +20,8 @@ void LibraryView::configureHeaders() {
     table.getHeader().addColumn(
         "Length", 4, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
     table.setMultipleSelectionEnabled(true);
+    // Default to Artist
+    table.getHeader().setSortColumnId(3, true);
 }
 
 void LibraryView::cellDoubleClicked(int rowNumber,
@@ -58,7 +62,6 @@ TrackInfo LibraryView::getNextTrack(TrackInfo currentTrack) {
     // Not sure if the table column sorting will change
     // the underlying tracklist order, so may need to
     // update manually when table sorting changes
-
     // TODO improve big O by keeping like a trackname to index mapping or w/e
     if (tracklist.back().getPath() == currentTrack.getPath())
         return tracklist[0];
@@ -68,4 +71,20 @@ TrackInfo LibraryView::getNextTrack(TrackInfo currentTrack) {
     }
     throw std::invalid_argument(std::format("Could not find {} in LibraryView tracklist.",
                                             currentTrack.toString()));
+}
+
+void LibraryView::sortOrderChanged(int newSortColumnId, bool isForwards) {
+    TrackInfoComparator* sorter = TrackComparatorFactory::getTrackComparator(
+        table.getHeader().getColumnName(newSortColumnId).toStdString(), isForwards);
+    std::sort(
+        tracklist.begin(), tracklist.end(), [sorter](TrackInfo first, TrackInfo second) {
+            return sorter->goesBefore(first, second);
+        });
+    table.updateContent();
+    delete sorter;
+}
+
+void LibraryView::setTracklist(std::vector<TrackInfo> tracks) {
+    BrowserView::setTracklist(tracks);
+    table.getHeader().reSortTable();
 }

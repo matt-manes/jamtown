@@ -31,4 +31,8 @@ public:
                      const juce::MouseEvent& mouseEvent) override;
 
     TrackInfo getNextTrack(TrackInfo currentTrack);
+
+    void sortOrderChanged(int newSortColumnId, bool isForwards) override;
+
+    void setTracklist(std::vector<TrackInfo> tracks) override;
 };
