@@ -35,4 +35,15 @@ public:
     void sortOrderChanged(int newSortColumnId, bool isForwards) override;
 
     void setTracklist(std::vector<TrackInfo> tracks) override;
+
+    void setCurrentlyPlayingTrack(TrackInfo track);
+
+    void paintRowBackground(juce::Graphics& g,
+                            int rowNumber,
+                            int width,
+                            int height,
+                            bool rowIsSelected) override;
+
+private:
+    TrackInfo currentlyPlayingTrack;
 };

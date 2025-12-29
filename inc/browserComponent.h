@@ -63,6 +63,8 @@ public:
 
     TrackInfo getNextLibraryTrack(TrackInfo currentTrack);
 
+    void setCurrentlyPlayingTrack(TrackInfo track);
+
 private:
     Library* library;
     PlayQueue* playQueue;

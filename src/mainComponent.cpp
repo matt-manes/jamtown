@@ -3,7 +3,6 @@
 MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
     configureElements();
-    setSize(666, 666);
 }
 
 void MainComponent::configureTransport() {
@@ -42,6 +41,7 @@ void MainComponent::paint(juce::Graphics& g) {
 void MainComponent::playTrack(TrackInfo track) {
     transport.loadTrack(track);
     transport.start();
+    browser.setCurrentlyPlayingTrack(track);
 }
 
 void MainComponent::resizeTopBar() {

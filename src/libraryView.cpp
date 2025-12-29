@@ -59,9 +59,6 @@ void LibraryView::cellClicked(int rowNumber,
 TrackInfo LibraryView::getNextTrack(TrackInfo currentTrack) {
     // Doing this here so that the next track depends on
     // the current sort order of the table.
-    // Not sure if the table column sorting will change
-    // the underlying tracklist order, so may need to
-    // update manually when table sorting changes
     // TODO improve big O by keeping like a trackname to index mapping or w/e
     if (tracklist.back().getPath() == currentTrack.getPath())
         return tracklist[0];
@@ -87,4 +84,19 @@ void LibraryView::sortOrderChanged(int newSortColumnId, bool isForwards) {
 void LibraryView::setTracklist(std::vector<TrackInfo> tracks) {
     BrowserView::setTracklist(tracks);
     table.getHeader().reSortTable();
+}
+
+void LibraryView::setCurrentlyPlayingTrack(TrackInfo track) {
+    currentlyPlayingTrack = track;
+    repaint();
+}
+
+void LibraryView::paintRowBackground(
+    juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) {
+    TrackInfo track = getTrack(rowNumber);
+    if (track.getPath() == currentlyPlayingTrack.getPath()) {
+        g.fillAll(juce::Colours::turquoise);
+        return;
+    }
+    BrowserView::paintRowBackground(g, rowNumber, width, height, rowIsSelected);
 }

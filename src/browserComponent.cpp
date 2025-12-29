@@ -57,3 +57,7 @@ void BrowserComponent::setPlayQueue(PlayQueue* newQueue) {
     playQueue = newQueue;
     playQueueView->setTracklist(playQueue->getTrackList());
 }
+
+void BrowserComponent::setCurrentlyPlayingTrack(TrackInfo track) {
+    libraryView->setCurrentlyPlayingTrack(track);
+}
