@@ -45,6 +45,13 @@ public:
     std::string getAlbum() { return album; }
     std::string getTitle() { return title; }
     juce::File getPath() { return path; }
+    juce::StringPairArray getMetadata() { return metadata; }
+
+    void setArtist(std::string artist) { this->artist = artist; }
+    void setAlbum(std::string album) { this->album = album; }
+    void setTitle(std::string title) { this->title = title; }
+    void setPath(juce::File path) { this->path = path; }
+    void setLength(double length) { this->lengthInSeconds = length; }
 
     /**
      * @brief Track length in seconds.

@@ -7,6 +7,18 @@
 #include "trackInfo.h"
 #include "library.h"
 
+/* Temp quick and dirty library persistence.*/
+class LibWriter {
+public:
+    static void write(std::vector<TrackInfo> tracks);
+    static std::string prepareTrackInfo(TrackInfo track);
+};
+
+class LibReader {
+public:
+    static std::vector<TrackInfo> read();
+};
+
 /**
  * @brief In memory implementation of `Library` interface.
  *
@@ -26,6 +38,8 @@ public:
 
 private:
     std::unordered_map<std::string, TrackInfo> titleToTrackMap;
+    std::unordered_set<std::string> filepaths;
+    std::vector<TrackInfo> tracks;
     std::unordered_map<std::string, std::unordered_set<std::string>> albumToTrackTitleMap;
     std::unordered_map<std::string, std::unordered_set<std::string>> artistToAlbumMap;
 };

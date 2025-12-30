@@ -4,6 +4,9 @@
 MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
     configureElements();
+    auto tracks = LibReader::read();
+    library.addTracks(tracks);
+    sendActionMessage(ActionMessages::libraryUpdated);
 }
 
 void MainComponent::configureTransport() {
@@ -72,6 +75,7 @@ void MainComponent::handleTracksAdded() {
     auto files = topBar.getTrackAdderFiles();
     auto tracks = fileProcessor.processFiles(files);
     library.addTracks(tracks);
+    LibWriter::write(library.getAllTracks());
     sendActionMessage(ActionMessages::libraryUpdated);
 }
 
