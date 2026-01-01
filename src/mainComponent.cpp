@@ -136,12 +136,13 @@ void MainComponent::handleNextTrackMessage() { playNextTrack(); }
 void MainComponent::handleRestartTrackMessage() { transport.setPosition(0.0); }
 
 void MainComponent::handlePlayAlbumMessage() {
-    auto tracks = library.getAlbum(browser.getAlbumToPlay());
+    auto selection = browser.getAlbumToPlay();
+    auto tracks = library.getAlbumTracks(selection.first, selection.second);
     overwritePlayQueue(tracks, "Title");
 }
 
 void MainComponent::handlePlayArtistMessage() {
-    auto tracks = library.getTracks(browser.getArtistToPlay());
+    auto tracks = library.getArtistTracks(browser.getArtistToPlay());
     overwritePlayQueue(tracks, "Album");
 }
 

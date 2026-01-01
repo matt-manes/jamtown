@@ -20,11 +20,18 @@ public:
     virtual std::unordered_map<std::string, std::vector<TrackInfo>> getAlbums(
         std::string artist) = 0;
 
-    virtual std::vector<TrackInfo> getAlbum(std::string album) = 0;
+    virtual std::vector<TrackInfo> getAlbumTracks(std::string album,
+                                                  std::string artist) = 0;
 
-    virtual std::vector<TrackInfo> getTracks(std::string artist);
+    virtual std::vector<TrackInfo> getArtistTracks(std::string artist);
 
-    virtual TrackInfo getTrack(std::string title) = 0;
+    virtual TrackInfo getTrack(std::string title,
+                               std::string album,
+                               std::string artist) = 0;
 
     virtual std::vector<TrackInfo> getAllTracks() = 0;
+
+    virtual void removeTrack(std::string title,
+                             std::string album,
+                             std::string artist) = 0;
 };

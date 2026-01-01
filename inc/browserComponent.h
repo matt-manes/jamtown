@@ -14,6 +14,7 @@
 #include "actionMessages.h"
 #include "libraryView.h"
 #include "playQueueView.h"
+#include <utility>
 
 enum View { LIBRARY, PLAYQUEUE };
 
@@ -65,7 +66,7 @@ public:
 
     void setCurrentlyPlayingTrack(TrackInfo track);
 
-    std::string getAlbumToPlay();
+    std::pair<std::string, std::string> getAlbumToPlay();
     std::string getArtistToPlay();
 
 private:

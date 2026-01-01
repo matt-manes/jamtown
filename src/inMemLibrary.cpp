@@ -74,42 +74,52 @@ std::vector<TrackInfo> LibReader::read() {
 }
 
 void InMemLibrary::addTrack(TrackInfo track) {
-    // This is broken for tracks with the same title
-    // titleToTrackMap[track.getTitle()] = track;
     if (filepaths.contains(track.getPath().getFullPathName().toStdString()))
         return;
     filepaths.insert(track.getPath().getFullPathName().toStdString());
     tracks.push_back(track);
-    albumToTrackTitleMap[track.getAlbum()].insert(track.getTitle());
-    artistToAlbumMap[track.getArtist()].insert(track.getAlbum());
+    db[track.getArtist()][track.getAlbum()].push_back(track);
 }
 
 std::unordered_map<std::string, std::vector<TrackInfo>> InMemLibrary::getAlbums(
     std::string artist) {
-    auto albumTitles = artistToAlbumMap[artist];
-    std::unordered_map<std::string, std::vector<TrackInfo>> albums;
-    for (auto album : albumTitles) {
-        albums[album] = getAlbum(album);
-    }
-    return albums;
+    if (db.contains(artist))
+        return db[artist];
+    return std::unordered_map<std::string, std::vector<TrackInfo>>{};
 }
 
-std::vector<TrackInfo> InMemLibrary::getAlbum(std::string album) {
-    auto titles = albumToTrackTitleMap[album];
-    std::vector<TrackInfo> tracks;
-    for (auto title : titles) {
-        tracks.push_back(getTrack(title));
-    }
-    return tracks;
+std::vector<TrackInfo> InMemLibrary::getAlbumTracks(std::string album,
+                                                    std::string artist) {
+    if (db.contains(artist) && db[artist].contains(album))
+        return db[artist][album];
+    return std::vector<TrackInfo>{};
 }
 
-TrackInfo InMemLibrary::getTrack(std::string title) { return titleToTrackMap[title]; }
+TrackInfo InMemLibrary::getTrack(std::string title,
+                                 std::string album,
+                                 std::string artist) {
+    // Not ideal way to do look up time-complexity wise
+    // but the number of tracks in an album is generally small
+    auto tracks = getAlbumTracks(album, artist);
+    for (auto track : tracks) {
+        if (track.getTitle() == title) {
+            return track;
+        }
+    }
+    return TrackInfo{};
+}
 
-std::vector<TrackInfo> InMemLibrary::getAllTracks() {
-    return tracks;
-    // std::vector<TrackInfo> tracks;
-    // for (auto i = titleToTrackMap.cbegin(); i != titleToTrackMap.cend(); ++i) {
-    //     tracks.push_back(i->second);
-    // }
-    // return tracks;
+std::vector<TrackInfo> InMemLibrary::getAllTracks() { return tracks; }
+
+void InMemLibrary::removeTrack(std::string title, std::string album, std::string artist) {
+    TrackInfo track = getTrack(title, album, artist);
+    if (track.getTitle() == title) {
+        filepaths.erase(track.getPath().getFullPathName().toStdString());
+        std::erase_if(db[artist][album], [track](TrackInfo t) { return t == track; });
+        std::erase_if(tracks, [track](TrackInfo t) { return t == track; });
+        if (db[artist][album].empty())
+            db[artist].erase(album);
+        if (db[artist].empty())
+            db.erase(artist);
+    }
 }

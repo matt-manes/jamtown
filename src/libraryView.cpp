@@ -52,6 +52,7 @@ void LibraryView::cellClicked(int rowNumber,
                 break;
             case 4:
                 albumToPlay = getTrack(rowNumber).getAlbum();
+                artistToPlay = getTrack(rowNumber).getArtist();
                 sendActionMessage(ActionMessages::playAlbum);
                 break;
             case 5:
@@ -107,5 +108,7 @@ void LibraryView::paintRowBackground(
     BrowserView::paintRowBackground(g, rowNumber, width, height, rowIsSelected);
 }
 
-std::string LibraryView::getAlbumToPlay() { return albumToPlay; }
+std::pair<std::string, std::string> LibraryView::getAlbumToPlay() {
+    return std::pair<std::string, std::string>{albumToPlay, artistToPlay};
+}
 std::string LibraryView::getArtistToPlay() { return artistToPlay; }

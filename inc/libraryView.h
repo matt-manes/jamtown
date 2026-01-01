@@ -10,6 +10,7 @@
 #include "trackInfo.h"
 #include "playQueue.h"
 #include "browserView.h"
+#include <utility>
 
 /**
  * @brief BrowserView implementation for track library.
@@ -44,7 +45,7 @@ public:
                             int height,
                             bool rowIsSelected) override;
 
-    std::string getAlbumToPlay();
+    std::pair<std::string, std::string> getAlbumToPlay();
     std::string getArtistToPlay();
 
 private:

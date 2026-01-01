@@ -47,11 +47,11 @@ public:
     juce::File getPath() { return path; }
     juce::StringPairArray getMetadata() { return metadata; }
 
-    void setArtist(std::string artist) { this->artist = artist; }
-    void setAlbum(std::string album) { this->album = album; }
-    void setTitle(std::string title) { this->title = title; }
-    void setPath(juce::File path) { this->path = path; }
-    void setLength(double length) { this->lengthInSeconds = length; }
+    void setArtist(std::string newArtist) { artist = newArtist; }
+    void setAlbum(std::string newAlbum) { album = newAlbum; }
+    void setTitle(std::string newTitle) { title = newTitle; }
+    void setPath(juce::File newPath) { path = newPath; }
+    void setLength(double newLength) { lengthInSeconds = newLength; }
 
     /**
      * @brief Track length in seconds.

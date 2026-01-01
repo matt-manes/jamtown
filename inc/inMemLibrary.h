@@ -30,16 +30,18 @@ public:
     std::unordered_map<std::string, std::vector<TrackInfo>> getAlbums(
         std::string artist) override;
 
-    std::vector<TrackInfo> getAlbum(std::string album) override;
+    std::vector<TrackInfo> getAlbumTracks(std::string album, std::string artist) override;
 
-    TrackInfo getTrack(std::string title) override;
+    TrackInfo getTrack(std::string title, std::string album, std::string artist) override;
 
     std::vector<TrackInfo> getAllTracks() override;
 
+    void removeTrack(std::string title, std::string album, std::string artist) override;
+
 private:
-    std::unordered_map<std::string, TrackInfo> titleToTrackMap;
     std::unordered_set<std::string> filepaths;
     std::vector<TrackInfo> tracks;
-    std::unordered_map<std::string, std::unordered_set<std::string>> albumToTrackTitleMap;
-    std::unordered_map<std::string, std::unordered_set<std::string>> artistToAlbumMap;
+    std::unordered_map<std::string,
+                       std::unordered_map<std::string, std::vector<TrackInfo>>>
+        db;
 };
