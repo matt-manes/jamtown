@@ -66,6 +66,8 @@ private:
     void handleRestartTrackMessage();
     void handlePlayAlbumMessage();
     void handlePlayArtistMessage();
+    void handleRemoveFromLibraryMessage();
+    void handleDeleteFromHarddriveMessage();
     void configureActionHandlers();
     // =================================
     void playNextTrack();

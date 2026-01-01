@@ -14,3 +14,12 @@ void Library::addTracks(std::vector<TrackInfo> tracks) {
         addTrack(track);
     }
 }
+
+void Library::removeTrack(TrackInfo track) {
+    removeTrack(track.getTitle(), track.getAlbum(), track.getArtist());
+}
+
+void Library::removeTracks(std::vector<TrackInfo> tracks) {
+    for (auto track : tracks)
+        removeTrack(track);
+}

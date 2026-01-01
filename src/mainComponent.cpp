@@ -146,6 +146,22 @@ void MainComponent::handlePlayArtistMessage() {
     overwritePlayQueue(tracks, "Album");
 }
 
+void MainComponent::handleRemoveFromLibraryMessage() {
+    auto tracks = browser.getSelectedTracks();
+    library.removeTracks(tracks);
+    LibWriter::write(library.getAllTracks());
+    sendActionMessage(ActionMessages::libraryUpdated);
+    // TODO update playqueue if it contains removed tracks
+}
+
+void MainComponent::handleDeleteFromHarddriveMessage() {
+    auto tracks = browser.getSelectedTracks();
+    for (auto track : tracks) {
+        track.getPath().deleteFile();
+    }
+    handleRemoveFromLibraryMessage();
+}
+
 void MainComponent::configureActionHandlers() {
     actionHandlers.emplace(ActionMessages::loadSelectedTracks,
                            [this] { handleLoadSelectedMessage(); });
@@ -167,6 +183,10 @@ void MainComponent::configureActionHandlers() {
                            [this] { handlePlayAlbumMessage(); });
     actionHandlers.emplace(ActionMessages::playArtist,
                            [this] { handlePlayArtistMessage(); });
+    actionHandlers.emplace(ActionMessages::removeTracksFromLibrary,
+                           [this] { handleRemoveFromLibraryMessage(); });
+    actionHandlers.emplace(ActionMessages::deleteTracksFromHarddrive,
+                           [this] { handleDeleteFromHarddriveMessage(); });
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {

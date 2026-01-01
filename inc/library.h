@@ -34,4 +34,8 @@ public:
     virtual void removeTrack(std::string title,
                              std::string album,
                              std::string artist) = 0;
+
+    virtual void removeTrack(TrackInfo track);
+
+    virtual void removeTracks(std::vector<TrackInfo> tracks);
 };

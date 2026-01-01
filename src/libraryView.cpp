@@ -42,6 +42,8 @@ void LibraryView::cellClicked(int rowNumber,
         menu.addItem(3, "Add to playlist", false);
         menu.addItem(4, "Play album");
         menu.addItem(5, "Play artist");
+        menu.addItem(6, "Remove from library");
+        menu.addItem(7, "Delete from harddrive");
         menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
             switch (result) {
             case 1:
@@ -58,6 +60,23 @@ void LibraryView::cellClicked(int rowNumber,
             case 5:
                 artistToPlay = getTrack(rowNumber).getArtist();
                 sendActionMessage(ActionMessages::playArtist);
+                break;
+            case 6:
+                sendActionMessage(ActionMessages::removeTracksFromLibrary);
+                break;
+            case 7:
+                juce::AlertWindow::showOkCancelBox(
+                    juce::MessageBoxIconType::WarningIcon,
+                    "Confirm Delete",
+                    "This will delete the track from your system permanently. "
+                    "Continue?",
+                    "",
+                    "",
+                    nullptr,
+                    juce::ModalCallbackFunction::create([this](int result) {
+                        if (result)
+                            sendActionMessage(ActionMessages::deleteTracksFromHarddrive);
+                    }));
                 break;
             // TODO implement other options
             default:

@@ -22,4 +22,8 @@ public:
     inline static const juce::String filesForLibrary = "FILES FOR LIBRARY";
     inline static const juce::String viewLibrary = "VIEW LIBRARY";
     inline static const juce::String viewPlayQueue = "VIEW PLAYQUEUE";
+    inline static const juce::String removeTracksFromLibrary =
+        "REMOVE TRACKS FROM LIBRARY";
+    inline static const juce::String deleteTracksFromHarddrive =
+        "DELETE TRACKS FROM HARDDRIVE";
 };
