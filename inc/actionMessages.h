@@ -8,22 +8,20 @@
  */
 class ActionMessages {
 public:
-    inline static const juce::String loadSelectedTracks = "LOAD SELECTED TRACKS";
-    inline static const juce::String playTrack = "PLAY TRACK";
-    inline static const juce::String queueTrack = "QUEUE TRACK";
-    inline static const juce::String pauseTrack = "PAUSE TRACK";
-    inline static const juce::String stopTrack = "STOP TRACK";
-    inline static const juce::String nextTrack = "NEXT TRACK";
-    inline static const juce::String restartTrack = "RESTART TRACK";
-    inline static const juce::String playAlbum = "PLAY ALBUM";
-    inline static const juce::String playArtist = "PLAY ARTIST";
-    inline static const juce::String libraryUpdated = "LIBRARY UPDATED";
-    inline static const juce::String playQueueUpdated = "PLAY QUEUE UPDATED";
-    inline static const juce::String filesForLibrary = "FILES FOR LIBRARY";
-    inline static const juce::String viewLibrary = "VIEW LIBRARY";
-    inline static const juce::String viewPlayQueue = "VIEW PLAYQUEUE";
-    inline static const juce::String removeTracksFromLibrary =
-        "REMOVE TRACKS FROM LIBRARY";
-    inline static const juce::String deleteTracksFromHarddrive =
-        "DELETE TRACKS FROM HARDDRIVE";
+    inline static const juce::String loadSelectedTracks = "0";
+    inline static const juce::String playTrack = "1";
+    inline static const juce::String queueTrack = "2";
+    inline static const juce::String pauseTrack = "3";
+    inline static const juce::String stopTrack = "4";
+    inline static const juce::String nextTrack = "5";
+    inline static const juce::String restartTrack = "6";
+    inline static const juce::String playAlbum = "7";
+    inline static const juce::String playArtist = "8";
+    inline static const juce::String libraryUpdated = "9";
+    inline static const juce::String playQueueUpdated = "10";
+    inline static const juce::String filesForLibrary = "11";
+    inline static const juce::String viewLibrary = "12";
+    inline static const juce::String viewPlayQueue = "13";
+    inline static const juce::String removeTracksFromLibrary = "14";
+    inline static const juce::String deleteTracksFromHarddrive = "15";
 };
