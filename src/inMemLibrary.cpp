@@ -100,8 +100,8 @@ TrackInfo InMemLibrary::getTrack(std::string title,
                                  std::string artist) {
     // Not ideal way to do look up time-complexity wise
     // but the number of tracks in an album is generally small
-    auto tracks = getAlbumTracks(album, artist);
-    for (auto track : tracks) {
+    auto albumTracks = getAlbumTracks(album, artist);
+    for (auto track : albumTracks) {
         if (track.getTitle() == title) {
             return track;
         }
