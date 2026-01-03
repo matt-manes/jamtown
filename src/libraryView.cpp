@@ -68,7 +68,7 @@ void LibraryView::cellClicked(int rowNumber,
                 juce::AlertWindow::showOkCancelBox(
                     juce::MessageBoxIconType::WarningIcon,
                     "Confirm Delete",
-                    "This will delete the track from your system permanently. "
+                    "This will delete the track from your system permanently."
                     "Continue?",
                     "",
                     "",
