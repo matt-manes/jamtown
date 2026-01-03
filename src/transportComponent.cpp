@@ -4,6 +4,21 @@
 #include "timeFormatter.h"
 #include "actionMessages.h"
 
+ShuffleButton::ShuffleButton() {
+    shuffleOffState.setNextState(&shuffleTrackState);
+    shuffleTrackState.setNextState(&shuffleAlbumState);
+    shuffleAlbumState.setNextState(&shuffleOffState);
+    currentShuffleState = &shuffleOffState;
+    currentShuffleState->applyState();
+}
+
+void ShuffleButtonState::applyState() { button->setButtonText(getText()); }
+
+ShuffleButtonState* ShuffleButtonState::applyAndGetNextState() {
+    next->applyState();
+    return next;
+}
+
 TransportComponent::TransportComponent(Transport* transport)
     : transport(transport), elapsedTime(transport),
       skipButton("ff", 0.0, juce::Colours::turquoise),
@@ -72,6 +87,24 @@ void TransportComponent::configureVolumeSlider() {
                            juce::Colours::hotpink);
 }
 
+void TransportComponent::configureShuffleButton() {
+    shuffleButton.onClick = [this] { shuffleButtonClicked(); };
+    shuffleButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
+    shuffleButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    shuffleButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+    shuffleButton.setName("shuffle");
+}
+
+void TransportComponent::configureRandomAlbumButton() {
+    randomAlbumButton.onClick = [this] { randomAlbumButtonClicked(); };
+    randomAlbumButton.setColour(juce::TextButton::buttonColourId,
+                                juce::Colours::turquoise);
+    randomAlbumButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    randomAlbumButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+    randomAlbumButton.setButtonText("Random album");
+    randomAlbumButton.setName("random album");
+}
+
 void TransportComponent::configureInterface() {
     orderButtons();
     addAndMakeVisible(&playButton);
@@ -94,12 +127,21 @@ void TransportComponent::configureInterface() {
 
     addAndMakeVisible(&volumeSlider);
     configureVolumeSlider();
+
+    addAndMakeVisible(&shuffleButton);
+    configureShuffleButton();
+
+    addAndMakeVisible(&randomAlbumButton);
+    configureRandomAlbumButton();
 }
 
 void TransportComponent::resizeButtons() {
     for (auto i = buttons.begin(); i != buttons.end(); ++i) {
         juce::String name = (*i)->getName();
-        int width = name == "play" || name == "stop" ? 40 : buttonSize.width;
+        int width = name == "play" || name == "stop" || name == "shuffle" ||
+                            name == "random album"
+                        ? 40
+                        : buttonSize.width;
         (*i)->setSize(width, buttonSize.height);
         int topLeft = *i == buttons.front() ? 0 : (*(i - 1))->getRight() + 10;
         (*i)->setTopLeftPosition(topLeft, getHeight() - (*i)->getHeight());
@@ -163,6 +205,15 @@ void TransportComponent::skipButtonClicked() {
 void TransportComponent::backButtonClicked() {
     // TODO send a previous track message if current track playtime is less than 1s
     sendActionMessage(ActionMessages::restartTrack);
+}
+
+void TransportComponent::shuffleButtonClicked() {
+    shuffleButton.nextState();
+    sendActionMessage(ActionMessages::shuffleModeChanged);
+}
+
+void TransportComponent::randomAlbumButtonClicked() {
+    sendActionMessage(ActionMessages::playRandomAlbum);
 }
 
 void TransportComponent::stoppedHandler() {
@@ -255,4 +306,10 @@ void TransportComponent::orderButtons() {
     buttons.push_back(&stopButton);
     buttons.push_back(&playButton);
     buttons.push_back(&skipButton);
+    buttons.push_back(&shuffleButton);
+    buttons.push_back(&randomAlbumButton);
+}
+
+ShuffleMode TransportComponent::getCurrentShuffleMode() {
+    return shuffleButton.getCurrentMode();
 }

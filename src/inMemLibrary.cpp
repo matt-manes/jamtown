@@ -1,5 +1,4 @@
 #include "inMemLibrary.h"
-#include <juce_core/juce_core.h>
 
 void LibWriter::write(std::vector<TrackInfo> tracks) {
     auto dataDir = juce::File::getSpecialLocation(
@@ -81,11 +80,31 @@ void InMemLibrary::addTrack(TrackInfo track) {
     db[track.getArtist()][track.getAlbum()].push_back(track);
 }
 
-std::unordered_map<std::string, std::vector<TrackInfo>> InMemLibrary::getAlbums(
+std::unordered_map<std::string, std::vector<TrackInfo>> InMemLibrary::getAlbumsByArtist(
     std::string artist) {
     if (db.contains(artist))
         return db[artist];
     return std::unordered_map<std::string, std::vector<TrackInfo>>{};
+}
+
+std::vector<std::string> InMemLibrary::getAllAlbumTitles() {
+    std::vector<std::string> titles;
+    // Not using getAllArtistTitles() b/c this will be faster than
+    // copying them all to a vector first.
+    for (auto artist : db) {
+        for (auto album : artist.second) {
+            titles.push_back(album.first);
+        }
+    }
+    return titles;
+}
+
+std::vector<std::string> InMemLibrary::getAllArtistTitles() {
+    std::vector<std::string> artists;
+    for (auto artist : db) {
+        artists.push_back(artist.first);
+    }
+    return artists;
 }
 
 std::vector<TrackInfo> InMemLibrary::getAlbumTracks(std::string album,
@@ -122,4 +141,18 @@ void InMemLibrary::removeTrack(std::string title, std::string album, std::string
         if (db[artist].empty())
             db.erase(artist);
     }
+}
+
+TrackInfo InMemLibrary::getRandomTrack() {
+    return tracks[(random.nextInt64() % tracks.size())];
+}
+
+std::vector<TrackInfo> InMemLibrary::getRandomAlbumTracks() {
+    std::vector<std::vector<TrackInfo>> options;
+    // Collect vectors of album tracks
+    for (auto artist : db) {
+        for (auto album : artist.second)
+            options.push_back(album.second);
+    }
+    return options[(random.nextInt64() % options.size())];
 }

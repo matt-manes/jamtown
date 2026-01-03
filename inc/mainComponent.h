@@ -68,10 +68,14 @@ private:
     void handlePlayArtistMessage();
     void handleRemoveFromLibraryMessage();
     void handleDeleteFromHarddriveMessage();
+    void handleShuffleModeChangedMessage();
+    void handlePlayRandomAlbumMessage();
     void configureActionHandlers();
     // =================================
     void playNextTrack();
     void overwritePlayQueue(std::vector<TrackInfo> tracks, std::string sortAttribute);
+    TrackInfo getRandomTrackToPlay();
+    std::vector<TrackInfo> getRandomAlbumToPlay();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

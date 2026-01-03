@@ -79,12 +79,38 @@ void MainComponent::handleTracksAdded() {
     sendActionMessage(ActionMessages::libraryUpdated);
 }
 
+TrackInfo MainComponent::getRandomTrackToPlay() {
+    if (library.getTrackCount() <= 1)
+        return transport.getCurrentTrack();
+    auto track = library.getRandomTrack();
+    while (track == transport.getCurrentTrack())
+        track = library.getRandomTrack();
+    return track;
+}
+
+std::vector<TrackInfo> MainComponent::getRandomAlbumToPlay() {
+    auto tracks = library.getRandomAlbumTracks();
+    if (library.getAllAlbumTitles().size() <= 1)
+        return tracks;
+    while (tracks[0].getAlbum() == transport.getCurrentTrack().getAlbum() &&
+           tracks[0].getArtist() == transport.getCurrentTrack().getArtist())
+        tracks = library.getRandomAlbumTracks();
+    return tracks;
+}
+
 void MainComponent::playNextTrack() {
     if (!playQueue.empty()) {
         playTrack(playQueue.getNextTrack());
         sendActionMessage(ActionMessages::playQueueUpdated);
     } else {
-        playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
+        auto shuffleMode = transportComponent.getCurrentShuffleMode();
+        if (shuffleMode == ShuffleMode::OFF)
+            playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
+        else if (shuffleMode == ShuffleMode::TRACK)
+            playTrack(getRandomTrackToPlay());
+        else if (shuffleMode == ShuffleMode::ALBUM) {
+            overwritePlayQueue(getRandomAlbumToPlay(), "Title");
+        }
     }
 }
 
@@ -115,9 +141,9 @@ void MainComponent::handleLoadSelectedMessage() {
 
 void MainComponent::handleQueueMessage() {
     playQueue.addTracks(browser.getSelectedTracks());
-    //  If nothing is playing, play track added to queue
+    //  If nothing is playing, load track added to queue
     if (!transport.hasActiveTrack())
-        playTrack(playQueue.getNextTrack());
+        transport.loadTrack(playQueue.getNextTrack());
     sendActionMessage(ActionMessages::playQueueUpdated);
 }
 
@@ -162,6 +188,22 @@ void MainComponent::handleDeleteFromHarddriveMessage() {
     handleRemoveFromLibraryMessage();
 }
 
+void MainComponent::handleShuffleModeChangedMessage() {
+    if (!transport.hasActiveTrack() && playQueue.empty()) {
+        if (transportComponent.getCurrentShuffleMode() == ShuffleMode::TRACK)
+            transport.loadTrack(getRandomTrackToPlay());
+        else if (transportComponent.getCurrentShuffleMode() == ShuffleMode::ALBUM) {
+            overwritePlayQueue(getRandomAlbumToPlay(), "Title");
+            // overwrite playqueue starts playing when called
+            transport.stop();
+        }
+    }
+}
+
+void MainComponent::handlePlayRandomAlbumMessage() {
+    overwritePlayQueue(getRandomAlbumToPlay(), "Title");
+}
+
 void MainComponent::configureActionHandlers() {
     actionHandlers.emplace(ActionMessages::loadSelectedTracks,
                            [this] { handleLoadSelectedMessage(); });
@@ -187,6 +229,10 @@ void MainComponent::configureActionHandlers() {
                            [this] { handleRemoveFromLibraryMessage(); });
     actionHandlers.emplace(ActionMessages::deleteTracksFromHarddrive,
                            [this] { handleDeleteFromHarddriveMessage(); });
+    actionHandlers.emplace(ActionMessages::shuffleModeChanged,
+                           [this] { handleShuffleModeChangedMessage(); });
+    actionHandlers.emplace(ActionMessages::playRandomAlbum,
+                           [this] { handlePlayRandomAlbumMessage(); });
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {

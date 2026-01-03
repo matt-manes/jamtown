@@ -24,4 +24,6 @@ public:
     inline static const juce::String viewPlayQueue = "13";
     inline static const juce::String removeTracksFromLibrary = "14";
     inline static const juce::String deleteTracksFromHarddrive = "15";
+    inline static const juce::String shuffleModeChanged = "16";
+    inline static const juce::String playRandomAlbum = "17";
 };

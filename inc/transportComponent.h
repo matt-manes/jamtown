@@ -10,6 +10,43 @@
 #include "transport.h"
 #include "timeFormatter.h"
 
+enum ShuffleMode { OFF, TRACK, ALBUM };
+
+class ShuffleButtonState {
+public:
+    ShuffleButtonState(juce::TextButton* button, ShuffleMode mode, std::string buttonText)
+        : button(button), mode(mode), text(buttonText) {}
+    ShuffleMode getMode() { return mode; }
+    std::string getText() { return text; }
+    ShuffleButtonState* getNextState() { return next; }
+    ShuffleButtonState* applyAndGetNextState();
+    virtual void applyState();
+    void setNextState(ShuffleButtonState* nextState) { next = nextState; }
+
+private:
+    ShuffleButtonState* next;
+    ShuffleMode mode;
+    std::string text;
+    juce::TextButton* button;
+};
+
+class ShuffleButton : public juce::TextButton {
+public:
+    ShuffleButton();
+
+    void nextState() {
+        currentShuffleState = currentShuffleState->applyAndGetNextState();
+    }
+
+    ShuffleMode getCurrentMode() { return currentShuffleState->getMode(); }
+
+private:
+    ShuffleButtonState shuffleOffState{this, ShuffleMode::OFF, "Shuffle off"};
+    ShuffleButtonState shuffleTrackState{this, ShuffleMode::TRACK, "Shuffle tracks"};
+    ShuffleButtonState shuffleAlbumState{this, ShuffleMode::ALBUM, "Shuffle albums"};
+    ShuffleButtonState* currentShuffleState;
+};
+
 /**
  * @brief The transport UI component.
  *
@@ -46,6 +83,8 @@ public:
 
     void sliderValueChanged(juce::Slider* slider) override;
 
+    ShuffleMode getCurrentShuffleMode();
+
 private:
     /**
      * @brief Update GUI elements.
@@ -69,6 +108,10 @@ private:
     void skipButtonClicked();
 
     void backButtonClicked();
+
+    void shuffleButtonClicked();
+
+    void randomAlbumButtonClicked();
 
     /*
     None of these '*Handler' functions are called directly.
@@ -118,6 +161,8 @@ private:
     void configureVolumeSlider();
     void configureSkipButton();
     void configureBackButton();
+    void configureShuffleButton();
+    void configureRandomAlbumButton();
 
     /**
      * @brief Any UI element setup functions should be called here.
@@ -160,6 +205,8 @@ private:
     juce::TextButton stopButton;
     juce::ArrowButton skipButton;
     juce::ArrowButton backButton;
+    ShuffleButton shuffleButton;
+    juce::TextButton randomAlbumButton;
     juce::Label currentTrackInfo;
     ElapsedTime elapsedTime;
     juce::Slider volumeSlider;

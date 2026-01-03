@@ -17,8 +17,12 @@ public:
 
     virtual void addTracks(std::vector<TrackInfo> tracks);
 
-    virtual std::unordered_map<std::string, std::vector<TrackInfo>> getAlbums(
+    virtual std::unordered_map<std::string, std::vector<TrackInfo>> getAlbumsByArtist(
         std::string artist) = 0;
+
+    virtual std::vector<std::string> getAllAlbumTitles() = 0;
+
+    virtual std::vector<std::string> getAllArtistTitles() = 0;
 
     virtual std::vector<TrackInfo> getAlbumTracks(std::string album,
                                                   std::string artist) = 0;
@@ -38,4 +42,8 @@ public:
     virtual void removeTrack(TrackInfo track);
 
     virtual void removeTracks(std::vector<TrackInfo> tracks);
+
+    virtual TrackInfo getRandomTrack() = 0;
+
+    virtual std::vector<TrackInfo> getRandomAlbumTracks() = 0;
 };

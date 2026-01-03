@@ -41,11 +41,11 @@ public:
     // Temporary
     void setMetadata(juce::StringPairArray data) { metadata = data; }
 
-    std::string getArtist() { return artist; }
-    std::string getAlbum() { return album; }
-    std::string getTitle() { return title; }
-    juce::File getPath() { return path; }
-    juce::StringPairArray getMetadata() { return metadata; }
+    std::string getArtist() const { return artist; }
+    std::string getAlbum() const { return album; }
+    std::string getTitle() const { return title; }
+    juce::File getPath() const { return path; }
+    juce::StringPairArray getMetadata() const { return metadata; }
 
     void setArtist(std::string newArtist) { artist = newArtist; }
     void setAlbum(std::string newAlbum) { album = newAlbum; }
