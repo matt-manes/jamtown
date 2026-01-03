@@ -131,3 +131,14 @@ std::pair<std::string, std::string> LibraryView::getAlbumToPlay() {
     return std::pair<std::string, std::string>{albumToPlay, artistToPlay};
 }
 std::string LibraryView::getArtistToPlay() { return artistToPlay; }
+
+void LibraryView::scrollTrackIntoView(TrackInfo track) {
+    int rowNum = 0;
+    for (int i = 0; i < tracklist.size(); ++i) {
+        if (tracklist[i] == track) {
+            rowNum = i;
+            break;
+        }
+    }
+    table.scrollToEnsureRowIsOnscreen(rowNum);
+}

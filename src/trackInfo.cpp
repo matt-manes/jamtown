@@ -19,6 +19,7 @@ std::string TrackInfo::toString() const {
 std::string TrackInfo::getLengthString() const { return formatSeconds(lengthInSeconds); }
 
 bool TrackInfo::operator==(const TrackInfo& track) { return path == track.path; }
+bool TrackInfo::operator==(TrackInfo& track) { return path == track.path; }
 
 // ===============================================================================================
 TrackInfoComparator::TrackInfoComparator(bool forwards) : direction(forwards ? 1 : -1) {}

@@ -63,6 +63,7 @@ public:
     std::string getLengthString() const;
 
     bool operator==(const TrackInfo& track);
+    bool operator==(TrackInfo& track);
 
 private:
     std::string artist;

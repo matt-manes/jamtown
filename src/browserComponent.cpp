@@ -60,6 +60,7 @@ void BrowserComponent::setPlayQueue(PlayQueue* newQueue) {
 
 void BrowserComponent::setCurrentlyPlayingTrack(TrackInfo track) {
     libraryView->setCurrentlyPlayingTrack(track);
+    libraryView->scrollTrackIntoView(track);
 }
 
 std::pair<std::string, std::string> BrowserComponent::getAlbumToPlay() {

@@ -48,6 +48,8 @@ public:
     std::pair<std::string, std::string> getAlbumToPlay();
     std::string getArtistToPlay();
 
+    void scrollTrackIntoView(TrackInfo track);
+
 private:
     TrackInfo currentlyPlayingTrack;
     std::string albumToPlay;
