@@ -4,7 +4,9 @@ std::vector<TrackInfo> Library::getArtistTracks(std::string artist) {
     auto albums = getAlbumsByArtist(artist);
     std::vector<TrackInfo> tracks;
     for (auto i = albums.begin(); i != albums.end(); ++i) {
-        tracks.append_range(i->second);
+        for (auto track : i->second) {
+            tracks.push_back(track);
+        }
     }
     return tracks;
 }
