@@ -5,7 +5,9 @@ set(CMAKE_C_STANDARD 23)
 find_package(JUCE CONFIG REQUIRED)
 
 juce_add_gui_app(jamtown
-    VERSION 0.0.0)
+    VERSION 0.0.0
+    NEEDS_WEB_BROWSER TRUE
+    NEEDS_CURL TRUE)
 
 target_sources(jamtown
     PRIVATE
@@ -41,4 +43,4 @@ target_link_libraries(jamtown
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags)
 
-target_compile_definitions(jamtown PRIVATE -D_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING=1)
+target_compile_definitions(jamtown PRIVATE -D_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING=1 -DJUCE_USE_MP3AUDIOFORMAT=1)
