@@ -4,7 +4,6 @@
 #include <juce_audio_formats/juce_audio_formats.h>
 #include <vector>
 #include <memory>
-#include <string>
 #include "trackInfo.h"
 
 class FileProcessor {

@@ -1,4 +1,6 @@
 #include "library.h"
+#include <string>
+#include <vector>
 
 std::vector<TrackInfo> Library::getArtistTracks(std::string artist) {
     auto albums = getAlbumsByArtist(artist);

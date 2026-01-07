@@ -1,5 +1,4 @@
 #include "playQueueView.h"
-
 #include "actionMessages.h"
 
 PlayQueueView::PlayQueueView() { configureHeaders(); }
@@ -43,7 +42,7 @@ void PlayQueueView::cellClicked(int rowNumber,
         menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
             switch (result) {
             case 1:
-                // TODO remove selected track from playqueue probably by moving it to the front
+                // TODO adjust playqueue on selection
                 sendActionMessage(ActionMessages::loadSelectedTracks);
                 break;
             // TODO implement other options

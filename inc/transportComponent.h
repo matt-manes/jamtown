@@ -2,8 +2,6 @@
 
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_events/juce_events.h>
-#include <iostream>
-#include <memory>
 #include <vector>
 #include <string>
 #include <unordered_map>

@@ -1,4 +1,6 @@
 #include "fileProcessor.h"
+#include <vector>
+#include <string>
 
 FileProcessor::FileProcessor() { formatManager.registerBasicFormats(); }
 

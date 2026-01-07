@@ -1,4 +1,9 @@
 #include "browserComponent.h"
+#include "actionMessages.h"
+#include <memory>
+#include <vector>
+#include <utility>
+#include <string>
 
 BrowserComponent::BrowserComponent() {
     libraryView = std::make_unique<LibraryView>();
@@ -44,8 +49,10 @@ void BrowserComponent::actionListenerCallback(const juce::String& message) {
         libraryView->setTracklist(library->getAllTracks());
     } else if (message == ActionMessages::playQueueUpdated) {
         playQueueView->setTracklist(playQueue->getTrackList());
-    } else  // propogate action messages sent from view objects
+    } else {
+        // propogate action messages sent from view objects
         sendActionMessage(message);
+    }
 }
 
 void BrowserComponent::setLibrary(Library* newLibrary) {

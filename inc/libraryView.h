@@ -1,14 +1,9 @@
 #pragma once
 
-#include <juce_core/juce_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
-#include <juce_events/juce_events.h>
 #include <vector>
 #include <string>
-#include <memory>
-#include "inMemLibrary.h"
 #include "trackInfo.h"
-#include "playQueue.h"
 #include "browserView.h"
 #include <utility>
 
@@ -46,6 +41,7 @@ public:
                             bool rowIsSelected) override;
 
     std::pair<std::string, std::string> getAlbumToPlay();
+
     std::string getArtistToPlay();
 
     void scrollTrackIntoView(TrackInfo track);

@@ -1,5 +1,8 @@
 #include "mainComponent.h"
+#include "actionMessages.h"
 #include <algorithm>
+#include <vector>
+#include <string>
 
 MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
@@ -108,9 +111,8 @@ void MainComponent::playNextTrack() {
             playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
         else if (shuffleMode == ShuffleMode::TRACK)
             playTrack(getRandomTrackToPlay());
-        else if (shuffleMode == ShuffleMode::ALBUM) {
+        else if (shuffleMode == ShuffleMode::ALBUM)
             overwritePlayQueue(getRandomAlbumToPlay(), "Title");
-        }
     }
 }
 
@@ -190,9 +192,9 @@ void MainComponent::handleDeleteFromHarddriveMessage() {
 
 void MainComponent::handleShuffleModeChangedMessage() {
     if (!transport.hasActiveTrack() && playQueue.empty()) {
-        if (transportComponent.getCurrentShuffleMode() == ShuffleMode::TRACK)
+        if (transportComponent.getCurrentShuffleMode() == ShuffleMode::TRACK) {
             transport.loadTrack(getRandomTrackToPlay());
-        else if (transportComponent.getCurrentShuffleMode() == ShuffleMode::ALBUM) {
+        } else if (transportComponent.getCurrentShuffleMode() == ShuffleMode::ALBUM) {
             overwritePlayQueue(getRandomAlbumToPlay(), "Title");
             // overwrite playqueue starts playing when called
             transport.stop();

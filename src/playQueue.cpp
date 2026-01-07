@@ -1,4 +1,5 @@
 #include "playQueue.h"
+#include <vector>
 
 void PlayQueue::addTrack(TrackInfo track) { queue.push_back(track); }
 

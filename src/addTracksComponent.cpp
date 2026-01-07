@@ -1,4 +1,5 @@
 #include "addTracksComponent.h"
+#include <memory>
 
 AddTracksComponent::AddTracksComponent() : fileScanner("*") {
     addAndMakeVisible(addTracksButton);

@@ -2,6 +2,8 @@
 #include <juce_core/juce_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_events/juce_events.h>
+#include <string>
+#include <vector>
 
 int BrowserView::getNumRows() { return static_cast<int>(tracklist.size()); }
 

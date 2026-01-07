@@ -2,6 +2,8 @@
 #include "actionMessages.h"
 #include <stdexcept>
 #include <algorithm>
+#include <utility>
+#include <string>
 
 void LibraryView::configureHeaders() {
     addAndMakeVisible(table);

@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include "trackInfo.h"
-#include "playQueue.h"
 
 /**
  * @brief Base class for a view that can be displayed by the browser component.

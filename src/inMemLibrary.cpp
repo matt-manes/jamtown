@@ -1,4 +1,7 @@
 #include "inMemLibrary.h"
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 void LibWriter::write(std::vector<TrackInfo> tracks) {
     auto dataDir = juce::File::getSpecialLocation(

@@ -5,7 +5,6 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
-#include <memory>
 #include <unordered_map>
 #include "playQueue.h"
 #include "fileProcessor.h"

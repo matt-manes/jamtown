@@ -6,12 +6,10 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "inMemLibrary.h"
 #include "trackInfo.h"
 #include "playQueue.h"
 #include "browserView.h"
 #include "library.h"
-#include "actionMessages.h"
 #include "libraryView.h"
 #include "playQueueView.h"
 #include <utility>

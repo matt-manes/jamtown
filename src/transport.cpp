@@ -97,11 +97,11 @@ void Transport::setState(TransportState newState) {
 
 void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
     if (source == &transportSource) {
-        if (transportSource.isPlaying())
+        if (transportSource.isPlaying()) {
             setState(TransportState::PLAYING);
-        else if (getState() == TransportState::PAUSING)
+        } else if (getState() == TransportState::PAUSING) {
             setState(TransportState::PAUSED);
-        else {
+        } else {
             setState(TransportState::STOPPED);
             _hasActiveTrack = !trackFinished();
         }

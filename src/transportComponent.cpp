@@ -1,8 +1,9 @@
+#include "transportComponent.h"
 #include <juce_graphics/juce_graphics.h>
 #include <memory>
-#include "transportComponent.h"
 #include "timeFormatter.h"
 #include "actionMessages.h"
+#include <string>
 
 ShuffleButton::ShuffleButton() {
     shuffleOffState.setNextState(&shuffleTrackState);
