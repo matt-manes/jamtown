@@ -16,9 +16,9 @@ void LibraryView::configureHeaders() {
     table.getHeader().addColumn(
         "Title", 1, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
     table.getHeader().addColumn(
-        "Album", 2, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
-    table.getHeader().addColumn(
         "Artist", 3, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
+    table.getHeader().addColumn(
+        "Album", 2, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
     table.getHeader().addColumn(
         "Length", 4, 100, 10, -1, juce::TableHeaderComponent::defaultFlags);
     table.setMultipleSelectionEnabled(true);
