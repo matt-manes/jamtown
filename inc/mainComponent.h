@@ -20,7 +20,11 @@ class MainComponent : public juce::Component,
 public:
     MainComponent();
 
-    ~MainComponent() = default;
+    ~MainComponent() {
+        // Prevent leakage
+        while (loadingLib && !libLoaded)
+            juce::Thread::sleep(1);
+    };
 
     void paint(juce::Graphics& g) override;
 
@@ -32,6 +36,8 @@ public:
 
     void playTrack(TrackInfo track);
 
+    void loadLibrary();
+
 private:
     Transport transport;
     TransportComponent transportComponent;
@@ -41,6 +47,8 @@ private:
     InMemLibrary library;
     PlayQueue playQueue;
     TopBarComponent topBar;
+    std::atomic<bool> libLoaded = false;
+    std::atomic<bool> loadingLib = false;
     std::unordered_map<juce::String, std::function<void()>> actionHandlers;
     // =================================
     void configureTransport();

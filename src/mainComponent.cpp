@@ -7,9 +7,19 @@
 MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
     configureElements();
-    auto tracks = LibReader::read();
-    library.addTracks(tracks);
-    sendActionMessage(ActionMessages::libraryUpdated);
+    loadLibrary();
+}
+
+void MainComponent::loadLibrary() {
+    // Using `loadingLib` and `libLoaded`
+    // to prevent leaks if user exits
+    // while library is being loaded
+    loadingLib = true;
+    juce::Thread::launch([this]() {
+        library.addTracks(LibReader::read());
+        libLoaded = true;
+        sendActionMessage(ActionMessages::libraryUpdated);
+    });
 }
 
 void MainComponent::configureTransport() {
