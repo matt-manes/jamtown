@@ -206,6 +206,12 @@ void MainComponent::handlePlayRandomAlbumMessage() {
     overwritePlayQueue(getRandomAlbumToPlay(), "Title");
 }
 
+void MainComponent::handleRemoveSelectedFromPlayQueueMessage() {
+    auto selectedTracks = browser.getSelectedTracks();
+    playQueue.remove(selectedTracks);
+    sendActionMessage(ActionMessages::playQueueUpdated);
+}
+
 void MainComponent::configureActionHandlers() {
     actionHandlers.emplace(ActionMessages::loadSelectedTracks,
                            [this] { handleLoadSelectedMessage(); });
@@ -235,6 +241,8 @@ void MainComponent::configureActionHandlers() {
                            [this] { handleShuffleModeChangedMessage(); });
     actionHandlers.emplace(ActionMessages::playRandomAlbum,
                            [this] { handlePlayRandomAlbumMessage(); });
+    actionHandlers.emplace(ActionMessages::removeSelectedFromPlayQueue,
+                           [this] { handleRemoveSelectedFromPlayQueueMessage(); });
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {

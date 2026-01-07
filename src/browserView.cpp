@@ -59,6 +59,7 @@ void BrowserView::resized() {
 
 void BrowserView::setTracklist(std::vector<TrackInfo> tracks) {
     tracklist = tracks;
+    table.deselectAllRows();
     table.updateContent();
 }
 
@@ -83,5 +84,3 @@ std::vector<TrackInfo> BrowserView::getSelectedTracks() {
 }
 
 TrackInfo BrowserView::getTrack(int index) { return tracklist[index]; }
-
-void BrowserView::updateTable() { table.updateContent(); }

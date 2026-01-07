@@ -21,4 +21,7 @@ public:
     void cellClicked(int rowNumber,
                      int columnId,
                      const juce::MouseEvent& mouseEvent) override;
+
+private:
+    void showContextMenu(int rowNumber);
 };

@@ -20,6 +20,8 @@ public:
 
     std::vector<TrackInfo> getTrackList();
 
+    void remove(std::vector<TrackInfo> tracks);
+
 private:
     std::deque<TrackInfo> queue;
 };

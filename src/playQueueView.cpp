@@ -20,6 +20,7 @@ void PlayQueueView::configureHeaders() {
         "Artist", 3, 100, 10, -1, juce::TableHeaderComponent::notSortable);
     table.getHeader().addColumn(
         "Length", 4, 100, 10, -1, juce::TableHeaderComponent::notSortable);
+    table.setMultipleSelectionEnabled(true);
 }
 
 // TODO abstract to a "trackListingView" base class inheriting from `BrowserView`
@@ -32,23 +33,22 @@ void PlayQueueView::cellDoubleClicked(int rowNumber,
     }
 }
 
+void PlayQueueView::showContextMenu(int /*rowNumber*/) {
+    juce::PopupMenu menu;
+    menu.addItem("Play", [this]() {
+        // TODO adjust playqueue on selection
+        sendActionMessage(ActionMessages::loadSelectedTracks);
+    });
+    menu.addItem("Remove from queue", [this]() {
+        sendActionMessage(ActionMessages::removeSelectedFromPlayQueue);
+    });
+    menu.showMenuAsync(juce::PopupMenu::Options());
+}
+
 void PlayQueueView::cellClicked(int rowNumber,
                                 int /*columnId*/,
                                 const juce::MouseEvent& mouseEvent) {
     if (mouseEvent.mods.isRightButtonDown() && rowNumber < getNumRows()) {
-        juce::PopupMenu menu;
-        menu.addItem(1, "Play");
-        // menu.addItem(2, "Add to playlist", false);
-        menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
-            switch (result) {
-            case 1:
-                // TODO adjust playqueue on selection
-                sendActionMessage(ActionMessages::loadSelectedTracks);
-                break;
-            // TODO implement other options
-            default:
-                break;
-            }
-        });
+        showContextMenu(rowNumber);
     }
 }

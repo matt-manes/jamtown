@@ -69,6 +69,7 @@ private:
     void handleDeleteFromHarddriveMessage();
     void handleShuffleModeChangedMessage();
     void handlePlayRandomAlbumMessage();
+    void handleRemoveSelectedFromPlayQueueMessage();
     void configureActionHandlers();
     // =================================
     void playNextTrack();
