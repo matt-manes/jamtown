@@ -50,4 +50,6 @@ private:
     TrackInfo currentlyPlayingTrack;
     std::string albumToPlay;
     std::string artistToPlay;
+
+    void showContextMenu(int rowNumber);
 };

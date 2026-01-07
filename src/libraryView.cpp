@@ -34,57 +34,47 @@ void LibraryView::cellDoubleClicked(int rowNumber,
     }
 }
 
+void LibraryView::showContextMenu(int rowNumber) {
+    juce::PopupMenu menu;
+    menu.addItem("Play",
+                 [this]() { sendActionMessage(ActionMessages::loadSelectedTracks); });
+    menu.addItem("Add to queue",
+                 [this]() { sendActionMessage(ActionMessages::queueTrack); });
+    // menu.addItem("Add to playlist", false);
+    menu.addItem("Play album", [this, rowNumber]() {
+        albumToPlay = getTrack(rowNumber).getAlbum();
+        artistToPlay = getTrack(rowNumber).getArtist();
+        sendActionMessage(ActionMessages::playAlbum);
+    });
+    menu.addItem("Play artist", [this, rowNumber]() {
+        artistToPlay = getTrack(rowNumber).getArtist();
+        sendActionMessage(ActionMessages::playArtist);
+    });
+    menu.addItem("Remove from library", [this]() {
+        sendActionMessage(ActionMessages::removeTracksFromLibrary);
+    });
+    menu.addItem("Delete from harddrive", [this]() {
+        juce::AlertWindow::showOkCancelBox(
+            juce::MessageBoxIconType::WarningIcon,
+            "Confirm Delete",
+            "This will delete the track from your system permanently."
+            "Continue?",
+            "",
+            "",
+            nullptr,
+            juce::ModalCallbackFunction::create([this](int result) {
+                if (result)
+                    sendActionMessage(ActionMessages::deleteTracksFromHarddrive);
+            }));
+    });
+    menu.showMenuAsync(juce::PopupMenu::Options());
+}
+
 void LibraryView::cellClicked(int rowNumber,
                               int /*columnId*/,
                               const juce::MouseEvent& mouseEvent) {
     if (mouseEvent.mods.isRightButtonDown() && rowNumber < getNumRows()) {
-        juce::PopupMenu menu;
-        menu.addItem(1, "Play");
-        menu.addItem(2, "Add to queue");
-        menu.addItem(3, "Add to playlist", false);
-        menu.addItem(4, "Play album");
-        menu.addItem(5, "Play artist");
-        menu.addItem(6, "Remove from library");
-        menu.addItem(7, "Delete from harddrive");
-        menu.showMenuAsync(juce::PopupMenu::Options(), [this, rowNumber](int result) {
-            switch (result) {
-            case 1:
-                sendActionMessage(ActionMessages::loadSelectedTracks);
-                break;
-            case 2:
-                sendActionMessage(ActionMessages::queueTrack);
-                break;
-            case 4:
-                albumToPlay = getTrack(rowNumber).getAlbum();
-                artistToPlay = getTrack(rowNumber).getArtist();
-                sendActionMessage(ActionMessages::playAlbum);
-                break;
-            case 5:
-                artistToPlay = getTrack(rowNumber).getArtist();
-                sendActionMessage(ActionMessages::playArtist);
-                break;
-            case 6:
-                sendActionMessage(ActionMessages::removeTracksFromLibrary);
-                break;
-            case 7:
-                juce::AlertWindow::showOkCancelBox(
-                    juce::MessageBoxIconType::WarningIcon,
-                    "Confirm Delete",
-                    "This will delete the track from your system permanently."
-                    "Continue?",
-                    "",
-                    "",
-                    nullptr,
-                    juce::ModalCallbackFunction::create([this](int result) {
-                        if (result)
-                            sendActionMessage(ActionMessages::deleteTracksFromHarddrive);
-                    }));
-                break;
-            // TODO implement other options
-            default:
-                break;
-            }
-        });
+        showContextMenu(rowNumber);
     }
 }
 
