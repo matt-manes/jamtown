@@ -21,6 +21,25 @@ std::string TrackInfo::getLengthString() const { return formatSeconds(lengthInSe
 bool TrackInfo::operator==(const TrackInfo& track) { return path == track.path; }
 bool TrackInfo::operator==(TrackInfo& track) { return path == track.path; }
 
+void TrackInfo::toLower(std::string& src, std::string& dst) {
+    dst.resize(src.size());
+    std::transform(src.begin(), src.end(), dst.begin(), [](unsigned char c) {
+        return static_cast<unsigned char>(std::tolower(c));
+    });
+}
+
+void TrackInfo::normalizeArtist() { toLower(artist, normalizedNames.artist); }
+
+void TrackInfo::normalizeAlbum() { toLower(album, normalizedNames.album); }
+
+void TrackInfo::normalizeTitle() { toLower(title, normalizedNames.title); }
+
+void TrackInfo::normalizeNames() {
+    normalizeAlbum();
+    normalizeArtist();
+    normalizeTitle();
+}
+
 // ===============================================================================================
 TrackInfoComparator::TrackInfoComparator(bool forwards) : direction(forwards ? 1 : -1) {}
 
@@ -32,7 +51,7 @@ bool TrackInfoComparator::goesBefore(TrackInfo first, TrackInfo second) {
 }
 // ===============================================================================================
 int TitleComparator::compare(TrackInfo first, TrackInfo second) const {
-    int result = first.getTitle().compare(second.getTitle());
+    int result = first.getNormalizedTitle().compare(second.getNormalizedTitle());
     return direction * result;
 }
 // ===============================================================================================
@@ -40,7 +59,7 @@ AlbumComparator::AlbumComparator(bool forwards)
     : TrackInfoComparator(forwards), titleComparator(forwards) {}
 
 int AlbumComparator::compare(TrackInfo first, TrackInfo second) const {
-    int result = first.getAlbum().compare(second.getAlbum());
+    int result = first.getNormalizedAlbum().compare(second.getNormalizedAlbum());
     if (result == 0) {
         result = titleComparator.compare(first, second);
     }
@@ -57,7 +76,7 @@ ArtistComparator::ArtistComparator(bool forwards)
 }
 
 int ArtistComparator::compare(TrackInfo first, TrackInfo second) const {
-    int result = first.getArtist().compare(second.getArtist());
+    int result = first.getNormalizedArtist().compare(second.getNormalizedArtist());
     if (result == 0) {
         result = albumComparator.compare(first, second);
     }

@@ -29,7 +29,9 @@ public:
               double lengthInSeconds,
               juce::File path)
         : artist(artist), album(album), title(title), lengthInSeconds(lengthInSeconds),
-          path(path) {}
+          path(path) {
+        normalizeNames();
+    }
 
     /**
      * @brief Format track info into a string.
@@ -42,14 +44,26 @@ public:
     void setMetadata(juce::StringPairArray data) { metadata = data; }
 
     std::string getArtist() const { return artist; }
+    std::string getNormalizedArtist() const { return normalizedNames.artist; }
     std::string getAlbum() const { return album; }
+    std::string getNormalizedAlbum() const { return normalizedNames.album; }
     std::string getTitle() const { return title; }
+    std::string getNormalizedTitle() const { return normalizedNames.title; }
     juce::File getPath() const { return path; }
     juce::StringPairArray getMetadata() const { return metadata; }
 
-    void setArtist(std::string newArtist) { artist = newArtist; }
-    void setAlbum(std::string newAlbum) { album = newAlbum; }
-    void setTitle(std::string newTitle) { title = newTitle; }
+    void setArtist(std::string newArtist) {
+        artist = newArtist;
+        normalizeArtist();
+    }
+    void setAlbum(std::string newAlbum) {
+        album = newAlbum;
+        normalizeAlbum();
+    }
+    void setTitle(std::string newTitle) {
+        title = newTitle;
+        normalizeTitle();
+    }
     void setPath(juce::File newPath) { path = newPath; }
     void setLength(double newLength) { lengthInSeconds = newLength; }
 
@@ -72,6 +86,20 @@ private:
     double lengthInSeconds;
     juce::File path;
     juce::StringPairArray metadata;
+    // Want to ignore case when sorting
+    // so use this to cache lowercase names
+    struct NormalizedNames {
+        std::string artist;
+        std::string album;
+        std::string title;
+    } normalizedNames;
+
+    void normalizeArtist();
+    void normalizeAlbum();
+    void normalizeTitle();
+    void normalizeNames();
+
+    void toLower(std::string& src, std::string& dst);
 };
 
 class TrackInfoComparator {
