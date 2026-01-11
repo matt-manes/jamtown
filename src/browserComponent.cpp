@@ -31,7 +31,7 @@ void BrowserComponent::setView(View view) {
     currentView->setVisible(true);
 }
 
-TrackInfo BrowserComponent::getNextLibraryTrack(TrackInfo currentTrack) {
+TrackInfo BrowserComponent::getNextLibraryViewTrack(TrackInfo currentTrack) {
     return libraryView->getNextTrack(currentTrack);
 }
 

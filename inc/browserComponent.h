@@ -60,7 +60,7 @@ public:
      */
     void setView(View view);
 
-    TrackInfo getNextLibraryTrack(TrackInfo currentTrack);
+    TrackInfo getNextLibraryViewTrack(TrackInfo currentTrack);
 
     void setCurrentlyPlayingTrack(TrackInfo track);
 

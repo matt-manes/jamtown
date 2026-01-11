@@ -118,7 +118,7 @@ void MainComponent::playNextTrack() {
     } else {
         auto shuffleMode = transportComponent.getCurrentShuffleMode();
         if (shuffleMode == ShuffleMode::OFF)
-            playTrack(browser.getNextLibraryTrack(transport.getCurrentTrack()));
+            playTrack(browser.getNextLibraryViewTrack(transport.getCurrentTrack()));
         else if (shuffleMode == ShuffleMode::TRACK)
             playTrack(getRandomTrackToPlay());
         else if (shuffleMode == ShuffleMode::ALBUM)
