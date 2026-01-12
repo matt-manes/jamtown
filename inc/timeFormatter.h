@@ -2,6 +2,12 @@
 
 #include <format>
 
+/**
+ * @brief Format the given number of seconds into 'mm:ss' format.
+ *
+ * @param seconds
+ * @return std::string
+ */
 inline std::string formatSeconds(double seconds) {
     int m = static_cast<int>(static_cast<int>(seconds / 60) % 60);
     int s = static_cast<int>(static_cast<int>(seconds) % 60);

@@ -162,6 +162,13 @@ public:
 
 class TrackSorter {
 public:
+    /**
+     * @brief Sorts the given tracks in-place.
+     *
+     * @param tracks
+     * @param attribute The attribute to sort on ('Title', 'Album', 'Artist', 'Length').
+     * @param forwards Whether to sort forwards or backwards.
+     */
     static void sort(std::vector<TrackInfo>& tracks,
                      std::string attribute,
                      bool forwards);

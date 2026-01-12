@@ -60,11 +60,33 @@ public:
      */
     void setView(View view);
 
+    /**
+     * @brief Get the track after the given one in the current sort order.
+     *
+     * @param currentTrack
+     * @return TrackInfo
+     */
     TrackInfo getNextLibraryViewTrack(TrackInfo currentTrack);
 
+    /**
+     * @brief Set what the currently playing track is.
+     *
+     * @param track
+     */
     void setCurrentlyPlayingTrack(TrackInfo track);
 
+    /**
+     * @brief Get the most recently selected album.
+     *
+     * @return std::pair<std::string, std::string> The first is the album title and the second is the artist name.
+     */
     std::pair<std::string, std::string> getAlbumToPlay();
+
+    /**
+     * @brief Get the most recently selected artist.
+     *
+     * @return std::string
+     */
     std::string getArtistToPlay();
 
 private:

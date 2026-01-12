@@ -11,12 +11,29 @@
 /* Temp quick and dirty library persistence.*/
 class LibWriter {
 public:
+    /**
+     * @brief Save the given tracklist to disk.
+     *
+     * @param tracks
+     */
     static void write(std::vector<TrackInfo> tracks);
+
+    /**
+     * @brief Format the given track for writing.
+     *
+     * @param track
+     * @return std::string
+     */
     static std::string prepareTrackInfo(TrackInfo track);
 };
 
 class LibReader {
 public:
+    /**
+     * @brief Load track info from disk.
+     *
+     * @return std::vector<TrackInfo>
+     */
     static std::vector<TrackInfo> read();
 };
 
@@ -47,11 +64,22 @@ public:
 
     std::vector<TrackInfo> getRandomAlbumTracks() override;
 
+    /**
+     * @brief Get the number of tracks in the library.
+     *
+     * @return size_t
+     */
     size_t getTrackCount() { return tracks.size(); }
 
 private:
+    // Used to determine if a track is already in the library
     std::unordered_set<std::string> filepaths;
+    // Maintain all tracks in a vector so it doesn't have to be gotten
+    // through iterating db map whenever it's needed
     std::vector<TrackInfo> tracks;
+    // First key is artist name, the second key is the album title
+    // Innermost value is the tracklist of the album
+    // i.e. `std::vector<TrackInfo> tracks = db[artist][album];`
     std::unordered_map<std::string,
                        std::unordered_map<std::string, std::vector<TrackInfo>>>
         db;

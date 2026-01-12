@@ -23,5 +23,10 @@ public:
                      const juce::MouseEvent& mouseEvent) override;
 
 private:
+    /**
+     * @brief Show the context menu to the user.
+     *
+     * @param rowNumber
+     */
     void showContextMenu(int rowNumber);
 };

@@ -34,8 +34,17 @@ public:
 
     void actionListenerCallback(const juce::String& message);
 
+    /**
+     * @brief Play the given track.
+     *
+     * @param track
+     */
     void playTrack(TrackInfo track);
 
+    /**
+     * @brief Load library from disk.
+     *
+     */
     void loadLibrary();
 
 private:

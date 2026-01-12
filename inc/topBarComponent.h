@@ -15,8 +15,18 @@ public:
 
     void resized() override;
 
+    /**
+     * @brief Get the files found during the last scan.
+     *
+     * @return juce::Array<juce::File>
+     */
     juce::Array<juce::File> getTrackAdderFiles();
 
+    /**
+     * @brief Set the wildcard to use when searching for files.
+     *
+     * @param wildcard A ';' seperated list of file extension wildcards.
+     */
     void setTrackAdderWildcard(juce::String wildcard);
 
 private:
@@ -35,5 +45,10 @@ private:
     void configureViewPlayQueue();
     void applyButtonStyle(juce::TextButton& button);
 
+    /**
+     * @brief Get the width components should be displayed with.
+     *
+     * @return int
+     */
     int getElementWidth();
 };

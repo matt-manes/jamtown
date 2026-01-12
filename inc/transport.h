@@ -63,6 +63,13 @@ public:
      */
     bool loadTrack(juce::File);
 
+    /**
+     * @brief Load the given track for playback, returning whether loading was successful or not.
+     *
+     * @param track
+     * @return true
+     * @return false
+     */
     bool loadTrack(TrackInfo track);
 
     /**
@@ -114,20 +121,65 @@ public:
      */
     bool canPause();
 
+    /**
+     * @brief Whether the transport is currently playing or not.
+     *
+     * @return true
+     * @return false
+     */
     bool isPlaying();
 
+    /**
+     * @brief Whether the transport is paused.
+     *
+     * @return true
+     * @return false
+     */
     bool isPaused();
 
+    /**
+     * @brief Whether the transport is stopped.
+     *
+     * @return true
+     * @return false
+     */
     bool isStopped();
 
+    /**
+     * @brief Get a wildcard string for the file types playable by this transport object.
+     *
+     * @return juce::String
+     */
     juce::String getWildcardForAllFormats();
 
+    /**
+     * @brief Whether the current track has finished playing.
+     *
+     * @return true
+     * @return false
+     */
     bool trackFinished();
 
+    /**
+     * @brief Whether a track has been loaded for playback.
+     *
+     * @return true
+     * @return false
+     */
     bool hasActiveTrack();
 
+    /**
+     * @brief Get the current playback position in seconds.
+     *
+     * @return double
+     */
     double getCurrentPosition();
 
+    /**
+     * @brief Set the current playback position in seconds.
+     *
+     * @param position
+     */
     void setPosition(double position);
 
 private:
@@ -142,9 +194,14 @@ private:
      * @brief Populate `currentTrack` using the given file.
      *
      */
-    void setTrackInfo(juce::File);
+    void setCurrentTrack(juce::File);
 
-    void setTrackInfo(TrackInfo track);
+    /**
+     * @brief Set `currentTrack` to the given track.
+     *
+     * @param track
+     */
+    void setCurrentTrack(TrackInfo track);
 
     /**
      * @brief Update the transport state tracker and send a notification to any listeners.

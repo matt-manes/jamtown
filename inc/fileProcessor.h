@@ -10,6 +10,12 @@ class FileProcessor {
 public:
     FileProcessor();
 
+    /**
+     * @brief Read track info from the given files.
+     *
+     * @param files
+     * @return std::vector<TrackInfo>
+     */
     std::vector<TrackInfo> processFiles(juce::Array<juce::File> files);
 
 private:

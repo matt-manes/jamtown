@@ -46,7 +46,7 @@ bool Transport::hasActiveTrack() { return _hasActiveTrack; }
 
 double Transport::getCurrentPosition() { return transportSource.getCurrentPosition(); }
 
-void Transport::setTrackInfo(TrackInfo track) { currentTrack = track; }
+void Transport::setCurrentTrack(TrackInfo track) { currentTrack = track; }
 
 void Transport::start() {
     if (!canStart())
@@ -108,7 +108,7 @@ void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
     }
 }
 
-void Transport::setTrackInfo(juce::File file) {
+void Transport::setCurrentTrack(juce::File file) {
     // TODO try to read metadata then fallback on path parsing if that fails
     std::string artist =
         file.getParentDirectory().getParentDirectory().getFileName().toStdString();
@@ -126,7 +126,7 @@ bool Transport::loadTrack(juce::File file) {
         return false;
     auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
     transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-    setTrackInfo(file);
+    setCurrentTrack(file);
     currentTrack.setMetadata(reader->metadataValues);
     readerSource.reset(newSource.release());
     setState(TransportState::READY);
@@ -141,7 +141,7 @@ bool Transport::loadTrack(TrackInfo track) {
     auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
     transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
     readerSource.reset(newSource.release());
-    setTrackInfo(track);
+    setCurrentTrack(track);
     setState(TransportState::READY);
     _hasActiveTrack = true;
     return true;
