@@ -16,13 +16,12 @@ public:
         : button(button), mode(mode), text(buttonText) {}
     ShuffleMode getMode() { return mode; }
     std::string getText() { return text; }
-    ShuffleButtonState* getNextState() { return next; }
-    ShuffleButtonState* applyAndGetNextState();
+    ShuffleButtonState* transistionToNextState();
     virtual void applyState();
-    void setNextState(ShuffleButtonState* nextState) { next = nextState; }
+    void setNextState(ShuffleButtonState* state) { this->nextState = state; }
 
 private:
-    ShuffleButtonState* next;
+    ShuffleButtonState* nextState;
     ShuffleMode mode;
     std::string text;
     juce::TextButton* button;
@@ -32,8 +31,8 @@ class ShuffleButton : public juce::TextButton {
 public:
     ShuffleButton();
 
-    void nextState() {
-        currentShuffleState = currentShuffleState->applyAndGetNextState();
+    void transistionToNextState() {
+        currentShuffleState = currentShuffleState->transistionToNextState();
     }
 
     ShuffleMode getCurrentMode() { return currentShuffleState->getMode(); }

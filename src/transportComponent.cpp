@@ -15,9 +15,9 @@ ShuffleButton::ShuffleButton() {
 
 void ShuffleButtonState::applyState() { button->setButtonText(getText()); }
 
-ShuffleButtonState* ShuffleButtonState::applyAndGetNextState() {
-    next->applyState();
-    return next;
+ShuffleButtonState* ShuffleButtonState::transistionToNextState() {
+    nextState->applyState();
+    return nextState;
 }
 
 TransportComponent::TransportComponent(Transport* transport)
@@ -209,7 +209,7 @@ void TransportComponent::backButtonClicked() {
 }
 
 void TransportComponent::shuffleButtonClicked() {
-    shuffleButton.nextState();
+    shuffleButton.transistionToNextState();
     sendActionMessage(ActionMessages::shuffleModeChanged);
 }
 
