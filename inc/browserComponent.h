@@ -89,6 +89,8 @@ public:
      */
     std::string getArtistToPlay();
 
+    void updateLibraryViewTrackList(std::vector<TrackInfo> tracks);
+
 private:
     Library* library;
     PlayQueue* playQueue;

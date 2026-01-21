@@ -8,6 +8,10 @@ MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
     configureElements();
     loadLibrary();
+    // Careful with this
+    // don't wanna cause recursion oblivion
+    // messaging set up should be refactored to avoid this
+    addActionListener(this);
 }
 
 void MainComponent::loadLibrary() {
@@ -16,7 +20,9 @@ void MainComponent::loadLibrary() {
     // while library is being loaded
     loadingLib = true;
     juce::Thread::launch([this]() {
-        library.addTracks(LibReader::read());
+        auto tracks = LibReader::read();
+        library.addTracks(tracks);
+        searchService.addTracks(tracks);
         libLoaded = true;
         sendActionMessage(ActionMessages::libraryUpdated);
     });
@@ -44,10 +50,17 @@ void MainComponent::configureBrowser() {
     addActionListener(&browser);
 }
 
+void MainComponent::configureSearchBox() {
+    addAndMakeVisible(searchBox);
+    searchBox.searchService = &searchService;
+    searchBox.addActionListener(this);
+}
+
 void MainComponent::configureElements() {
     configureTransport();
     configureBrowser();
     configureTopBar();
+    configureSearchBox();
 }
 
 void MainComponent::paint(juce::Graphics& g) {
@@ -62,7 +75,7 @@ void MainComponent::playTrack(TrackInfo track) {
 }
 
 void MainComponent::resizeTopBar() {
-    topBar.setSize(getWidth() - 2, 20);
+    topBar.setSize(static_cast<int>(getWidth() * 0.75), 20);
     topBar.setTopLeftPosition(1, 1);
 }
 
@@ -78,10 +91,16 @@ void MainComponent::resizeTransport() {
         transportPadding, getHeight() - transportComponent.getHeight() - 5);
 }
 
+void MainComponent::resizeSearchBox() {
+    searchBox.setSize(static_cast<int>(getWidth() * 0.25), 20);
+    searchBox.setTopRightPosition(getWidth() - 1, 1);
+}
+
 void MainComponent::resized() {
     resizeTopBar();
     resizeBrowser();
     resizeTransport();
+    resizeSearchBox();
 }
 
 void MainComponent::handleTracksAdded() {
@@ -89,6 +108,7 @@ void MainComponent::handleTracksAdded() {
     auto tracks = fileProcessor.processFiles(files);
     library.addTracks(tracks);
     LibWriter::write(library.getAllTracks());
+    searchService.addTracks(tracks);
     sendActionMessage(ActionMessages::libraryUpdated);
 }
 
@@ -188,6 +208,7 @@ void MainComponent::handleRemoveFromLibraryMessage() {
     auto tracks = browser.getSelectedTracks();
     library.removeTracks(tracks);
     LibWriter::write(library.getAllTracks());
+    searchService.removeTracks(tracks);
     sendActionMessage(ActionMessages::libraryUpdated);
     // TODO update playqueue if it contains removed tracks
 }
@@ -197,6 +218,8 @@ void MainComponent::handleDeleteFromHarddriveMessage() {
     for (auto track : tracks) {
         track.getPath().deleteFile();
     }
+    // TODO refactor this, shouldn't be calling handle message
+    // TODO functions not in response to a message
     handleRemoveFromLibraryMessage();
 }
 
@@ -220,6 +243,27 @@ void MainComponent::handleRemoveSelectedFromPlayQueueMessage() {
     auto selectedTracks = browser.getSelectedTracks();
     playQueue.remove(selectedTracks);
     sendActionMessage(ActionMessages::playQueueUpdated);
+}
+
+void MainComponent::handleSearchUpdatedMessage() {
+    std::cout << searchService.getQuery() << std::endl;
+    if (searchService.getQuery().empty())
+        browser.updateLibraryViewTrackList(library.getAllTracks());
+    else {
+        auto tracks = searchService.getResults();
+        for (auto track : tracks) {
+            std::cout << track.toString() << std::endl;
+        }
+        browser.updateLibraryViewTrackList(tracks);
+    }
+}
+
+void MainComponent::handleLibraryUpdatedMessage() {
+    // TODO refactor this, this is whack
+    if (!searchService.getQuery().empty()) {
+        searchService.recomputeSearch();
+        handleSearchUpdatedMessage();
+    }
 }
 
 void MainComponent::configureActionHandlers() {
@@ -253,6 +297,10 @@ void MainComponent::configureActionHandlers() {
                            [this] { handlePlayRandomAlbumMessage(); });
     actionHandlers.emplace(ActionMessages::removeSelectedFromPlayQueue,
                            [this] { handleRemoveSelectedFromPlayQueueMessage(); });
+    actionHandlers.emplace(ActionMessages::searchUpdated,
+                           [this] { handleSearchUpdatedMessage(); });
+    actionHandlers.emplace(ActionMessages::libraryUpdated,
+                           [this] { handleLibraryUpdatedMessage(); });
 }
 
 void MainComponent::actionListenerCallback(const juce::String& message) {

@@ -74,3 +74,7 @@ std::pair<std::string, std::string> BrowserComponent::getAlbumToPlay() {
     return libraryView->getAlbumToPlay();
 }
 std::string BrowserComponent::getArtistToPlay() { return libraryView->getArtistToPlay(); }
+
+void BrowserComponent::updateLibraryViewTrackList(std::vector<TrackInfo> tracks) {
+    libraryView->setTracklist(tracks);
+}

@@ -27,4 +27,5 @@ public:
     inline static const juce::String shuffleModeChanged = "16";
     inline static const juce::String playRandomAlbum = "17";
     inline static const juce::String removeSelectedFromPlayQueue = "18";
+    inline static const juce::String searchUpdated = "19";
 };

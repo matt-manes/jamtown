@@ -26,7 +26,10 @@ target_sources(jamtown
     src/browserComponent.cpp
     src/libraryView.cpp
     src/topBarComponent.cpp
-    src/playQueueView.cpp)
+    src/playQueueView.cpp
+    src/searchService.cpp
+    src/searchBoxComponent.cpp
+    src/utilities.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 

@@ -12,6 +12,8 @@
 #include "browserComponent.h"
 #include "transport.h"
 #include "topBarComponent.h"
+#include "searchService.h"
+#include "searchBoxComponent.h"
 
 class MainComponent : public juce::Component,
                       public juce::ChangeListener,
@@ -56,6 +58,8 @@ private:
     InMemLibrary library;
     PlayQueue playQueue;
     TopBarComponent topBar;
+    SearchService searchService;
+    SearchBoxComponent searchBox;
     std::atomic<bool> libLoaded = false;
     std::atomic<bool> loadingLib = false;
     std::unordered_map<juce::String, std::function<void()>> actionHandlers;
@@ -63,11 +67,13 @@ private:
     void configureTransport();
     void configureTopBar();
     void configureBrowser();
+    void configureSearchBox();
     void configureElements();
     // =================================
     void resizeBrowser();
     void resizeTransport();
     void resizeTopBar();
+    void resizeSearchBox();
     // =================================
     void handleTracksAdded();
     void handleTransportChange();
@@ -87,6 +93,8 @@ private:
     void handleShuffleModeChangedMessage();
     void handlePlayRandomAlbumMessage();
     void handleRemoveSelectedFromPlayQueueMessage();
+    void handleSearchUpdatedMessage();
+    void handleLibraryUpdatedMessage();
     void configureActionHandlers();
     // =================================
     void playNextTrack();
