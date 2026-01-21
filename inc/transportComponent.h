@@ -6,7 +6,6 @@
 #include <string>
 #include <unordered_map>
 #include "transport.h"
-#include "timeFormatter.h"
 
 enum ShuffleMode { OFF, TRACK, ALBUM };
 

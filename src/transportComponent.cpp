@@ -1,9 +1,9 @@
 #include "transportComponent.h"
 #include <juce_graphics/juce_graphics.h>
 #include <memory>
-#include "timeFormatter.h"
 #include "actionMessages.h"
 #include <string>
+#include "utilities.h"
 
 ShuffleButton::ShuffleButton() {
     shuffleOffState.setNextState(&shuffleTrackState);
@@ -290,7 +290,7 @@ void TransportComponent::ElapsedTime::resized() {
 
 void TransportComponent::ElapsedTime::update() {
     if (transport->hasActiveTrack()) {
-        label.setText(formatSeconds(transport->getCurrentPosition()), {});
+        label.setText(utilities::formatSeconds(transport->getCurrentPosition()), {});
     } else {
         label.setText("", {});
     }

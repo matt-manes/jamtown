@@ -98,8 +98,6 @@ private:
     void normalizeAlbum();
     void normalizeTitle();
     void normalizeNames();
-
-    void toLower(std::string& src, std::string& dst);
 };
 
 class TrackInfoComparator {

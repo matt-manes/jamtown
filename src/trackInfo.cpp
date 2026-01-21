@@ -2,7 +2,7 @@
 #include <juce_core/juce_core.h>
 #include <string>
 #include <algorithm>
-#include "timeFormatter.h"
+#include "utilities.h"
 
 std::string TrackInfo::toString() const {
     std::string info = artist + " - " + album + " - " + title + " - " + getLengthString();
@@ -16,23 +16,18 @@ std::string TrackInfo::toString() const {
     return info;
 }
 
-std::string TrackInfo::getLengthString() const { return formatSeconds(lengthInSeconds); }
+std::string TrackInfo::getLengthString() const {
+    return utilities::formatSeconds(lengthInSeconds);
+}
 
 bool TrackInfo::operator==(const TrackInfo& track) { return path == track.path; }
 bool TrackInfo::operator==(TrackInfo& track) { return path == track.path; }
 
-void TrackInfo::toLower(std::string& src, std::string& dst) {
-    dst.resize(src.size());
-    std::transform(src.begin(), src.end(), dst.begin(), [](unsigned char c) {
-        return static_cast<unsigned char>(std::tolower(c));
-    });
-}
+void TrackInfo::normalizeArtist() { utilities::toLower(artist, normalizedNames.artist); }
 
-void TrackInfo::normalizeArtist() { toLower(artist, normalizedNames.artist); }
+void TrackInfo::normalizeAlbum() { utilities::toLower(album, normalizedNames.album); }
 
-void TrackInfo::normalizeAlbum() { toLower(album, normalizedNames.album); }
-
-void TrackInfo::normalizeTitle() { toLower(title, normalizedNames.title); }
+void TrackInfo::normalizeTitle() { utilities::toLower(title, normalizedNames.title); }
 
 void TrackInfo::normalizeNames() {
     normalizeAlbum();
