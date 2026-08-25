@@ -1,6 +1,7 @@
 #include "utilities.h"
 #include <algorithm>
 #include <format>
+#include <string>
 
 void utilities::toLower(std::string& src, std::string& dst) {
     dst.resize(src.size());

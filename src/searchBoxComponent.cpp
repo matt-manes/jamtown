@@ -1,6 +1,6 @@
+#include <string>
 #include "searchBoxComponent.h"
 #include "utilities.h"
-#include <string>
 
 SearchBoxComponent::SearchBoxComponent() {
     onTextChange = [this]() { searchUpdated(); };

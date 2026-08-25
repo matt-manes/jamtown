@@ -1,5 +1,4 @@
 #include "playQueue.h"
-#include "trackInfo.h"
 #include <vector>
 #include <unordered_set>
 #include <string>

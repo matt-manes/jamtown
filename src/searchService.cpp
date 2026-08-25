@@ -5,7 +5,6 @@
 #include <mutex>
 #include <vector>
 #include <string>
-#include "trackInfo.h"
 
 std::int64_t SearchService::getID(TrackInfo track) {
     auto path = track.getPath().getFullPathName().toStdString();
