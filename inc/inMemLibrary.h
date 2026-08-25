@@ -8,35 +8,6 @@
 #include "library.h"
 #include <juce_core/juce_core.h>
 
-/* Temp quick and dirty library persistence.*/
-class LibWriter {
-public:
-    /**
-     * @brief Save the given tracklist to disk.
-     *
-     * @param tracks
-     */
-    static void write(std::vector<TrackInfo> tracks);
-
-    /**
-     * @brief Format the given track for writing.
-     *
-     * @param track
-     * @return std::string
-     */
-    static std::string prepareTrackInfo(TrackInfo track);
-};
-
-class LibReader {
-public:
-    /**
-     * @brief Load track info from disk.
-     *
-     * @return std::vector<TrackInfo>
-     */
-    static std::vector<TrackInfo> read();
-};
-
 /**
  * @brief In memory implementation of `Library` interface.
  *

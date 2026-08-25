@@ -1,16 +1,15 @@
-#include "mainComponent.h"
-#include "actionMessages.h"
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <memory>
+#include "mainComponent.h"
+#include "actionMessages.h"
 
 MainComponent::MainComponent() : transportComponent(&transport) {
     configureActionHandlers();
     configureElements();
+    libraryPersistanceService = std::make_unique<TxtLibraryPersistanceService>();
     loadLibrary();
-    // Careful with this
-    // don't wanna cause recursion oblivion
-    // messaging set up should be refactored to avoid this
     addActionListener(this);
 }
 
@@ -20,7 +19,7 @@ void MainComponent::loadLibrary() {
     // while library is being loaded
     loadingLib = true;
     juce::Thread::launch([this]() {
-        auto tracks = LibReader::read();
+        auto tracks = libraryPersistanceService->load();
         library.addTracks(tracks);
         searchService.addTracks(tracks);
         libLoaded = true;
@@ -107,7 +106,7 @@ void MainComponent::handleTracksAdded() {
     auto files = topBar.getTrackAdderFiles();
     auto tracks = fileProcessor.processFiles(files);
     library.addTracks(tracks);
-    LibWriter::write(library.getAllTracks());
+    libraryPersistanceService->save(library.getAllTracks());
     searchService.addTracks(tracks);
     sendActionMessage(ActionMessages::libraryUpdated);
 }
@@ -207,7 +206,7 @@ void MainComponent::handlePlayArtistMessage() {
 void MainComponent::handleRemoveFromLibraryMessage() {
     auto tracks = browser.getSelectedTracks();
     library.removeTracks(tracks);
-    LibWriter::write(library.getAllTracks());
+    libraryPersistanceService->save(library.getAllTracks());
     searchService.removeTracks(tracks);
     sendActionMessage(ActionMessages::libraryUpdated);
     // TODO update playqueue if it contains removed tracks
@@ -246,20 +245,16 @@ void MainComponent::handleRemoveSelectedFromPlayQueueMessage() {
 }
 
 void MainComponent::handleSearchUpdatedMessage() {
-    std::cout << searchService.getQuery() << std::endl;
-    if (searchService.getQuery().empty())
+    if (searchService.getQuery().empty()) {
         browser.updateLibraryViewTrackList(library.getAllTracks());
-    else {
+    } else {
         auto tracks = searchService.getResults();
-        for (auto track : tracks) {
-            std::cout << track.toString() << std::endl;
-        }
         browser.updateLibraryViewTrackList(tracks);
     }
 }
 
 void MainComponent::handleLibraryUpdatedMessage() {
-    // TODO refactor this, this is whack
+    // Update search results when library updated if the search box isn't empty
     if (!searchService.getQuery().empty()) {
         searchService.recomputeSearch();
         handleSearchUpdatedMessage();

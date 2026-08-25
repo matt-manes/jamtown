@@ -1,11 +1,12 @@
 #pragma once
 
-#include "transportComponent.h"
-#include "addTracksComponent.h"
+#include <memory>
+#include <unordered_map>
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
-#include <unordered_map>
+#include "transportComponent.h"
+#include "addTracksComponent.h"
 #include "playQueue.h"
 #include "fileProcessor.h"
 #include "inMemLibrary.h"
@@ -14,6 +15,8 @@
 #include "topBarComponent.h"
 #include "searchService.h"
 #include "searchBoxComponent.h"
+#include "libraryPersistanceService.h"
+#include "txtLibraryPersistanceService.h"
 
 class MainComponent : public juce::Component,
                       public juce::ChangeListener,
@@ -60,6 +63,7 @@ private:
     TopBarComponent topBar;
     SearchService searchService;
     SearchBoxComponent searchBox;
+    std::unique_ptr<LibraryPersistanceService> libraryPersistanceService;
     std::atomic<bool> libLoaded = false;
     std::atomic<bool> loadingLib = false;
     std::unordered_map<juce::String, std::function<void()>> actionHandlers;

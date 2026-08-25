@@ -29,7 +29,8 @@ target_sources(jamtown
     src/playQueueView.cpp
     src/searchService.cpp
     src/searchBoxComponent.cpp
-    src/utilities.cpp)
+    src/utilities.cpp
+    src/txtLibraryPersistanceService.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 
@@ -47,3 +48,7 @@ target_link_libraries(jamtown
     juce::juce_recommended_warning_flags)
 
 target_compile_definitions(jamtown PRIVATE -D_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING=1 -DJUCE_USE_MP3AUDIOFORMAT=1)
+
+if(USE_DEV_LIB)
+    target_compile_definitions(jamtown PRIVATE USE_DEV_LIB)
+endif()
