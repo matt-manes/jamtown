@@ -1,61 +1,63 @@
-#include "transport.h"
+#include "transportController.h"
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
-Transport::Transport() {
+TransportController::TransportController() {
     transportSource.addChangeListener(this);
     formatManager.registerBasicFormats();
     setState(STOPPED);
 }
 
-TransportState Transport::getState() { return state; }
+TransportState TransportController::getState() { return state; }
 
-void Transport::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
+void TransportController::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
-void Transport::releaseResources() { transportSource.releaseResources(); }
+void TransportController::releaseResources() { transportSource.releaseResources(); }
 
-void Transport::setGain(float gain) { transportSource.setGain(gain); }
+void TransportController::setGain(float gain) { transportSource.setGain(gain); }
 
-bool Transport::hasPlayableSource() { return readerSource.get() != nullptr; }
+bool TransportController::hasPlayableSource() { return readerSource.get() != nullptr; }
 
-const TrackInfo& Transport::getCurrentTrack() { return currentTrack; }
+const TrackInfo& TransportController::getCurrentTrack() { return currentTrack; }
 
-bool Transport::canStart() { return hasPlayableSource() && !isPlaying(); }
+bool TransportController::canStart() { return hasPlayableSource() && !isPlaying(); }
 
-bool Transport::canStop() { return isPlaying() || isPaused(); }
+bool TransportController::canStop() { return isPlaying() || isPaused(); }
 
-bool Transport::canPause() { return isPlaying(); }
+bool TransportController::canPause() { return isPlaying(); }
 
-bool Transport::isPlaying() { return getState() == PLAYING; }
+bool TransportController::isPlaying() { return getState() == PLAYING; }
 
-bool Transport::isPaused() { return getState() == PAUSED; }
+bool TransportController::isPaused() { return getState() == PAUSED; }
 
-bool Transport::isStopped() { return getState() == STOPPED; }
+bool TransportController::isStopped() { return getState() == STOPPED; }
 
-juce::String Transport::getWildcardForAllFormats() {
+juce::String TransportController::getWildcardForAllFormats() {
     return formatManager.getWildcardForAllFormats();
 }
 
-bool Transport::trackFinished() { return transportSource.hasStreamFinished(); }
+bool TransportController::trackFinished() { return transportSource.hasStreamFinished(); }
 
-bool Transport::hasActiveTrack() { return _hasActiveTrack; }
+bool TransportController::hasActiveTrack() { return _hasActiveTrack; }
 
-double Transport::getCurrentPosition() { return transportSource.getCurrentPosition(); }
+double TransportController::getCurrentPosition() {
+    return transportSource.getCurrentPosition();
+}
 
-void Transport::setCurrentTrack(TrackInfo track) { currentTrack = track; }
+void TransportController::setCurrentTrack(TrackInfo track) { currentTrack = track; }
 
-void Transport::start() {
+void TransportController::start() {
     if (!canStart())
         return;
     transportSource.start();
     setState(STARTING);
 }
 
-void Transport::stop() {
+void TransportController::stop() {
     if (!canStop())
         return;
     setPosition(0.0);
@@ -71,16 +73,19 @@ void Transport::stop() {
     }
 }
 
-void Transport::pause() {
+void TransportController::pause() {
     if (!canPause())
         return;
     transportSource.stop();
     setState(PAUSING);
 }
 
-void Transport::setPosition(double position) { transportSource.setPosition(position); }
+void TransportController::setPosition(double position) {
+    transportSource.setPosition(position);
+}
 
-void Transport::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) {
+void TransportController::getNextAudioBlock(
+    const juce::AudioSourceChannelInfo& bufferToFill) {
     if (!hasPlayableSource()) {
         bufferToFill.clearActiveBufferRegion();
         return;
@@ -88,14 +93,14 @@ void Transport::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFi
     transportSource.getNextAudioBlock(bufferToFill);
 }
 
-void Transport::setState(TransportState newState) {
+void TransportController::setState(TransportState newState) {
     if (newState != getState()) {
         state = newState;
         sendChangeMessage();
     }
 }
 
-void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
+void TransportController::changeListenerCallback(juce::ChangeBroadcaster* source) {
     if (source == &transportSource) {
         if (transportSource.isPlaying()) {
             setState(TransportState::PLAYING);
@@ -108,7 +113,7 @@ void Transport::changeListenerCallback(juce::ChangeBroadcaster* source) {
     }
 }
 
-void Transport::setCurrentTrack(juce::File file) {
+void TransportController::setCurrentTrack(juce::File file) {
     // TODO try to read metadata then fallback on path parsing if that fails
     std::string artist =
         file.getParentDirectory().getParentDirectory().getFileName().toStdString();
@@ -120,7 +125,7 @@ void Transport::setCurrentTrack(juce::File file) {
     currentTrack = TrackInfo{artist, album, title, length, file};
 }
 
-bool Transport::loadTrack(juce::File file) {
+bool TransportController::loadTrack(juce::File file) {
     auto* reader = formatManager.createReaderFor(file);
     if (reader == nullptr)
         return false;
@@ -134,7 +139,7 @@ bool Transport::loadTrack(juce::File file) {
     return true;
 }
 
-bool Transport::loadTrack(TrackInfo track) {
+bool TransportController::loadTrack(TrackInfo track) {
     auto* reader = formatManager.createReaderFor(track.getPath());
     if (reader == nullptr)
         return false;

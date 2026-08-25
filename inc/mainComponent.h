@@ -11,7 +11,7 @@
 #include "fileProcessor.h"
 #include "inMemLibrary.h"
 #include "browserComponent.h"
-#include "transport.h"
+#include "transportController.h"
 #include "topBarComponent.h"
 #include "searchService.h"
 #include "searchBoxComponent.h"
@@ -53,7 +53,7 @@ public:
     void loadLibrary();
 
 private:
-    Transport transport;
+    TransportController transportController;
     TransportComponent transportComponent;
     FileProcessor fileProcessor;
     int transportPadding = 10;

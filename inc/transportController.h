@@ -19,11 +19,15 @@ enum TransportState : int {
     READY
 };
 
-class Transport : public juce::AudioSource,
-                  public juce::ChangeListener,
-                  public juce::ChangeBroadcaster {
+/**
+ * @brief Controls audio playback and broadcasts state changes through the juce::ChangeBroadcaster interface.
+ *
+ */
+class TransportController : public juce::AudioSource,
+                            public juce::ChangeListener,
+                            public juce::ChangeBroadcaster {
 public:
-    Transport();
+    TransportController();
 
     /**
      * @brief Get the current transport state.

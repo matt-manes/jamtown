@@ -20,8 +20,8 @@ ShuffleButtonState* ShuffleButtonState::transistionToNextState() {
     return nextState;
 }
 
-TransportComponent::TransportComponent(Transport* transport)
-    : transport(transport), elapsedTime(transport),
+TransportComponent::TransportComponent(TransportController* transport)
+    : transportController(transport), elapsedTime(transport),
       skipButton("ff", 0.0, juce::Colours::turquoise),
       backButton("rw", 0.5, juce::Colours::hotpink) {
     configureInterface();
@@ -34,15 +34,15 @@ TransportComponent::TransportComponent(Transport* transport)
 }
 
 void TransportComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
-    transport->prepareToPlay(samplesPerBlockExpected, sampleRate);
+    transportController->prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void TransportComponent::getNextAudioBlock(
     const juce::AudioSourceChannelInfo& bufferToFill) {
-    transport->getNextAudioBlock(bufferToFill);
+    transportController->getNextAudioBlock(bufferToFill);
 }
 
-void TransportComponent::releaseResources() { transport->releaseResources(); }
+void TransportComponent::releaseResources() { transportController->releaseResources(); }
 
 void TransportComponent::configurePlayButton() {
     playButton.onClick = [this] { playButtonClicked(); };
@@ -169,26 +169,26 @@ void TransportComponent::paint(juce::Graphics& g) {
 }
 
 void TransportComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
-    if (source == transport) {
+    if (source == transportController) {
         updateUI();
-        if (transport->trackFinished())
+        if (transportController->trackFinished())
             sendChangeMessage();
     }
 }
 
 void TransportComponent::sliderValueChanged(juce::Slider* slider) {
     if (slider == &volumeSlider) {
-        transport->setGain(static_cast<float>(volumeSlider.getValue()));
+        transportController->setGain(static_cast<float>(volumeSlider.getValue()));
     }
 }
 
 void TransportComponent::updateUI() {
-    if (stateChangeHandlers.contains(transport->getState()))
-        stateChangeHandlers[transport->getState()]();
+    if (stateChangeHandlers.contains(transportController->getState()))
+        stateChangeHandlers[transportController->getState()]();
 }
 
 void TransportComponent::playButtonClicked() {
-    if (transport->isPlaying()) {
+    if (transportController->isPlaying()) {
         sendActionMessage(ActionMessages::pauseTrack);
     } else {
         sendActionMessage(ActionMessages::playTrack);
@@ -220,7 +220,7 @@ void TransportComponent::randomAlbumButtonClicked() {
 void TransportComponent::stoppedHandler() {
     stopButton.setEnabled(false);
     playButton.setButtonText("Play");
-    bool shouldBeEnabled = transport->hasPlayableSource();
+    bool shouldBeEnabled = transportController->hasPlayableSource();
     playButton.setEnabled(shouldBeEnabled);
     skipButton.setEnabled(shouldBeEnabled);
     backButton.setEnabled(shouldBeEnabled);
@@ -234,7 +234,7 @@ void TransportComponent::playingHandler() {
     playButton.setEnabled(true);
     skipButton.setEnabled(true);
     backButton.setEnabled(true);
-    setDisplayText(transport->getCurrentTrack().toString());
+    setDisplayText(transportController->getCurrentTrack().toString());
 }
 
 void TransportComponent::pausedHandler() {
@@ -251,7 +251,7 @@ void TransportComponent::readyHandler() {
     stopButton.setEnabled(false);
     skipButton.setEnabled(true);
     backButton.setEnabled(false);
-    setDisplayText(transport->getCurrentTrack().toString());
+    setDisplayText(transportController->getCurrentTrack().toString());
 }
 
 void TransportComponent::configureHandlers() {
@@ -277,8 +277,8 @@ void TransportComponent::setDisplayText(std::string text) {
     resized();
 }
 
-TransportComponent::ElapsedTime::ElapsedTime(Transport* transport)
-    : transport(transport) {
+TransportComponent::ElapsedTime::ElapsedTime(TransportController* transportController)
+    : transportController(transportController) {
     label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
     addAndMakeVisible(label);
     setFramesPerSecond(5);
@@ -289,8 +289,9 @@ void TransportComponent::ElapsedTime::resized() {
 }
 
 void TransportComponent::ElapsedTime::update() {
-    if (transport->hasActiveTrack()) {
-        label.setText(utilities::formatSeconds(transport->getCurrentPosition()), {});
+    if (transportController->hasActiveTrack()) {
+        label.setText(utilities::formatSeconds(transportController->getCurrentPosition()),
+                      {});
     } else {
         label.setText("", {});
     }

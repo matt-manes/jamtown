@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "transport.h"
+#include "transportController.h"
 
 enum ShuffleMode { OFF, TRACK, ALBUM };
 
@@ -57,7 +57,7 @@ public:
      * @brief Construct a new Transport Component object
      *
      */
-    TransportComponent(Transport* transport);
+    TransportComponent(TransportController* transportController);
 
     /**
      * @brief Destroy the Transport Component object
@@ -175,7 +175,7 @@ private:
 
     class ElapsedTime : public juce::AnimatedAppComponent {
     public:
-        ElapsedTime(Transport* transport);
+        ElapsedTime(TransportController* transportController);
 
         ~ElapsedTime() = default;
 
@@ -188,7 +188,7 @@ private:
         juce::Label label;
 
     private:
-        Transport* transport;
+        TransportController* transportController;
     };
 
     //==========================================================================
@@ -206,7 +206,7 @@ private:
     juce::Label currentTrackInfo;
     ElapsedTime elapsedTime;
     juce::Slider volumeSlider;
-    Transport* transport;
+    TransportController* transportController;
 
     std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;
 

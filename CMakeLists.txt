@@ -12,7 +12,7 @@ juce_add_gui_app(jamtown
 target_sources(jamtown
     PRIVATE
     src/app.cpp
-    src/transport.cpp
+    src/transportController.cpp
     src/transportComponent.cpp
     src/trackInfo.cpp
     src/fileScanner.cpp

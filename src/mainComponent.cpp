@@ -5,7 +5,7 @@
 #include "mainComponent.h"
 #include "actionMessages.h"
 
-MainComponent::MainComponent() : transportComponent(&transport) {
+MainComponent::MainComponent() : transportComponent(&transportController) {
     configureActionHandlers();
     configureElements();
     libraryPersistanceService = std::make_unique<TxtLibraryPersistanceService>();
@@ -29,8 +29,8 @@ void MainComponent::loadLibrary() {
 
 void MainComponent::configureTransport() {
     addAndMakeVisible(transportComponent);
-    transport.addChangeListener(&transportComponent);
-    transport.stop();
+    transportController.addChangeListener(&transportComponent);
+    transportController.stop();
     transportComponent.addChangeListener(this);
     transportComponent.addActionListener(this);
 }
@@ -38,7 +38,7 @@ void MainComponent::configureTransport() {
 void MainComponent::configureTopBar() {
     addAndMakeVisible(topBar);
     topBar.addActionListener(this);
-    topBar.setTrackAdderWildcard(transport.getWildcardForAllFormats());
+    topBar.setTrackAdderWildcard(transportController.getWildcardForAllFormats());
 }
 
 void MainComponent::configureBrowser() {
@@ -68,8 +68,8 @@ void MainComponent::paint(juce::Graphics& g) {
 }
 
 void MainComponent::playTrack(TrackInfo track) {
-    transport.loadTrack(track);
-    transport.start();
+    transportController.loadTrack(track);
+    transportController.start();
     browser.setCurrentlyPlayingTrack(track);
 }
 
@@ -113,9 +113,9 @@ void MainComponent::handleTracksAdded() {
 
 TrackInfo MainComponent::getRandomTrackToPlay() {
     if (library.getTrackCount() <= 1)
-        return transport.getCurrentTrack();
+        return transportController.getCurrentTrack();
     auto track = library.getRandomTrack();
-    while (track == transport.getCurrentTrack())
+    while (track == transportController.getCurrentTrack())
         track = library.getRandomTrack();
     return track;
 }
@@ -124,8 +124,8 @@ std::vector<TrackInfo> MainComponent::getRandomAlbumToPlay() {
     auto tracks = library.getRandomAlbumTracks();
     if (library.getAllAlbumTitles().size() <= 1)
         return tracks;
-    while (tracks[0].getAlbum() == transport.getCurrentTrack().getAlbum() &&
-           tracks[0].getArtist() == transport.getCurrentTrack().getArtist())
+    while (tracks[0].getAlbum() == transportController.getCurrentTrack().getAlbum() &&
+           tracks[0].getArtist() == transportController.getCurrentTrack().getArtist())
         tracks = library.getRandomAlbumTracks();
     return tracks;
 }
@@ -137,7 +137,8 @@ void MainComponent::playNextTrack() {
     } else {
         auto shuffleMode = transportComponent.getCurrentShuffleMode();
         if (shuffleMode == ShuffleMode::OFF)
-            playTrack(browser.getNextLibraryViewTrack(transport.getCurrentTrack()));
+            playTrack(
+                browser.getNextLibraryViewTrack(transportController.getCurrentTrack()));
         else if (shuffleMode == ShuffleMode::TRACK)
             playTrack(getRandomTrackToPlay());
         else if (shuffleMode == ShuffleMode::ALBUM)
@@ -147,7 +148,7 @@ void MainComponent::playNextTrack() {
 
 void MainComponent::handleTransportChange() {
     // TODO This will need to change when skips are added, probably to action callback
-    if (!transport.hasActiveTrack()) {
+    if (!transportController.hasActiveTrack()) {
         playNextTrack();
     }
 }
@@ -173,16 +174,16 @@ void MainComponent::handleLoadSelectedMessage() {
 void MainComponent::handleQueueMessage() {
     playQueue.addTracks(browser.getSelectedTracks());
     //  If nothing is playing, load track added to queue
-    if (!transport.hasActiveTrack())
-        transport.loadTrack(playQueue.getNextTrack());
+    if (!transportController.hasActiveTrack())
+        transportController.loadTrack(playQueue.getNextTrack());
     sendActionMessage(ActionMessages::playQueueUpdated);
 }
 
-void MainComponent::handlePauseMessage() { transport.pause(); }
+void MainComponent::handlePauseMessage() { transportController.pause(); }
 
-void MainComponent::handlePlayMessage() { transport.start(); }
+void MainComponent::handlePlayMessage() { transportController.start(); }
 
-void MainComponent::handleStopMessage() { transport.stop(); }
+void MainComponent::handleStopMessage() { transportController.stop(); }
 
 void MainComponent::handleViewLibraryMessage() { browser.setView(View::LIBRARY); }
 
@@ -190,7 +191,7 @@ void MainComponent::handleViewPlayQueueMessage() { browser.setView(View::PLAYQUE
 
 void MainComponent::handleNextTrackMessage() { playNextTrack(); }
 
-void MainComponent::handleRestartTrackMessage() { transport.setPosition(0.0); }
+void MainComponent::handleRestartTrackMessage() { transportController.setPosition(0.0); }
 
 void MainComponent::handlePlayAlbumMessage() {
     auto selection = browser.getAlbumToPlay();
@@ -223,13 +224,13 @@ void MainComponent::handleDeleteFromHarddriveMessage() {
 }
 
 void MainComponent::handleShuffleModeChangedMessage() {
-    if (!transport.hasActiveTrack() && playQueue.empty()) {
+    if (!transportController.hasActiveTrack() && playQueue.empty()) {
         if (transportComponent.getCurrentShuffleMode() == ShuffleMode::TRACK) {
-            transport.loadTrack(getRandomTrackToPlay());
+            transportController.loadTrack(getRandomTrackToPlay());
         } else if (transportComponent.getCurrentShuffleMode() == ShuffleMode::ALBUM) {
             overwritePlayQueue(getRandomAlbumToPlay(), "Title");
             // overwrite playqueue starts playing when called
-            transport.stop();
+            transportController.stop();
         }
     }
 }
