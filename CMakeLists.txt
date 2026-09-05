@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_C_STANDARD 23)
 find_package(JUCE CONFIG REQUIRED)
 
+# not having NEEDS_WEB_BROWSER and NEEDS_CURL set to TRUE causes build to fail on Ubuntu (any distro?)
 juce_add_gui_app(jamtown
     VERSION 0.0.0
     NEEDS_WEB_BROWSER TRUE
@@ -49,6 +50,7 @@ target_link_libraries(jamtown
 
 target_compile_definitions(jamtown PRIVATE -D_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING=1 -DJUCE_USE_MP3AUDIOFORMAT=1)
 
+# Uses a separate media library file that can be kept small since performance is slow with debug build
 if(USE_DEV_LIB)
     target_compile_definitions(jamtown PRIVATE USE_DEV_LIB)
 endif()
