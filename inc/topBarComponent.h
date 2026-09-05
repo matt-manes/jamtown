@@ -1,20 +1,27 @@
 #pragma once
 
-#include "addTracksComponent.h"
+#include "functionButtonsComponent.h"
+#include "searchService.h"
+#include "searchBoxComponent.h"
 #include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
-class TopBarComponent : public juce::Component,
-                        public juce::ChangeListener,
-                        public juce::ActionBroadcaster {
+class TopBarComponent : public juce::Component {
 public:
-    TopBarComponent();
+    TopBarComponent() { init(); };
+    TopBarComponent(SearchService* searchService) : searchBox(searchService) { init(); };
     ~TopBarComponent() = default;
 
-    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
-
     void resized() override;
+
+    void init();
+
+    void addFunctionButtonsActionListener(juce::ActionListener* listener);
+
+    void setTrackAdderWildcard(juce::String wildcard);
+
+    void addSearchBoxActionListener(juce::ActionListener* listener);
 
     /**
      * @brief Get the files found during the last scan.
@@ -23,31 +30,7 @@ public:
      */
     juce::Array<juce::File> getTrackAdderFiles();
 
-    /**
-     * @brief Set the wildcard to use when searching for files.
-     *
-     * @param wildcard A ';' seperated list of file extension wildcards.
-     */
-    void setTrackAdderWildcard(juce::String wildcard);
-
 private:
-    AddTracksComponent trackAdder;
-    juce::TextButton viewLibrary;
-    juce::TextButton viewPlayQueue;
-    float buttonSpacing = 2.5;
-    juce::FlexItem::Margin leftButtonMargin =
-        juce::FlexItem::Margin(0, buttonSpacing, 0, 0);
-    juce::FlexItem::Margin midButtonMargin =
-        juce::FlexItem::Margin(0, buttonSpacing, 0, buttonSpacing);
-    juce::FlexItem::Margin rightButtonMargin =
-        juce::FlexItem::Margin(0, 0, 0, buttonSpacing);
-
-    void viewLibraryClicked();
-    void viewPlayQueueClicked();
-
-    void configureElements();
-    void configureTrackAdder();
-    void configureViewLibrary();
-    void configureViewPlayQueue();
-    void applyButtonStyle(juce::TextButton& button);
+    FunctionButtonsComponent functionButtons;
+    SearchBoxComponent searchBox;
 };

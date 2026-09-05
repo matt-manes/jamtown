@@ -12,11 +12,12 @@
 #include "inMemLibrary.h"
 #include "browserComponent.h"
 #include "transportController.h"
-#include "topBarComponent.h"
+#include "functionButtonsComponent.h"
 #include "searchService.h"
 #include "searchBoxComponent.h"
 #include "libraryPersistanceService.h"
 #include "txtLibraryPersistanceService.h"
+#include "topBarComponent.h"
 
 class MainComponent : public juce::Component,
                       public juce::ChangeListener,
@@ -60,9 +61,8 @@ private:
     BrowserComponent browser;
     InMemLibrary library;
     PlayQueue playQueue;
-    TopBarComponent topBar;
     SearchService searchService;
-    SearchBoxComponent searchBox;
+    TopBarComponent topBar;
     std::unique_ptr<LibraryPersistanceService> libraryPersistanceService;
     std::atomic<bool> libLoaded = false;
     std::atomic<bool> loadingLib = false;
@@ -71,13 +71,11 @@ private:
     void configureTransport();
     void configureTopBar();
     void configureBrowser();
-    void configureSearchBox();
     void configureElements();
     // =================================
     void resizeBrowser();
     void resizeTransport();
     void resizeTopBar();
-    void resizeSearchBox();
     // =================================
     void handleTracksAdded();
     void handleTransportChange();

@@ -5,7 +5,8 @@
 #include "mainComponent.h"
 #include "actionMessages.h"
 
-MainComponent::MainComponent() : transportComponent(&transportController) {
+MainComponent::MainComponent()
+    : transportComponent(&transportController), topBar(&searchService) {
     configureActionHandlers();
     configureElements();
     libraryPersistanceService = std::make_unique<TxtLibraryPersistanceService>();
@@ -37,8 +38,9 @@ void MainComponent::configureTransport() {
 
 void MainComponent::configureTopBar() {
     addAndMakeVisible(topBar);
-    topBar.addActionListener(this);
+    topBar.addFunctionButtonsActionListener(this);
     topBar.setTrackAdderWildcard(transportController.getWildcardForAllFormats());
+    topBar.addSearchBoxActionListener(this);
 }
 
 void MainComponent::configureBrowser() {
@@ -49,17 +51,10 @@ void MainComponent::configureBrowser() {
     addActionListener(&browser);
 }
 
-void MainComponent::configureSearchBox() {
-    addAndMakeVisible(searchBox);
-    searchBox.searchService = &searchService;
-    searchBox.addActionListener(this);
-}
-
 void MainComponent::configureElements() {
     configureTransport();
     configureBrowser();
     configureTopBar();
-    configureSearchBox();
 }
 
 void MainComponent::paint(juce::Graphics& g) {
@@ -73,14 +68,14 @@ void MainComponent::playTrack(TrackInfo track) {
     browser.setCurrentlyPlayingTrack(track);
 }
 
-void MainComponent::resizeTopBar() {
-    topBar.setSize(static_cast<int>(getWidth() * 0.25), 20);
-    topBar.setTopLeftPosition(1, 1);
-}
-
 void MainComponent::resizeBrowser() {
     browser.setSize(getWidth(), static_cast<int>(getHeight() * 0.8));
-    browser.setTopLeftPosition(0, topBar.getBottom() + 2);
+    browser.setTopLeftPosition(0, 20);
+}
+
+void MainComponent::resizeTopBar() {
+    topBar.setSize(getWidth(), 20);
+    topBar.setTopLeftPosition(0, 0);
 }
 
 void MainComponent::resizeTransport() {
@@ -90,16 +85,10 @@ void MainComponent::resizeTransport() {
         transportPadding, getHeight() - transportComponent.getHeight() - 5);
 }
 
-void MainComponent::resizeSearchBox() {
-    searchBox.setSize(static_cast<int>(getWidth() * 0.25), 20);
-    searchBox.setTopRightPosition(getWidth() - 1, 1);
-}
-
 void MainComponent::resized() {
     resizeTopBar();
     resizeBrowser();
     resizeTransport();
-    resizeSearchBox();
 }
 
 void MainComponent::handleTracksAdded() {

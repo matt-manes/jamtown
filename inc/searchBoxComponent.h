@@ -11,11 +11,14 @@
 class SearchBoxComponent : public juce::TextEditor, public juce::ActionBroadcaster {
 public:
     SearchBoxComponent();
+    SearchBoxComponent(SearchService* searchService);
     ~SearchBoxComponent() = default;
 
     SearchService* searchService;
 
     void searchUpdated();
+
+    void init();
 
 private:
     std::string lastEntry;
