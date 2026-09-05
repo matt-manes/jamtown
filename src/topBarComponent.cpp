@@ -9,7 +9,7 @@ void TopBarComponent::resized() {
     box.flexDirection = juce::FlexBox::Direction::row;
     box.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
     box.items.add(juce::FlexItem(functionButtons).withFlex(1));
-    box.items.add(juce::FlexItem(searchBox).withFlex(1).withMaxWidth(getWidth() * 0.33f));
+    box.items.add(juce::FlexItem(searchBox).withFlex(0, 1, getWidth() * 0.33f));
     box.performLayout(getLocalBounds());
 }
 

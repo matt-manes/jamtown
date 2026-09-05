@@ -69,16 +69,13 @@ void FunctionButtonsComponent::resized() {
     box.flexDirection = juce::FlexBox::Direction::row;
     box.justifyContent = juce::FlexBox::JustifyContent::flexStart;
     box.items.add(juce::FlexItem(trackAdder)
-                      .withFlex(1)
-                      .withMargin(leftButtonMargin)
-                      .withMaxWidth(maxButtonWidth));
+                      .withFlex(0, 1, maxButtonWidth)
+                      .withMargin(leftButtonMargin));
     box.items.add(juce::FlexItem(viewLibrary)
-                      .withFlex(1)
-                      .withMargin(midButtonMargin)
-                      .withMaxWidth(maxButtonWidth));
+                      .withFlex(0, 1, maxButtonWidth)
+                      .withMargin(midButtonMargin));
     box.items.add(juce::FlexItem(viewPlayQueue)
-                      .withFlex(1)
-                      .withMargin(rightButtonMargin)
-                      .withMaxWidth(maxButtonWidth));
+                      .withFlex(0, 1, maxButtonWidth)
+                      .withMargin(rightButtonMargin));
     box.performLayout(getLocalBounds());
 }

@@ -34,7 +34,7 @@ private:
     AddTracksComponent trackAdder;
     juce::TextButton viewLibrary;
     juce::TextButton viewPlayQueue;
-    float buttonSpacing = 2.5;
+    float buttonSpacing = 1;
     float maxButtonWidth = 150;
     juce::FlexItem::Margin leftButtonMargin =
         juce::FlexItem::Margin(0, buttonSpacing, 0, 0);

@@ -1,8 +1,9 @@
+#include "mainComponent.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 #include <algorithm>
 #include <vector>
 #include <string>
 #include <memory>
-#include "mainComponent.h"
 #include "actionMessages.h"
 
 MainComponent::MainComponent()
@@ -68,27 +69,16 @@ void MainComponent::playTrack(TrackInfo track) {
     browser.setCurrentlyPlayingTrack(track);
 }
 
-void MainComponent::resizeBrowser() {
-    browser.setSize(getWidth(), static_cast<int>(getHeight() * 0.8));
-    browser.setTopLeftPosition(0, 20);
-}
-
-void MainComponent::resizeTopBar() {
-    topBar.setSize(getWidth(), 20);
-    topBar.setTopLeftPosition(0, 0);
-}
-
-void MainComponent::resizeTransport() {
-    transportComponent.setSize(getWidth() - (2 * transportPadding),
-                               static_cast<int>(getHeight() * .25) - transportPadding);
-    transportComponent.setTopLeftPosition(
-        transportPadding, getHeight() - transportComponent.getHeight() - 5);
-}
-
 void MainComponent::resized() {
-    resizeTopBar();
-    resizeBrowser();
-    resizeTransport();
+    juce::FlexBox box;
+    box.flexDirection = juce::FlexBox::Direction::column;
+    box.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+    box.items.add(
+        juce::FlexItem(topBar).withFlex(0, 1, topBarHeight).withMargin(columnItemMargin));
+    box.items.add(juce::FlexItem(browser).withFlex(1).withMargin(columnItemMargin));
+    box.items.add(
+        juce::FlexItem(transportComponent).withFlex(0, 1, transportComponentHeight));
+    box.performLayout(getLocalBounds());
 }
 
 void MainComponent::handleTracksAdded() {

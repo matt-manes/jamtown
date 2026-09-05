@@ -5,6 +5,7 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 #include "transportComponent.h"
 #include "addTracksComponent.h"
 #include "playQueue.h"
@@ -57,12 +58,16 @@ private:
     TransportController transportController;
     TransportComponent transportComponent;
     FileProcessor fileProcessor;
-    int transportPadding = 10;
     BrowserComponent browser;
     InMemLibrary library;
     PlayQueue playQueue;
     SearchService searchService;
     TopBarComponent topBar;
+    float topBarHeight = 20;
+    float transportComponentHeight = 60;
+    float columnItemSpacing = 2;
+    juce::FlexItem::Margin columnItemMargin =
+        juce::FlexItem::Margin(0, 0, columnItemSpacing, 0);
     std::unique_ptr<LibraryPersistanceService> libraryPersistanceService;
     std::atomic<bool> libLoaded = false;
     std::atomic<bool> loadingLib = false;
@@ -72,10 +77,6 @@ private:
     void configureTopBar();
     void configureBrowser();
     void configureElements();
-    // =================================
-    void resizeBrowser();
-    void resizeTransport();
-    void resizeTopBar();
     // =================================
     void handleTracksAdded();
     void handleTransportChange();
