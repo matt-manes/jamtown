@@ -74,7 +74,7 @@ void MainComponent::playTrack(TrackInfo track) {
 }
 
 void MainComponent::resizeTopBar() {
-    topBar.setSize(static_cast<int>(getWidth() * 0.75), 20);
+    topBar.setSize(static_cast<int>(getWidth() * 0.25), 20);
     topBar.setTopLeftPosition(1, 1);
 }
 

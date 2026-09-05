@@ -1,5 +1,6 @@
 #include "topBarComponent.h"
 #include "actionMessages.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 TopBarComponent::TopBarComponent() { configureElements(); }
 
@@ -63,19 +64,13 @@ void TopBarComponent::viewPlayQueueClicked() {
     sendActionMessage(ActionMessages::viewPlayQueue);
 }
 
-int TopBarComponent::getElementWidth() {
-    // return static_cast<int>(getWidth() / numElements) -
-    //        ((numElements - 1) * buttonSpacing);
-    return getWidth() / 10;
-}
-
 void TopBarComponent::resized() {
-    int elementWidth = getElementWidth();
-    int height = getHeight();
-    trackAdder.setSize(elementWidth, height);
-    trackAdder.setTopLeftPosition(0, 0);
-    viewLibrary.setSize(elementWidth, height);
-    viewLibrary.setTopLeftPosition(trackAdder.getRight() + buttonSpacing, 0);
-    viewPlayQueue.setSize(elementWidth, height);
-    viewPlayQueue.setTopLeftPosition(viewLibrary.getRight() + buttonSpacing, 0);
+    juce::FlexBox box;
+    box.flexDirection = juce::FlexBox::Direction::row;
+    box.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+    box.items.add(juce::FlexItem(trackAdder).withFlex(1).withMargin(leftButtonMargin));
+    box.items.add(juce::FlexItem(viewLibrary).withFlex(1).withMargin(midButtonMargin));
+    box.items.add(
+        juce::FlexItem(viewPlayQueue).withFlex(1).withMargin(rightButtonMargin));
+    box.performLayout(getLocalBounds());
 }

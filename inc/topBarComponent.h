@@ -3,6 +3,7 @@
 #include "addTracksComponent.h"
 #include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
 class TopBarComponent : public juce::Component,
                         public juce::ChangeListener,
@@ -33,8 +34,13 @@ private:
     AddTracksComponent trackAdder;
     juce::TextButton viewLibrary;
     juce::TextButton viewPlayQueue;
-    int numElements = 3;
-    int buttonSpacing = 5;
+    float buttonSpacing = 2.5;
+    juce::FlexItem::Margin leftButtonMargin =
+        juce::FlexItem::Margin(0, buttonSpacing, 0, 0);
+    juce::FlexItem::Margin midButtonMargin =
+        juce::FlexItem::Margin(0, buttonSpacing, 0, buttonSpacing);
+    juce::FlexItem::Margin rightButtonMargin =
+        juce::FlexItem::Margin(0, 0, 0, buttonSpacing);
 
     void viewLibraryClicked();
     void viewPlayQueueClicked();
@@ -44,11 +50,4 @@ private:
     void configureViewLibrary();
     void configureViewPlayQueue();
     void applyButtonStyle(juce::TextButton& button);
-
-    /**
-     * @brief Get the width components should be displayed with.
-     *
-     * @return int
-     */
-    int getElementWidth();
 };
