@@ -1,5 +1,6 @@
 #include "transportComponent.h"
 #include <juce_graphics/juce_graphics.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 #include <memory>
 #include "actionMessages.h"
 #include <string>
@@ -64,10 +65,12 @@ void TransportComponent::configureStopButton() {
 
 void TransportComponent::configureSkipButton() {
     skipButton.onClick = [this] { skipButtonClicked(); };
+    skipButton.setName("skip");
 }
 
 void TransportComponent::configureBackButton() {
     backButton.onClick = [this] { backButtonClicked(); };
+    backButton.setName("back");
 }
 
 void TransportComponent::configureElapsedTimeLabel() {
@@ -106,6 +109,45 @@ void TransportComponent::configureRandomAlbumButton() {
     randomAlbumButton.setName("random album");
 }
 
+void TransportComponent::configureTrackInfoBox() {
+    trackInfoBox.flexDirection = juce::FlexBox::Direction::row;
+    trackInfoBox.justifyContent = juce::FlexBox::JustifyContent::center;
+    trackInfoBox.items.addArray({juce::FlexItem(currentTrackInfo).withFlex(1),
+                                 juce::FlexItem(elapsedTime).withFlex(1)});
+}
+
+void TransportComponent::configureControlBox() {
+    controlsBox.flexDirection = juce::FlexBox::Direction::row;
+    controlsBox.justifyContent = juce::FlexBox::JustifyContent::center;
+    juce::FlexItem::Margin controlMargin{0, 2.5, 0, 2.5};
+    float width;
+    float minWidth;
+    juce::String name;
+    for (auto i = buttons.begin(); i != buttons.end(); ++i) {
+        name = (*i)->getName();
+        if (name == "skip" || name == "back") {
+            width = arrowButtonWidth;
+            minWidth = arrowButtonWidth / 2.0f;
+        } else {
+            width = textButtonWidth;
+            minWidth = 0.0f;
+        }
+        controlsBox.items.add(juce::FlexItem(*(*i))
+                                  .withFlex(0, 1, width)
+                                  .withMargin(controlMargin)
+                                  .withMinWidth(minWidth));
+    }
+    controlsBox.items.add(juce::FlexItem(volumeSlider).withFlex(0, 1, volumeSliderWidth));
+}
+
+void TransportComponent::configureTransportBox() {
+    juce::FlexItem::Margin margin{0, 0, 1, 0};
+    transportBox.flexDirection = juce::FlexBox::Direction::column;
+    transportBox.items.addArray(
+        {juce::FlexItem(trackInfoBox).withFlex(1).withMargin(margin),
+         juce::FlexItem(controlsBox).withFlex(1).withMargin(margin)});
+}
+
 void TransportComponent::configureInterface() {
     orderButtons();
     addAndMakeVisible(&playButton);
@@ -134,34 +176,13 @@ void TransportComponent::configureInterface() {
 
     addAndMakeVisible(&randomAlbumButton);
     configureRandomAlbumButton();
+
+    configureTrackInfoBox();
+    configureControlBox();
+    configureTransportBox();
 }
 
-void TransportComponent::resizeButtons() {
-    for (auto i = buttons.begin(); i != buttons.end(); ++i) {
-        juce::String name = (*i)->getName();
-        int width = name == "play" || name == "stop" || name == "shuffle" ||
-                            name == "random album"
-                        ? 40
-                        : buttonSize.width;
-        (*i)->setSize(width, buttonSize.height);
-        int topLeft = *i == buttons.front() ? 0 : (*(i - 1))->getRight() + 10;
-        (*i)->setTopLeftPosition(topLeft, getHeight() - (*i)->getHeight());
-    }
-}
-
-void TransportComponent::resized() {
-    // TODO read these values from a file on start up
-    resizeButtons();
-    volumeSlider.setSize(static_cast<int>(getWidth() * 0.25), 20);
-    volumeSlider.setTopLeftPosition(buttons.back()->getRight() + 10,
-                                    getHeight() - volumeSlider.getHeight());
-    auto font = currentTrackInfo.getFont();
-    int displayHeight = static_cast<int>(font.getHeight() * getDisplayLineCount());
-    currentTrackInfo.setSize(getWidth() / 2, displayHeight);
-    currentTrackInfo.setTopLeftPosition(0, stopButton.getY() - displayHeight);
-    elapsedTime.setSize(getWidth() / 2, 20);
-    elapsedTime.setTopLeftPosition((getWidth() / 2) + 1, stopButton.getY() - 20);
-}
+void TransportComponent::resized() { transportBox.performLayout(getLocalBounds()); }
 
 void TransportComponent::paint(juce::Graphics& g) {
     g.setColour(juce::Colours::black);
@@ -234,7 +255,7 @@ void TransportComponent::playingHandler() {
     playButton.setEnabled(true);
     skipButton.setEnabled(true);
     backButton.setEnabled(true);
-    setDisplayText(transportController->getCurrentTrack().toString());
+    setDisplayText(getCurrentTrackDisplayString());
 }
 
 void TransportComponent::pausedHandler() {
@@ -251,7 +272,7 @@ void TransportComponent::readyHandler() {
     stopButton.setEnabled(false);
     skipButton.setEnabled(true);
     backButton.setEnabled(false);
-    setDisplayText(transportController->getCurrentTrack().toString());
+    setDisplayText(getCurrentTrackDisplayString());
 }
 
 void TransportComponent::configureHandlers() {
@@ -262,14 +283,10 @@ void TransportComponent::configureHandlers() {
     stateChangeHandlers.emplace(TransportState::READY, [this] { readyHandler(); });
 }
 
-int TransportComponent::getDisplayLineCount() {
-    auto text = currentTrackInfo.getText();
-    int count = 1;
-    int pos = -1;
-    while ((pos = text.indexOf(pos + 1, "\n")) != -1) {
-        ++count;
-    }
-    return count;
+std::string TransportComponent::getCurrentTrackDisplayString() {
+    TrackInfo track = transportController->getCurrentTrack();
+    return track.getArtist() + " - " + track.getAlbum() + " - " + track.getTitle() +
+           " - " + track.getLengthString();
 }
 
 void TransportComponent::setDisplayText(std::string text) {

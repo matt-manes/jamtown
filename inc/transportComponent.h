@@ -2,6 +2,7 @@
 
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_events/juce_events.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -159,6 +160,9 @@ private:
     void configureBackButton();
     void configureShuffleButton();
     void configureRandomAlbumButton();
+    void configureTrackInfoBox();
+    void configureControlBox();
+    void configureTransportBox();
 
     /**
      * @brief Any UI element setup functions should be called here.
@@ -166,10 +170,9 @@ private:
      */
     void configureInterface();
 
-    int getDisplayLineCount();
-    void setDisplayText(std::string text);
+    std::string getCurrentTrackDisplayString();
 
-    void resizeButtons();
+    void setDisplayText(std::string text);
 
     void orderButtons();
 
@@ -192,10 +195,9 @@ private:
     };
 
     //==========================================================================
-    struct {
-        int width = 20;
-        int height = 20;
-    } buttonSize;
+    float textButtonWidth = 75.0f;
+    float arrowButtonWidth = 20.0f;
+    float volumeSliderWidth = 200.0f;
     std::vector<juce::Component*> buttons;
     juce::TextButton playButton;
     juce::TextButton stopButton;
@@ -207,6 +209,10 @@ private:
     ElapsedTime elapsedTime;
     juce::Slider volumeSlider;
     TransportController* transportController;
+    juce::FlexBox trackInfoBox;
+    juce::FlexBox controlsBox;
+    // trackInfoBox and controlsBox are held by this
+    juce::FlexBox transportBox;
 
     std::unordered_map<TransportState, std::function<void()>> stateChangeHandlers;
 
