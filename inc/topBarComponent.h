@@ -9,13 +9,17 @@
 
 class TopBarComponent : public juce::Component {
 public:
-    TopBarComponent() { init(); };
-    TopBarComponent(SearchService* searchService) : searchBox(searchService) { init(); };
+    TopBarComponent() { configureElements(); };
+    TopBarComponent(SearchService* searchService) : searchBox(searchService) {
+        configureElements();
+    };
     ~TopBarComponent() = default;
 
     void resized() override;
 
-    void init();
+    void configureLayout();
+
+    void configureElements();
 
     void addFunctionButtonsActionListener(juce::ActionListener* listener);
 
@@ -33,4 +37,5 @@ public:
 private:
     FunctionButtonsComponent functionButtons;
     SearchBoxComponent searchBox;
+    juce::FlexBox layoutBox;
 };

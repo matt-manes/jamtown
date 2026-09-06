@@ -36,12 +36,11 @@ private:
     juce::TextButton viewPlayQueue;
     float buttonSpacing = 1;
     float maxButtonWidth = 150;
-    juce::FlexItem::Margin leftButtonMargin =
-        juce::FlexItem::Margin(0, buttonSpacing, 0, 0);
-    juce::FlexItem::Margin midButtonMargin =
-        juce::FlexItem::Margin(0, buttonSpacing, 0, buttonSpacing);
-    juce::FlexItem::Margin rightButtonMargin =
-        juce::FlexItem::Margin(0, 0, 0, buttonSpacing);
+    float minButtonWidth = 20;
+    juce::FlexItem::Margin leftButtonMargin{0, buttonSpacing, 0, 0};
+    juce::FlexItem::Margin midButtonMargin{0, buttonSpacing, 0, buttonSpacing};
+    juce::FlexItem::Margin rightButtonMargin{0, 0, 0, buttonSpacing};
+    juce::FlexBox layoutBox;
 
     void viewLibraryClicked();
     void viewPlayQueueClicked();
@@ -50,5 +49,6 @@ private:
     void configureTrackAdder();
     void configureViewLibrary();
     void configureViewPlayQueue();
+    void configureLayout();
     void applyButtonStyle(juce::TextButton& button);
 };

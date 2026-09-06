@@ -52,10 +52,21 @@ void MainComponent::configureBrowser() {
     addActionListener(&browser);
 }
 
+void MainComponent::configureLayout() {
+    layoutBox.flexDirection = juce::FlexBox::Direction::column;
+    layoutBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+    layoutBox.items.add(
+        juce::FlexItem(topBar).withFlex(0, 1, topBarHeight).withMargin(columnItemMargin));
+    layoutBox.items.add(juce::FlexItem(browser).withFlex(1).withMargin(columnItemMargin));
+    layoutBox.items.add(
+        juce::FlexItem(transportComponent).withFlex(0, 1, transportComponentHeight));
+}
+
 void MainComponent::configureElements() {
     configureTransport();
     configureBrowser();
     configureTopBar();
+    configureLayout();
 }
 
 void MainComponent::paint(juce::Graphics& g) {
@@ -69,17 +80,7 @@ void MainComponent::playTrack(TrackInfo track) {
     browser.setCurrentlyPlayingTrack(track);
 }
 
-void MainComponent::resized() {
-    juce::FlexBox box;
-    box.flexDirection = juce::FlexBox::Direction::column;
-    box.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
-    box.items.add(
-        juce::FlexItem(topBar).withFlex(0, 1, topBarHeight).withMargin(columnItemMargin));
-    box.items.add(juce::FlexItem(browser).withFlex(1).withMargin(columnItemMargin));
-    box.items.add(
-        juce::FlexItem(transportComponent).withFlex(0, 1, transportComponentHeight));
-    box.performLayout(getLocalBounds());
-}
+void MainComponent::resized() { layoutBox.performLayout(getLocalBounds()); }
 
 void MainComponent::handleTracksAdded() {
     auto files = topBar.getTrackAdderFiles();

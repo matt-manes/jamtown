@@ -4,18 +4,21 @@
 #include <juce_core/juce_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
-void TopBarComponent::resized() {
-    juce::FlexBox box;
-    box.flexDirection = juce::FlexBox::Direction::row;
-    box.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
-    box.items.add(juce::FlexItem(functionButtons).withFlex(1));
-    box.items.add(juce::FlexItem(searchBox).withFlex(0, 1, getWidth() * 0.33f));
-    box.performLayout(getLocalBounds());
+void TopBarComponent::resized() { layoutBox.performLayout(getLocalBounds()); }
+
+void TopBarComponent::configureLayout() {
+    layoutBox.flexDirection = juce::FlexBox::Direction::row;
+    layoutBox.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+    layoutBox.items.add(juce::FlexItem(functionButtons).withFlex(1));
+    // empty box to keep spacing gap
+    layoutBox.items.add(juce::FlexItem().withFlex(1));
+    layoutBox.items.add(juce::FlexItem(searchBox).withFlex(1));
 }
 
-void TopBarComponent::init() {
+void TopBarComponent::configureElements() {
     addAndMakeVisible(functionButtons);
     addAndMakeVisible(searchBox);
+    configureLayout();
 }
 
 void TopBarComponent::addFunctionButtonsActionListener(juce::ActionListener* listener) {

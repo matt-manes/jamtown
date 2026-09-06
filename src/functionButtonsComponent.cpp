@@ -19,6 +19,7 @@ void FunctionButtonsComponent::configureElements() {
     // This assumes library view is the initial view
     viewLibrary.setEnabled(false);
     viewPlayQueue.setEnabled(true);
+    configureLayout();
 }
 
 void FunctionButtonsComponent::configureTrackAdder() {
@@ -38,6 +39,23 @@ void FunctionButtonsComponent::configureViewPlayQueue() {
     applyButtonStyle(viewPlayQueue);
     viewPlayQueue.setButtonText("Play Queue");
     viewPlayQueue.onClick = [this] { viewPlayQueueClicked(); };
+}
+
+void FunctionButtonsComponent::configureLayout() {
+    layoutBox.flexDirection = juce::FlexBox::Direction::row;
+    layoutBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+    layoutBox.items.add(juce::FlexItem(trackAdder)
+                            .withFlex(0, 1, maxButtonWidth)
+                            .withMargin(leftButtonMargin)
+                            .withMinWidth(minButtonWidth));
+    layoutBox.items.add(juce::FlexItem(viewLibrary)
+                            .withFlex(0, 1, maxButtonWidth)
+                            .withMargin(midButtonMargin)
+                            .withMinWidth(minButtonWidth));
+    layoutBox.items.add(juce::FlexItem(viewPlayQueue)
+                            .withFlex(0, 1, maxButtonWidth)
+                            .withMargin(rightButtonMargin)
+                            .withMinWidth(minButtonWidth));
 }
 
 void FunctionButtonsComponent::applyButtonStyle(juce::TextButton& button) {
@@ -64,18 +82,4 @@ void FunctionButtonsComponent::viewPlayQueueClicked() {
     sendActionMessage(ActionMessages::viewPlayQueue);
 }
 
-void FunctionButtonsComponent::resized() {
-    juce::FlexBox box;
-    box.flexDirection = juce::FlexBox::Direction::row;
-    box.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    box.items.add(juce::FlexItem(trackAdder)
-                      .withFlex(0, 1, maxButtonWidth)
-                      .withMargin(leftButtonMargin));
-    box.items.add(juce::FlexItem(viewLibrary)
-                      .withFlex(0, 1, maxButtonWidth)
-                      .withMargin(midButtonMargin));
-    box.items.add(juce::FlexItem(viewPlayQueue)
-                      .withFlex(0, 1, maxButtonWidth)
-                      .withMargin(rightButtonMargin));
-    box.performLayout(getLocalBounds());
-}
+void FunctionButtonsComponent::resized() { layoutBox.performLayout(getLocalBounds()); }
