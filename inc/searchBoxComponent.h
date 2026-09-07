@@ -18,7 +18,7 @@ public:
 
     void searchUpdated();
 
-    void init();
+    void configure();
 
 private:
     std::string lastEntry;

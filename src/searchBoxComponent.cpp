@@ -2,11 +2,11 @@
 #include "searchBoxComponent.h"
 #include "utilities.h"
 
-SearchBoxComponent::SearchBoxComponent() { init(); }
+SearchBoxComponent::SearchBoxComponent() { configure(); }
 
 SearchBoxComponent::SearchBoxComponent(SearchService* searchService)
     : searchService(searchService) {
-    init();
+    configure();
 }
 
 void SearchBoxComponent::searchUpdated() {
@@ -26,7 +26,7 @@ void SearchBoxComponent::searchUpdated() {
     sendActionMessage(ActionMessages::searchUpdated);
 }
 
-void SearchBoxComponent::init() {
+void SearchBoxComponent::configure() {
     onTextChange = [this]() { searchUpdated(); };
     setTextToShowWhenEmpty("Search...", juce::Colours::grey);
     setColour(juce::TextEditor::backgroundColourId, juce::Colours::turquoise);
