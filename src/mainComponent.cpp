@@ -58,8 +58,9 @@ void MainComponent::configureLayout() {
     layoutBox.items.add(
         juce::FlexItem(topBar).withFlex(0, 1, topBarHeight).withMargin(columnItemMargin));
     layoutBox.items.add(juce::FlexItem(browser).withFlex(1).withMargin(columnItemMargin));
-    layoutBox.items.add(
-        juce::FlexItem(transportComponent).withFlex(0, 1, transportComponentHeight));
+    layoutBox.items.add(juce::FlexItem(transportComponent)
+                            .withFlex(0, 1, transportComponentHeight)
+                            .withMargin(juce::FlexItem::Margin{0, 0, 10, 0}));
 }
 
 void MainComponent::configureElements() {

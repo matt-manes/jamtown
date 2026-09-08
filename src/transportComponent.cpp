@@ -22,9 +22,8 @@ ShuffleButtonState* ShuffleButtonState::transistionToNextState() {
 }
 
 TransportComponent::TransportComponent(TransportController* transport)
-    : transportController(transport), elapsedTime(transport),
-      skipButton("ff", 0.0, juce::Colours::turquoise),
-      backButton("rw", 0.5, juce::Colours::hotpink) {
+    : transportController(transport), skipButton("ff", 0.0, juce::Colours::turquoise),
+      backButton("rw", 0.5, juce::Colours::hotpink), scrubSlider(transport) {
     configureElements();
     configureHandlers();
     setAudioChannels(0, 2);
@@ -73,14 +72,10 @@ void TransportComponent::configureBackButton() {
     backButton.setName("back");
 }
 
-void TransportComponent::configureElapsedTimeLabel() {
-    elapsedTime.label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
-}
-
 void TransportComponent::configureVolumeSlider() {
     volumeSlider.addListener(this);
     volumeSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    volumeSlider.setRange(0, 1, 0.000001);
+    volumeSlider.setRange(0, 100, 0.000001);
     volumeSlider.setValue(0);
     volumeSlider.setSkewFactorFromMidPoint(0.1);
     volumeSlider.setTextBoxStyle(
@@ -90,6 +85,8 @@ void TransportComponent::configureVolumeSlider() {
     volumeSlider.setColour(juce::Slider::ColourIds::trackColourId,
                            juce::Colours::hotpink);
 }
+
+void TransportComponent::configureScrubSlider() { scrubSlider.slider.addListener(this); }
 
 void TransportComponent::configureShuffleButton() {
     shuffleButton.onClick = [this] { shuffleButtonClicked(); };
@@ -110,10 +107,10 @@ void TransportComponent::configureRandomAlbumButton() {
 }
 
 void TransportComponent::configureTrackInfoBox() {
+    currentTrackInfo.setJustificationType(juce::Justification::centred);
     trackInfoBox.flexDirection = juce::FlexBox::Direction::row;
     trackInfoBox.justifyContent = juce::FlexBox::JustifyContent::center;
-    trackInfoBox.items.addArray({juce::FlexItem(currentTrackInfo).withFlex(1),
-                                 juce::FlexItem(elapsedTime).withFlex(1)});
+    trackInfoBox.items.add(juce::FlexItem(currentTrackInfo).withFlex(1));
 }
 
 void TransportComponent::configureControlBox() {
@@ -145,6 +142,7 @@ void TransportComponent::configureTransportBox() {
     transportBox.flexDirection = juce::FlexBox::Direction::column;
     transportBox.items.addArray(
         {juce::FlexItem(trackInfoBox).withFlex(1).withMargin(margin),
+         juce::FlexItem(scrubSlider).withFlex(1).withMargin(margin),
          juce::FlexItem(controlsBox).withFlex(1).withMargin(margin)});
 }
 
@@ -165,9 +163,6 @@ void TransportComponent::configureElements() {
     addAndMakeVisible(&currentTrackInfo);
     currentTrackInfo.setColour(juce::Label::textColourId, juce::Colours::hotpink);
 
-    addAndMakeVisible(&elapsedTime);
-    configureElapsedTimeLabel();
-
     addAndMakeVisible(&volumeSlider);
     configureVolumeSlider();
 
@@ -176,6 +171,9 @@ void TransportComponent::configureElements() {
 
     addAndMakeVisible(&randomAlbumButton);
     configureRandomAlbumButton();
+
+    addAndMakeVisible(&scrubSlider);
+    configureScrubSlider();
 
     configureTrackInfoBox();
     configureControlBox();
@@ -200,6 +198,8 @@ void TransportComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
 void TransportComponent::sliderValueChanged(juce::Slider* slider) {
     if (slider == &volumeSlider) {
         transportController->setGain(static_cast<float>(volumeSlider.getValue()));
+    } else if (slider == &scrubSlider.slider) {
+        transportController->setPosition(scrubSlider.slider.getValue());
     }
 }
 
@@ -292,31 +292,6 @@ std::string TransportComponent::getCurrentTrackDisplayString() {
 void TransportComponent::setDisplayText(std::string text) {
     currentTrackInfo.setText(text, {});
     resized();
-}
-
-TransportComponent::ElapsedTime::ElapsedTime(TransportController* transportController)
-    : transportController(transportController) {
-    label.setColour(juce::Label::textColourId, juce::Colours::hotpink);
-    addAndMakeVisible(label);
-    setFramesPerSecond(5);
-}
-
-void TransportComponent::ElapsedTime::resized() {
-    label.setBounds(0, 0, getWidth(), getHeight());
-}
-
-void TransportComponent::ElapsedTime::update() {
-    if (transportController->hasActiveTrack()) {
-        label.setText(utilities::formatSeconds(transportController->getCurrentPosition()),
-                      {});
-    } else {
-        label.setText("", {});
-    }
-}
-
-void TransportComponent::ElapsedTime::paint(juce::Graphics& g) {
-    g.setColour(juce::Colours::black);
-    g.fillAll();
 }
 
 void TransportComponent::orderButtons() {

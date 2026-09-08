@@ -64,7 +64,7 @@ private:
     SearchService searchService;
     TopBarComponent topBar;
     float topBarHeight = 20;
-    float transportComponentHeight = 40;
+    float transportComponentHeight = 60;
     float columnItemSpacing = 2;
     juce::FlexItem::Margin columnItemMargin{0, 0, columnItemSpacing, 0};
     juce::FlexBox layoutBox;

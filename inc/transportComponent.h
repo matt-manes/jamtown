@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include "transportController.h"
+#include "scrubSlider.h"
 
 enum ShuffleMode { OFF, TRACK, ALBUM };
 
@@ -154,8 +155,8 @@ private:
 
     void configurePlayButton();
     void configureStopButton();
-    void configureElapsedTimeLabel();
     void configureVolumeSlider();
+    void configureScrubSlider();
     void configureSkipButton();
     void configureBackButton();
     void configureShuffleButton();
@@ -176,24 +177,6 @@ private:
 
     void orderButtons();
 
-    class ElapsedTime : public juce::AnimatedAppComponent {
-    public:
-        ElapsedTime(TransportController* transportController);
-
-        ~ElapsedTime() = default;
-
-        void resized() override;
-
-        void update() override;
-
-        void paint(juce::Graphics& g) override;
-
-        juce::Label label;
-
-    private:
-        TransportController* transportController;
-    };
-
     //==========================================================================
     float textButtonWidth = 75.0f;
     float arrowButtonWidth = 20.0f;
@@ -206,8 +189,8 @@ private:
     ShuffleButton shuffleButton;
     juce::TextButton randomAlbumButton;
     juce::Label currentTrackInfo;
-    ElapsedTime elapsedTime;
     juce::Slider volumeSlider;
+    ScrubSlider scrubSlider;
     TransportController* transportController;
     juce::FlexBox trackInfoBox;
     juce::FlexBox controlsBox;

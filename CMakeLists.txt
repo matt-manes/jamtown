@@ -32,7 +32,8 @@ target_sources(jamtown
     src/searchBoxComponent.cpp
     src/utilities.cpp
     src/txtLibraryPersistanceService.cpp
-    src/topBarComponent.cpp)
+    src/topBarComponent.cpp
+    src/scrubSlider.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 
