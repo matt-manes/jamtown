@@ -168,7 +168,7 @@ private:
      * @brief Any UI element setup functions should be called here.
      *
      */
-    void configureInterface();
+    void configureElements();
 
     std::string getCurrentTrackDisplayString();
 

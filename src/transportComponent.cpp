@@ -25,7 +25,7 @@ TransportComponent::TransportComponent(TransportController* transport)
     : transportController(transport), elapsedTime(transport),
       skipButton("ff", 0.0, juce::Colours::turquoise),
       backButton("rw", 0.5, juce::Colours::hotpink) {
-    configureInterface();
+    configureElements();
     configureHandlers();
     setAudioChannels(0, 2);
     transport->setGain(static_cast<float>(volumeSlider.getValue()));
@@ -148,7 +148,7 @@ void TransportComponent::configureTransportBox() {
          juce::FlexItem(controlsBox).withFlex(1).withMargin(margin)});
 }
 
-void TransportComponent::configureInterface() {
+void TransportComponent::configureElements() {
     orderButtons();
     addAndMakeVisible(&playButton);
     configurePlayButton();
