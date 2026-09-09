@@ -156,6 +156,7 @@ private:
     void configurePlayButton();
     void configureStopButton();
     void configureVolumeSlider();
+    void configureVolumeLabel();
     void configureScrubSlider();
     void configureSkipButton();
     void configureBackButton();
@@ -189,6 +190,7 @@ private:
     ShuffleButton shuffleButton;
     juce::TextButton randomAlbumButton;
     juce::Label currentTrackInfo;
+    juce::Label volumeLabel;
     juce::Slider volumeSlider;
     ScrubSlider scrubSlider;
     TransportController* transportController;

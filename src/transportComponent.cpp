@@ -2,6 +2,7 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <memory>
+#include <limits>
 #include "actionMessages.h"
 #include <string>
 #include "utilities.h"
@@ -75,7 +76,7 @@ void TransportComponent::configureBackButton() {
 void TransportComponent::configureVolumeSlider() {
     volumeSlider.addListener(this);
     volumeSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    volumeSlider.setRange(0, 100, 0.000001);
+    volumeSlider.setRange(0, 1, std::numeric_limits<double>::min());
     volumeSlider.setValue(0);
     volumeSlider.setSkewFactorFromMidPoint(0.1);
     volumeSlider.setTextBoxStyle(
@@ -84,6 +85,12 @@ void TransportComponent::configureVolumeSlider() {
                            juce::Colours::turquoise);
     volumeSlider.setColour(juce::Slider::ColourIds::trackColourId,
                            juce::Colours::hotpink);
+}
+
+void TransportComponent::configureVolumeLabel() {
+    volumeLabel.setJustificationType(juce::Justification::centredRight);
+    volumeLabel.setColour(juce::Label::textColourId, juce::Colours::hotpink);
+    volumeLabel.setText("vol", {});
 }
 
 void TransportComponent::configureScrubSlider() { scrubSlider.slider.addListener(this); }
@@ -107,6 +114,7 @@ void TransportComponent::configureRandomAlbumButton() {
 }
 
 void TransportComponent::configureTrackInfoBox() {
+    currentTrackInfo.setColour(juce::Label::textColourId, juce::Colours::hotpink);
     currentTrackInfo.setJustificationType(juce::Justification::centred);
     trackInfoBox.flexDirection = juce::FlexBox::Direction::row;
     trackInfoBox.justifyContent = juce::FlexBox::JustifyContent::center;
@@ -134,6 +142,7 @@ void TransportComponent::configureControlBox() {
                                   .withMargin(controlMargin)
                                   .withMinWidth(minWidth));
     }
+    controlsBox.items.add(juce::FlexItem(volumeLabel).withFlex(0, 1, 30));
     controlsBox.items.add(juce::FlexItem(volumeSlider).withFlex(0, 1, volumeSliderWidth));
 }
 
@@ -161,10 +170,11 @@ void TransportComponent::configureElements() {
     configureBackButton();
 
     addAndMakeVisible(&currentTrackInfo);
-    currentTrackInfo.setColour(juce::Label::textColourId, juce::Colours::hotpink);
 
     addAndMakeVisible(&volumeSlider);
+    addAndMakeVisible(&volumeLabel);
     configureVolumeSlider();
+    configureVolumeLabel();
 
     addAndMakeVisible(&shuffleButton);
     configureShuffleButton();
