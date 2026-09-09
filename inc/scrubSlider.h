@@ -15,7 +15,7 @@ public:
 
     void configureLayout();
 
-    void configureElements();
+    void initializeComponent();
 
     void resized() override;
 

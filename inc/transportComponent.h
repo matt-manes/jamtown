@@ -170,7 +170,7 @@ private:
      * @brief Any UI element setup functions should be called here.
      *
      */
-    void configureElements();
+    void initializeComponent();
 
     std::string getCurrentTrackDisplayString();
 

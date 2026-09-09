@@ -25,7 +25,7 @@ ShuffleButtonState* ShuffleButtonState::transistionToNextState() {
 TransportComponent::TransportComponent(TransportController* transport)
     : transportController(transport), skipButton("ff", 0.0, juce::Colours::turquoise),
       backButton("rw", 0.5, juce::Colours::hotpink), scrubSlider(transport) {
-    configureElements();
+    initializeComponent();
     configureHandlers();
     setAudioChannels(0, 2);
     transport->setGain(static_cast<float>(volumeSlider.getValue()));
@@ -155,35 +155,35 @@ void TransportComponent::configureTransportBox() {
          juce::FlexItem(controlsBox).withFlex(1).withMargin(margin)});
 }
 
-void TransportComponent::configureElements() {
+void TransportComponent::initializeComponent() {
     orderButtons();
-    addAndMakeVisible(&playButton);
     configurePlayButton();
+    addAndMakeVisible(&playButton);
 
-    addAndMakeVisible(&stopButton);
     configureStopButton();
+    addAndMakeVisible(&stopButton);
 
-    addAndMakeVisible(&skipButton);
     configureSkipButton();
+    addAndMakeVisible(&skipButton);
 
-    addAndMakeVisible(&backButton);
     configureBackButton();
+    addAndMakeVisible(&backButton);
 
     addAndMakeVisible(&currentTrackInfo);
 
-    addAndMakeVisible(&volumeSlider);
-    addAndMakeVisible(&volumeLabel);
     configureVolumeSlider();
+    addAndMakeVisible(&volumeSlider);
     configureVolumeLabel();
+    addAndMakeVisible(&volumeLabel);
 
-    addAndMakeVisible(&shuffleButton);
     configureShuffleButton();
+    addAndMakeVisible(&shuffleButton);
 
-    addAndMakeVisible(&randomAlbumButton);
     configureRandomAlbumButton();
+    addAndMakeVisible(&randomAlbumButton);
 
-    addAndMakeVisible(&scrubSlider);
     configureScrubSlider();
+    addAndMakeVisible(&scrubSlider);
 
     configureTrackInfoBox();
     configureControlBox();

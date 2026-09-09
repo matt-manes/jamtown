@@ -3,13 +3,10 @@
 
 ScrubSlider::ScrubSlider(TransportController* transportController)
     : transportController(transportController) {
-    setFramesPerSecond(60);
-    transportController->addChangeListener(this);
-    configureElements();
+    initializeComponent();
 }
 
 void ScrubSlider::configureSlider() {
-    addAndMakeVisible(slider);
     slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     slider.setRange(0, 1, 1);
     slider.setValue(0);
@@ -21,10 +18,8 @@ void ScrubSlider::configureSlider() {
 void ScrubSlider::configureLabels() {
     elapsedLabel.setColour(juce::Label::textColourId, juce::Colours::hotpink);
     elapsedLabel.setJustificationType(juce::Justification::centred);
-    addAndMakeVisible(elapsedLabel);
     remainingLabel.setColour(juce::Label::textColourId, juce::Colours::hotpink);
     remainingLabel.setJustificationType(juce::Justification::centred);
-    addAndMakeVisible(remainingLabel);
 }
 
 void ScrubSlider::configureLayout() {
@@ -37,11 +32,14 @@ void ScrubSlider::configureLayout() {
          juce::FlexItem(remainingLabel).withFlex(0, 1, labelWidth).withMargin(margin)});
 }
 
-void ScrubSlider::configureElements() {
+void ScrubSlider::initializeComponent() {
     setFramesPerSecond(60);
     transportController->addChangeListener(this);
     configureSlider();
+    addAndMakeVisible(slider);
     configureLabels();
+    addAndMakeVisible(elapsedLabel);
+    addAndMakeVisible(remainingLabel);
     configureLayout();
 }
 

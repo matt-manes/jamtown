@@ -67,6 +67,7 @@ private:
     float transportComponentHeight = 60;
     float columnItemSpacing = 2;
     juce::FlexItem::Margin columnItemMargin{0, 0, columnItemSpacing, 0};
+    juce::FlexItem::Margin bottomMargin{0, 0, 10, 0};
     juce::FlexBox layoutBox;
     std::unique_ptr<LibraryPersistanceService> libraryPersistanceService;
     std::atomic<bool> libLoaded = false;
@@ -77,7 +78,7 @@ private:
     void configureTopBar();
     void configureBrowser();
     void configureLayout();
-    void configureElements();
+    void initializeComponent();
     // =================================
     void handleTracksAdded();
     void handleTransportChange();

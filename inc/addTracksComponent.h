@@ -6,7 +6,7 @@
 #include "fileScanner.h"
 
 /**
- * @brief Button for selecting folder to add tracks from.
+ * @brief Button for launching a folder selection dialog to add tracks to the library.
  *
  */
 class AddTracksComponent : public juce::Component, public juce::ChangeBroadcaster {
@@ -20,7 +20,20 @@ public:
     void resized() override;
 
     /**
-     * @brief Get the files from folder scanning.
+     * @brief Configure the `addTracksButton`.
+     *
+     */
+    void configureAddTracksButton();
+
+    /**
+     * @brief Initialize the component. Should be called from constructor.
+     *
+     */
+    void initializeComponent();
+
+    /**
+     * @brief Get the files found during the previous scan.
+     * This function clears the results, i.e. subsequent calls will return an empty array unless another scan is performed.
      *
      * @return juce::Array<juce::File>
      */
@@ -37,9 +50,14 @@ private:
     juce::TextButton addTracksButton;
     juce::Array<juce::File> gatheredFiles;
     std::unique_ptr<juce::FileChooser> chooser;
+    // The directory the last scan was executed from.
     juce::File lastOpened;
     FileScanner fileScanner;
     juce::String supportedFormatsWildcard;
 
+    /**
+     * @brief Launches the file chooser. Should be used as the callback for `addTracksButton.onClick`.
+     *
+     */
     void onClick();
 };

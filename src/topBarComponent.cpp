@@ -15,7 +15,7 @@ void TopBarComponent::configureLayout() {
     layoutBox.items.add(juce::FlexItem(searchBox).withFlex(1));
 }
 
-void TopBarComponent::configureElements() {
+void TopBarComponent::initializeComponent() {
     addAndMakeVisible(functionButtons);
     addAndMakeVisible(searchBox);
     configureLayout();

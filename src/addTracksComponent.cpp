@@ -1,14 +1,7 @@
 #include "addTracksComponent.h"
 #include <memory>
 
-AddTracksComponent::AddTracksComponent() : fileScanner("*") {
-    addAndMakeVisible(addTracksButton);
-    addTracksButton.setButtonText("Add Tracks");
-    addTracksButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
-    addTracksButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
-    addTracksButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
-    addTracksButton.onClick = [this] { onClick(); };
-}
+AddTracksComponent::AddTracksComponent() : fileScanner("*") { initializeComponent(); }
 
 void AddTracksComponent::paint(juce::Graphics& g) {
     g.setColour(juce::Colours::black);
@@ -17,6 +10,19 @@ void AddTracksComponent::paint(juce::Graphics& g) {
 
 void AddTracksComponent::resized() {
     addTracksButton.setBounds(0, 0, getWidth(), getHeight());
+}
+
+void AddTracksComponent::configureAddTracksButton() {
+    addTracksButton.setButtonText("Add Tracks");
+    addTracksButton.setColour(juce::TextButton::buttonColourId, juce::Colours::turquoise);
+    addTracksButton.setColour(juce::TextButton::textColourOnId, juce::Colours::black);
+    addTracksButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+    addTracksButton.onClick = [this] { onClick(); };
+}
+
+void AddTracksComponent::initializeComponent() {
+    configureAddTracksButton();
+    addAndMakeVisible(addTracksButton);
 }
 
 juce::Array<juce::File> AddTracksComponent::getResults() {

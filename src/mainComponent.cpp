@@ -8,11 +8,7 @@
 
 MainComponent::MainComponent()
     : transportComponent(&transportController), topBar(&searchService) {
-    configureActionHandlers();
-    configureElements();
-    libraryPersistanceService = std::make_unique<TxtLibraryPersistanceService>();
-    loadLibrary();
-    addActionListener(this);
+    initializeComponent();
 }
 
 void MainComponent::loadLibrary() {
@@ -30,7 +26,6 @@ void MainComponent::loadLibrary() {
 }
 
 void MainComponent::configureTransport() {
-    addAndMakeVisible(transportComponent);
     transportController.addChangeListener(&transportComponent);
     transportController.stop();
     transportComponent.addChangeListener(this);
@@ -38,14 +33,12 @@ void MainComponent::configureTransport() {
 }
 
 void MainComponent::configureTopBar() {
-    addAndMakeVisible(topBar);
     topBar.addFunctionButtonsActionListener(this);
     topBar.setTrackAdderWildcard(transportController.getWildcardForAllFormats());
     topBar.addSearchBoxActionListener(this);
 }
 
 void MainComponent::configureBrowser() {
-    addAndMakeVisible(browser);
     browser.addActionListener(this);
     browser.setLibrary(&library);
     browser.setPlayQueue(&playQueue);
@@ -60,14 +53,26 @@ void MainComponent::configureLayout() {
     layoutBox.items.add(juce::FlexItem(browser).withFlex(1).withMargin(columnItemMargin));
     layoutBox.items.add(juce::FlexItem(transportComponent)
                             .withFlex(0, 1, transportComponentHeight)
-                            .withMargin(juce::FlexItem::Margin{0, 0, 10, 0}));
+                            .withMargin(bottomMargin));
 }
 
-void MainComponent::configureElements() {
+void MainComponent::initializeComponent() {
+    configureActionHandlers();
+
     configureTransport();
+    addAndMakeVisible(transportComponent);
+
     configureBrowser();
+    addAndMakeVisible(browser);
+
     configureTopBar();
+    addAndMakeVisible(topBar);
+
     configureLayout();
+
+    libraryPersistanceService = std::make_unique<TxtLibraryPersistanceService>();
+    loadLibrary();
+    addActionListener(this);
 }
 
 void MainComponent::paint(juce::Graphics& g) {

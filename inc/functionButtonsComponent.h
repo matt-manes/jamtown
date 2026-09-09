@@ -45,7 +45,7 @@ private:
     void viewLibraryClicked();
     void viewPlayQueueClicked();
 
-    void configureElements();
+    void initializeComponent();
     void configureTrackAdder();
     void configureViewLibrary();
     void configureViewPlayQueue();

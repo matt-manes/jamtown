@@ -2,7 +2,7 @@
 #include "actionMessages.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
-FunctionButtonsComponent::FunctionButtonsComponent() { configureElements(); }
+FunctionButtonsComponent::FunctionButtonsComponent() { initializeComponent(); }
 
 juce::Array<juce::File> FunctionButtonsComponent::getTrackAdderFiles() {
     return trackAdder.getResults();
@@ -12,30 +12,30 @@ void FunctionButtonsComponent::setTrackAdderWildcard(juce::String wildcard) {
     trackAdder.setScannerWildcard(wildcard);
 }
 
-void FunctionButtonsComponent::configureElements() {
+void FunctionButtonsComponent::initializeComponent() {
     configureTrackAdder();
     configureViewLibrary();
     configureViewPlayQueue();
     // This assumes library view is the initial view
     viewLibrary.setEnabled(false);
     viewPlayQueue.setEnabled(true);
+    addAndMakeVisible(trackAdder);
+    addAndMakeVisible(viewLibrary);
+    addAndMakeVisible(viewPlayQueue);
     configureLayout();
 }
 
 void FunctionButtonsComponent::configureTrackAdder() {
-    addAndMakeVisible(trackAdder);
     trackAdder.addChangeListener(this);
 }
 
 void FunctionButtonsComponent::configureViewLibrary() {
-    addAndMakeVisible(viewLibrary);
     applyButtonStyle(viewLibrary);
     viewLibrary.setButtonText("Library");
     viewLibrary.onClick = [this] { viewLibraryClicked(); };
 }
 
 void FunctionButtonsComponent::configureViewPlayQueue() {
-    addAndMakeVisible(viewPlayQueue);
     applyButtonStyle(viewPlayQueue);
     viewPlayQueue.setButtonText("Play Queue");
     viewPlayQueue.onClick = [this] { viewPlayQueueClicked(); };
