@@ -5,9 +5,9 @@
 #include <utility>
 #include <string>
 
-BrowserComponent::BrowserComponent() {
-    libraryView = std::make_unique<LibraryView>();
-    playQueueView = std::make_unique<PlayQueueView>();
+BrowserComponent::BrowserComponent()
+    : libraryView(std::make_unique<LibraryView>()),
+      playQueueView(std::make_unique<PlayQueueView>()) {
     addChildComponent(libraryView.get());
     addChildComponent(playQueueView.get());
     libraryView->addActionListener(this);
@@ -17,7 +17,9 @@ BrowserComponent::BrowserComponent() {
 
 void BrowserComponent::setView(View view) {
     if (currentView != nullptr)
+        // hide whatever the current view is before switching to new one
         currentView->setVisible(false);
+    // TODO replace with a map of enums to views and throw exception if no matching view found
     switch (view) {
     case LIBRARY:
         currentView = libraryView.get();
@@ -49,9 +51,6 @@ void BrowserComponent::actionListenerCallback(const juce::String& message) {
         libraryView->setTracklist(library->getAllTracks());
     } else if (message == ActionMessages::playQueueUpdated) {
         playQueueView->setTracklist(playQueue->getTrackList());
-    } else {
-        // propogate action messages sent from view objects
-        sendActionMessage(message);
     }
 }
 

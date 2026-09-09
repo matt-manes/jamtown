@@ -40,6 +40,8 @@ void MainComponent::configureTopBar() {
 
 void MainComponent::configureBrowser() {
     browser.addActionListener(this);
+    browser.libraryView->addActionListener(this);
+    browser.playQueueView->addActionListener(this);
     browser.setLibrary(&library);
     browser.setPlayQueue(&playQueue);
     addActionListener(&browser);

@@ -8,7 +8,7 @@
 #include "trackInfo.h"
 
 /**
- * @brief Base class for a view that can be displayed by the browser component.
+ * @brief Base class for a track list view that can be displayed by the BrowserComponent.
  *
  */
 class BrowserView : public juce::Component,

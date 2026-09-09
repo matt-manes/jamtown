@@ -47,7 +47,7 @@ public:
     void setLibrary(Library* newLibrary);
 
     /**
-     * @brief Set the PlayQueue instance to be use.
+     * @brief Set the PlayQueue instance to use.
      *
      * @param newQueue
      */
@@ -61,7 +61,7 @@ public:
     void setView(View view);
 
     /**
-     * @brief Get the track after the given one in the current sort order.
+     * @brief Get the track after the given one in the current sort order from the library view.
      *
      * @param currentTrack
      * @return TrackInfo
@@ -89,14 +89,20 @@ public:
      */
     std::string getArtistToPlay();
 
+    /**
+     * @brief Update the track list of the library view.
+     *
+     * @param tracks
+     */
     void updateLibraryViewTrackList(std::vector<TrackInfo> tracks);
+
+    const std::unique_ptr<LibraryView> libraryView;
+    const std::unique_ptr<PlayQueueView> playQueueView;
 
 private:
     Library* library;
     PlayQueue* playQueue;
     TrackInfo selectedTrack;
     int selectedTrackIndex = -1;
-    std::unique_ptr<LibraryView> libraryView;
-    std::unique_ptr<PlayQueueView> playQueueView;
     BrowserView* currentView = nullptr;
 };
