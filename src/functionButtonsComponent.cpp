@@ -41,21 +41,24 @@ void FunctionButtonsComponent::configureViewPlayQueue() {
     viewPlayQueue.onClick = [this] { viewPlayQueueClicked(); };
 }
 
+juce::FlexItem FunctionButtonsComponent::componentToFlexItem(
+    juce::Component& component, juce::FlexItem::Margin margin) {
+    return juce::FlexItem(component)
+        .withFlex(0, 1, maxButtonWidth)
+        .withMargin(margin)
+        .withMinWidth(minButtonWidth);
+}
+
+juce::FlexItem FunctionButtonsComponent::componentToFlexItem(juce::Component& component) {
+    return componentToFlexItem(component, midButtonMargin);
+}
+
 void FunctionButtonsComponent::configureLayout() {
     layoutBox.flexDirection = juce::FlexBox::Direction::row;
     layoutBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-    layoutBox.items.add(juce::FlexItem(trackAdder)
-                            .withFlex(0, 1, maxButtonWidth)
-                            .withMargin(leftButtonMargin)
-                            .withMinWidth(minButtonWidth));
-    layoutBox.items.add(juce::FlexItem(viewLibrary)
-                            .withFlex(0, 1, maxButtonWidth)
-                            .withMargin(midButtonMargin)
-                            .withMinWidth(minButtonWidth));
-    layoutBox.items.add(juce::FlexItem(viewPlayQueue)
-                            .withFlex(0, 1, maxButtonWidth)
-                            .withMargin(rightButtonMargin)
-                            .withMinWidth(minButtonWidth));
+    layoutBox.items.add(componentToFlexItem(trackAdder, leftButtonMargin));
+    layoutBox.items.add(componentToFlexItem(viewLibrary));
+    layoutBox.items.add(componentToFlexItem(viewPlayQueue, rightButtonMargin));
 }
 
 void FunctionButtonsComponent::applyButtonStyle(juce::TextButton& button) {
