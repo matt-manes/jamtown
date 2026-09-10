@@ -6,6 +6,10 @@
 #include <filesystem>
 #include "trackInfo.h"
 
+/**
+ * @brief Recursively scans a directory using a wildcard string.
+ *
+ */
 class FileScanner {
 public:
     /**

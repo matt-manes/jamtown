@@ -7,8 +7,9 @@
 #include <string>
 
 std::int64_t SearchService::getID(TrackInfo track) {
-    auto path = track.getPath().getFullPathName().toStdString();
+    auto path = track.getStringPath();
     if (filePathsToIdMap.contains(path))
+        // If track has already been added, just return its id
         return filePathsToIdMap[path];
     auto id = nextID;
     idMap[id] = track;
@@ -40,7 +41,6 @@ void SearchService::addTracks(std::vector<TrackInfo> tracks) {
 }
 
 void SearchService::clearSearch() {
-    // std::lock_guard<std::mutex> lock(searchMutex);
     results.clear();
     query = "";
 }
@@ -53,17 +53,34 @@ void SearchService::initializeResults() {
 }
 
 void SearchService::search(std::string substring) {
-    // std::lock_guard<std::mutex> lock(searchMutex);
     if (!searchInProgress()) {
         initializeResults();
     }
     query += substring;
     for (auto c : substring) {
         if (!index.contains(c)) {
+            // There are no results that match the character,
+            // i.e. no track has this character and the result set will be empty no matter what.
             results.clear();
             return;
         }
         updateResults(index[c]);
+    }
+}
+
+void search(std::string sub) {
+    query += sub;
+    for (auto c : sub) {
+        if (!index.contains(c))
+            continue;
+        std::unordered_set<std::int64_t> tmp;
+        for (auto id : results)
+            if (ids.contains(id))
+                tmp.insert(id);
+        for (auto id : ids)
+            if (results.contains(id))
+                tmp.insert(id);
+        results = tmp;
     }
 }
 
@@ -86,14 +103,8 @@ bool SearchService::textInTrackInfo(std::string text, TrackInfo track) {
 }
 
 std::vector<TrackInfo> SearchService::getResults() {
-    // cache to stack so we can release the lock
     std::unordered_set<std::int64_t> result_ids;
     std::string searchQuery;
-    // {
-    //     std::lock_guard<std::mutex> lock(searchMutex);
-    //     result_ids = results;
-    //     searchQuery = query;
-    // }
     result_ids = results;
     searchQuery = query;
     std::vector<TrackInfo> tracks;

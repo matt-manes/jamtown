@@ -74,7 +74,9 @@ public:
 
 private:
     TrackInfo currentlyPlayingTrack;
+    // Stores album selected by user so it can be queried by another component
     std::string albumToPlay;
+    // Stores artist selected by user so it can be queried by another component
     std::string artistToPlay;
 
     /**

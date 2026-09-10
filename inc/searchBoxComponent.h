@@ -8,17 +8,29 @@
 #include "actionMessages.h"
 #include <string>
 
+/**
+ * @brief Component allowing a user to search their library.
+ *
+ */
 class SearchBoxComponent : public juce::TextEditor, public juce::ActionBroadcaster {
 public:
     SearchBoxComponent(SearchService* searchService);
     ~SearchBoxComponent() = default;
 
-    SearchService* searchService;
+    /**
+     * @brief Callback for `onTextChange` member.
+     * Passes the current text to the search service and sends a 'searchUpdated' action message.
+     *
+     */
+    void onTextChangeCallback();
 
-    void searchUpdated();
-
+    /**
+     * @brief Set up should be done here and called from the constructor.
+     *
+     */
     void initializeComponent();
 
 private:
+    SearchService* searchService;
     std::string lastEntry;
 };

@@ -7,7 +7,7 @@ SearchBoxComponent::SearchBoxComponent(SearchService* searchService)
     initializeComponent();
 }
 
-void SearchBoxComponent::searchUpdated() {
+void SearchBoxComponent::onTextChangeCallback() {
     std::string text = getText().toStdString();
     utilities::toLower(text, text);
     if (text.empty() || text.substr(0, lastEntry.length()) != lastEntry) {
@@ -25,7 +25,7 @@ void SearchBoxComponent::searchUpdated() {
 }
 
 void SearchBoxComponent::initializeComponent() {
-    onTextChange = [this]() { searchUpdated(); };
+    onTextChange = [this]() { onTextChangeCallback(); };
     setTextToShowWhenEmpty("Search...", juce::Colours::grey);
     setColour(juce::TextEditor::backgroundColourId, juce::Colours::turquoise);
     setColour(juce::TextEditor::textColourId, juce::Colours::black);

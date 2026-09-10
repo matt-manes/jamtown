@@ -4,6 +4,10 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "transportController.h"
 
+/**
+ * @brief Component to display and directly control playhead.
+ *
+ */
 class ScrubSlider : public juce::AnimatedAppComponent, public juce::ChangeListener {
 public:
     ScrubSlider(TransportController* transportController);
@@ -15,6 +19,10 @@ public:
 
     void configureLayout();
 
+    /**
+     * @brief Set up should be done here and called from constructor.
+     *
+     */
     void initializeComponent();
 
     void resized() override;
