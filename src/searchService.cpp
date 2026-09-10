@@ -68,22 +68,6 @@ void SearchService::search(std::string substring) {
     }
 }
 
-void search(std::string sub) {
-    query += sub;
-    for (auto c : sub) {
-        if (!index.contains(c))
-            continue;
-        std::unordered_set<std::int64_t> tmp;
-        for (auto id : results)
-            if (ids.contains(id))
-                tmp.insert(id);
-        for (auto id : ids)
-            if (results.contains(id))
-                tmp.insert(id);
-        results = tmp;
-    }
-}
-
 void SearchService::updateResults(std::unordered_set<std::int64_t> ids) {
     // Do an intersection
     std::unordered_set<std::int64_t> tmp;
