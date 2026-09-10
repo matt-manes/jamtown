@@ -4,9 +4,10 @@
 #include <vector>
 
 void InMemLibrary::addTrack(TrackInfo track) {
-    if (filepaths.contains(track.getPath().getFullPathName().toStdString()))
+    std::string path = track.getStringPath();
+    if (filepaths.contains(path))
         return;
-    filepaths.insert(track.getPath().getFullPathName().toStdString());
+    filepaths.insert(path);
     tracks.push_back(track);
     db[track.getArtist()][track.getAlbum()].push_back(track);
 }
@@ -64,7 +65,7 @@ std::vector<TrackInfo> InMemLibrary::getAllTracks() { return tracks; }
 void InMemLibrary::removeTrack(std::string title, std::string album, std::string artist) {
     TrackInfo track = getTrack(title, album, artist);
     if (track.getTitle() == title) {
-        filepaths.erase(track.getPath().getFullPathName().toStdString());
+        filepaths.erase(track.getStringPath());
         std::erase_if(db[artist][album], [track](TrackInfo t) { return t == track; });
         std::erase_if(tracks, [track](TrackInfo t) { return t == track; });
         if (db[artist][album].empty())

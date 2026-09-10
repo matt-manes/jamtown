@@ -50,6 +50,7 @@ public:
     std::string getTitle() const { return title; }
     std::string getNormalizedTitle() const { return normalizedNames.title; }
     juce::File getPath() const { return path; }
+    std::string getStringPath() { return getPath().getFullPathName().toStdString(); }
     juce::StringPairArray getMetadata() const { return metadata; }
 
     void setArtist(std::string newArtist) {
