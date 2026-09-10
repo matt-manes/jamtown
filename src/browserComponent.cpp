@@ -19,7 +19,7 @@ void BrowserComponent::setView(View view) {
     if (currentView != nullptr)
         // hide whatever the current view is before switching to new one
         currentView->setVisible(false);
-    // TODO replace with a map of enums to views and throw exception if no matching view found
+    // TODO replace with a map of enums to views
     switch (view) {
     case LIBRARY:
         currentView = libraryView.get();

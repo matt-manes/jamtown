@@ -60,7 +60,8 @@ void SearchService::search(std::string substring) {
     for (auto c : substring) {
         if (!index.contains(c)) {
             // There are no results that match the character,
-            // i.e. no track has this character and the result set will be empty no matter what.
+            // i.e. no track has this character
+            // and the result set will be empty no matter what.
             results.clear();
             return;
         }

@@ -7,6 +7,10 @@
 #include <juce_core/juce_core.h>
 #include "libraryPersistanceService.h"
 
+/**
+ * @brief Exception to be thrown when reading or writing the library file fails.
+ *
+ */
 class LibFileException : public std::exception {
 public:
     LibFileException(const std::string msg) : message(msg) {}
@@ -47,10 +51,17 @@ public:
 private:
     std::string relativeLibPath;
 
+    /**
+     * @brief Get the library data file.
+     *
+     * Location is determined by juce::File::SpecialLocationType::userApplicationDataDirectory
+     *
+     * @return juce::File
+     */
     juce::File getLibFile();
 
     /**
-     * @brief Format the given track into a writeable string.
+     * @brief Format the given track data into the expected format for writing.
      *
      * @param track
      * @return std::string

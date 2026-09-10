@@ -22,12 +22,14 @@ std::vector<TrackInfo> FileProcessor::processFiles(juce::Array<juce::File> files
 }
 
 std::string FileProcessor::getArtist(juce::File file) {
-    // getParentDirectory returns the root if you're at the root, so no penalty for not checking first
+    // getParentDirectory returns the root if you're at the root
+    // so no penalty for not checking first
     return file.getParentDirectory().getParentDirectory().getFileName().toStdString();
 }
 
 std::string FileProcessor::getAlbum(juce::File file) {
-    // getParentDirectory returns the root if you're at the root, so no penalty for not checking first
+    // getParentDirectory returns the root if you're at the root
+    // so no penalty for not checking first
     return file.getParentDirectory().getFileName().toStdString();
 }
 

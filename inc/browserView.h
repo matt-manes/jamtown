@@ -80,6 +80,6 @@ public:
                              const juce::MouseEvent& mouseEvent) override;
 
 protected:
-    juce::TableListBox table{{}, this};
+    juce::TableListBox table = juce::TableListBox({}, this);
     std::vector<TrackInfo> tracklist;
 };

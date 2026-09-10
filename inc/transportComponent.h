@@ -11,14 +11,54 @@
 
 enum ShuffleMode { OFF, TRACK, ALBUM };
 
+/**
+ * @brief Class for adding different shuffle settings to the transports shuffle button.
+ *
+ */
 class ShuffleButtonState {
 public:
+    /**
+     * @brief Construct a new Shuffle Button State object
+     *
+     * @param button A pointer to the shuffle button.
+     * @param mode The shuffle type this state represents.
+     * @param buttonText The text this state should display when active.
+     */
     ShuffleButtonState(juce::TextButton* button, ShuffleMode mode, std::string buttonText)
         : button(button), mode(mode), text(buttonText) {}
+
+    /**
+     * @brief Get the shuffle type of this state.
+     *
+     * @return ShuffleMode
+     */
     ShuffleMode getMode() { return mode; }
+
+    /**
+     * @brief Get the text this state displays when active.
+     *
+     * @return std::string
+     */
     std::string getText() { return text; }
+
+    /**
+     * @brief Calls the next state's `applyState` method and then returns the state.
+     *
+     * @return ShuffleButtonState*
+     */
     ShuffleButtonState* transistionToNextState();
+
+    /**
+     * @brief Called when transistioning to this state.
+     *
+     */
     virtual void applyState();
+
+    /**
+     * @brief Set what state should be transistioned to when this state's `transistionToNextState` method is called.
+     *
+     * @param state
+     */
     void setNextState(ShuffleButtonState* state) { this->nextState = state; }
 
 private:
@@ -28,14 +68,27 @@ private:
     juce::TextButton* button;
 };
 
+/**
+ * @brief The shuffle button with circular mode cycling.
+ *
+ */
 class ShuffleButton : public juce::TextButton {
 public:
     ShuffleButton();
 
+    /**
+     * @brief Change to the next shuffle mode.
+     *
+     */
     void transistionToNextState() {
         currentShuffleState = currentShuffleState->transistionToNextState();
     }
 
+    /**
+     * @brief Get the current shuffle mode.
+     *
+     * @return ShuffleMode
+     */
     ShuffleMode getCurrentMode() { return currentShuffleState->getMode(); }
 
 private:
@@ -43,6 +96,12 @@ private:
     ShuffleButtonState shuffleTrackState{this, ShuffleMode::TRACK, "Shuffle tracks"};
     ShuffleButtonState shuffleAlbumState{this, ShuffleMode::ALBUM, "Shuffle albums"};
     ShuffleButtonState* currentShuffleState;
+
+    /**
+     * @brief Set up should be done here and called from the constructor.
+     *
+     */
+    void initializeComponent();
 };
 
 /**
@@ -167,15 +226,19 @@ private:
     void configureTransportBox();
 
     /**
-     * @brief Any UI element setup functions should be called here.
+     * @brief Set up should be done here and called from the constructor.
      *
      */
     void initializeComponent();
 
     std::string getCurrentTrackDisplayString();
 
-    void setDisplayText(std::string text);
+    void setCurrenTrackDisplayString(std::string text);
 
+    /**
+     * @brief Sets the left to right order control buttons should appear.
+     *
+     */
     void orderButtons();
 
     //==========================================================================

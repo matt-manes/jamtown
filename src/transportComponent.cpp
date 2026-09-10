@@ -7,7 +7,10 @@
 #include <string>
 #include "utilities.h"
 
-ShuffleButton::ShuffleButton() {
+ShuffleButton::ShuffleButton() { initializeComponent(); }
+
+void ShuffleButton::initializeComponent() {
+    // Set up shuffle modes to cycle through off->track->album->off->etc.
     shuffleOffState.setNextState(&shuffleTrackState);
     shuffleTrackState.setNextState(&shuffleAlbumState);
     shuffleAlbumState.setNextState(&shuffleOffState);
@@ -26,12 +29,6 @@ TransportComponent::TransportComponent(TransportController* transport)
     : transportController(transport), skipButton("ff", 0.0, juce::Colours::turquoise),
       backButton("rw", 0.5, juce::Colours::hotpink), scrubSlider(transport) {
     initializeComponent();
-    configureHandlers();
-    setAudioChannels(0, 2);
-    transport->setGain(static_cast<float>(volumeSlider.getValue()));
-    // normally called by the listener callback
-    // but here transport state is already set so make manual call
-    updateUI();
 }
 
 void TransportComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
@@ -188,6 +185,13 @@ void TransportComponent::initializeComponent() {
     configureTrackInfoBox();
     configureControlBox();
     configureTransportBox();
+
+    configureHandlers();
+    setAudioChannels(0, 2);
+    transportController->setGain(static_cast<float>(volumeSlider.getValue()));
+    // normally called by the listener callback
+    // but here transport state is already set so make manual call
+    updateUI();
 }
 
 void TransportComponent::resized() { transportBox.performLayout(getLocalBounds()); }
@@ -265,7 +269,7 @@ void TransportComponent::playingHandler() {
     playButton.setEnabled(true);
     skipButton.setEnabled(true);
     backButton.setEnabled(true);
-    setDisplayText(getCurrentTrackDisplayString());
+    setCurrenTrackDisplayString(getCurrentTrackDisplayString());
 }
 
 void TransportComponent::pausedHandler() {
@@ -282,7 +286,7 @@ void TransportComponent::readyHandler() {
     stopButton.setEnabled(false);
     skipButton.setEnabled(true);
     backButton.setEnabled(false);
-    setDisplayText(getCurrentTrackDisplayString());
+    setCurrenTrackDisplayString(getCurrentTrackDisplayString());
 }
 
 void TransportComponent::configureHandlers() {
@@ -299,9 +303,8 @@ std::string TransportComponent::getCurrentTrackDisplayString() {
            " - " + track.getLengthString();
 }
 
-void TransportComponent::setDisplayText(std::string text) {
+void TransportComponent::setCurrenTrackDisplayString(std::string text) {
     currentTrackInfo.setText(text, {});
-    resized();
 }
 
 void TransportComponent::orderButtons() {
