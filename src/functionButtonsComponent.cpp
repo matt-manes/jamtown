@@ -12,6 +12,10 @@ void FunctionButtonsComponent::setTrackAdderWildcard(juce::String wildcard) {
     trackAdder.setScannerWildcard(wildcard);
 }
 
+void FunctionButtonsComponent::addTrackAdderListener(juce::ChangeListener* listener) {
+    trackAdder.addChangeListener(listener);
+}
+
 void FunctionButtonsComponent::initializeComponent() {
     configureTrackAdder();
     configureViewLibrary();

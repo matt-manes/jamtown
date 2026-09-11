@@ -12,7 +12,9 @@
  * @brief Component allowing a user to search their library.
  *
  */
-class SearchBoxComponent : public juce::TextEditor, public juce::ActionBroadcaster {
+class SearchBoxComponent : public juce::TextEditor,
+                           public juce::ActionBroadcaster,
+                           public juce::ChangeBroadcaster {
 public:
     SearchBoxComponent(SearchService* searchService);
     ~SearchBoxComponent() = default;

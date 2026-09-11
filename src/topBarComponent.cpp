@@ -31,6 +31,14 @@ void TopBarComponent::addSearchBoxActionListener(juce::ActionListener* listener)
     searchBox.addActionListener(listener);
 }
 
+void TopBarComponent::addSearchBoxChangeListener(juce::ChangeListener* listener) {
+    searchBox.addChangeListener(listener);
+}
+
 juce::Array<juce::File> TopBarComponent::getTrackAdderFiles() {
     return functionButtons.getTrackAdderFiles();
+}
+
+void TopBarComponent::addTrackAdderListener(juce::ChangeListener* listener) {
+    functionButtons.addTrackAdderListener(listener);
 }

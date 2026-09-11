@@ -77,3 +77,7 @@ std::string BrowserComponent::getArtistToPlay() { return libraryView->getArtistT
 void BrowserComponent::updateLibraryViewTrackList(std::vector<TrackInfo> tracks) {
     libraryView->setTracklist(tracks);
 }
+
+void BrowserComponent::updatePlayQueueViewTrackList(std::vector<TrackInfo> tracks) {
+    playQueueView->setTracklist(tracks);
+}

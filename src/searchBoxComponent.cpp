@@ -21,7 +21,8 @@ void SearchBoxComponent::onTextChangeCallback() {
         searchService->search(text.substr(lastEntry.length()));
     }
     lastEntry = text;
-    sendActionMessage(ActionMessages::searchUpdated);
+    // sendActionMessage(ActionMessages::searchUpdated);
+    sendChangeMessage();
 }
 
 void SearchBoxComponent::initializeComponent() {

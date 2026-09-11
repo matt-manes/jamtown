@@ -4,12 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include "trackInfo.h"
+#include <juce_events/juce_events.h>
 
 /**
  * @brief Library service interface.
  *
  */
-class Library {
+class Library : public juce::ChangeBroadcaster {
 public:
     virtual ~Library() = default;
 
@@ -125,4 +126,11 @@ public:
      * @return std::vector<TrackInfo>
      */
     virtual std::vector<TrackInfo> getRandomAlbumTracks() = 0;
+
+    /**
+     * @brief Get the number of tracks in the library.
+     *
+     * @return size_t
+     */
+    virtual size_t getTrackCount() = 0;
 };

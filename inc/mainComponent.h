@@ -3,7 +3,6 @@
 #include <memory>
 #include <unordered_map>
 #include <juce_audio_utils/juce_audio_utils.h>
-#include <juce_events/juce_events.h>
 #include <juce_core/juce_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "transportComponent.h"
@@ -19,11 +18,25 @@
 #include "libraryPersistanceService.h"
 #include "txtLibraryPersistanceService.h"
 #include "topBarComponent.h"
+#include "tracksAddedListener.h"
+#include "libraryUpdatedListener.h"
+#include "searchUpdatedListener.h"
+#include "removeFromLibraryListener.h"
+#include "transportStateChangeListener.h"
+#include "trackController.h"
+#include "newTrackSelectedListener.h"
+#include "playQueueUpdatedListener.h"
+#include "loadSelectedTracksListener.h"
+#include "queueTrackListener.h"
+#include "dequeueTrackListener.h"
+#include "playRandomAlbumListener.h"
+#include "deleteFromHarddriveListener.h"
+#include "playArtistListener.h"
+#include "playAlbumListener.h"
+#include "transportCommandListener.h"
+#include "changeBrowserViewListener.h"
 
-class MainComponent : public juce::Component,
-                      public juce::ChangeListener,
-                      public juce::ActionListener,
-                      public juce::ActionBroadcaster {
+class MainComponent : public juce::Component {
 public:
     MainComponent();
 
@@ -37,17 +50,6 @@ public:
 
     void resized() override;
 
-    void changeListenerCallback(juce::ChangeBroadcaster* source);
-
-    void actionListenerCallback(const juce::String& message);
-
-    /**
-     * @brief Play the given track.
-     *
-     * @param track
-     */
-    void playTrack(TrackInfo track);
-
     /**
      * @brief Load library from disk.
      *
@@ -59,10 +61,11 @@ private:
     TransportComponent transportComponent;
     FileProcessor fileProcessor;
     BrowserComponent browser;
-    InMemLibrary library;
+    std::unique_ptr<Library> library;
     PlayQueue playQueue;
     SearchService searchService;
     TopBarComponent topBar;
+    TrackController trackController;
     float topBarHeight = 20;
     float transportComponentHeight = 60;
     float columnItemSpacing = 2;
@@ -73,37 +76,32 @@ private:
     std::unique_ptr<LibraryPersistanceService> libraryPersistanceService;
     std::atomic<bool> libLoaded = false;
     std::atomic<bool> loadingLib = false;
-    std::unordered_map<juce::String, std::function<void()>> actionHandlers;
-    // =================================
+    //  =================================
+    TracksAddedListener tracksAddedListener;
+    LibraryUpdatedListener libraryUpdatedListener;
+    SearchUpdatedListener searchUpdatedListener;
+    RemoveFromLibraryListener removeFromLibraryListener;
+    TransportStateChangeListener transportStateChangeListener;
+    NewTrackSelectedListener newTrackSelectedListener;
+    PlayQueueUpdatedListener playQueueUpdatedListener;
+    LoadSelectedTracksListener loadSelectedTracksListener;
+    QueueTrackActionListener queueTrackActionListener;
+    DequeueTrackListener dequeueTrackActionListener;
+    PlayRandomAlbumListener playRandomAlbumActionListener;
+    DeleteFromHarddriveListener deleteFromHarddriveListener;
+    PlayArtistListener playArtistListener;
+    PlayAlbumListener playAlbumListener;
+    TransportCommandListener transportCommandListener;
+    ChangeBrowserViewListener changeBrowserViewListener;
+    //  =================================
     void configureTransport();
     void configureTopBar();
     void configureBrowser();
     void configureLayout();
+    void configureListeners();
     void initializeComponent();
     // =================================
-    void handleTracksAdded();
-    void handleTransportChange();
-    void handleLoadSelectedMessage();
-    void handleQueueMessage();
-    void handlePauseMessage();
-    void handlePlayMessage();
-    void handleStopMessage();
-    void handleViewLibraryMessage();
-    void handleViewPlayQueueMessage();
-    void handleNextTrackMessage();
-    void handleRestartTrackMessage();
-    void handlePlayAlbumMessage();
-    void handlePlayArtistMessage();
-    void handleRemoveFromLibraryMessage();
-    void handleDeleteFromHarddriveMessage();
-    void handleShuffleModeChangedMessage();
-    void handlePlayRandomAlbumMessage();
-    void handleRemoveSelectedFromPlayQueueMessage();
-    void handleSearchUpdatedMessage();
-    void handleLibraryUpdatedMessage();
-    void configureActionHandlers();
-    // =================================
-    void playNextTrack();
+
     void overwritePlayQueue(std::vector<TrackInfo> tracks, std::string sortAttribute);
     TrackInfo getRandomTrackToPlay();
     std::vector<TrackInfo> getRandomAlbumToPlay();

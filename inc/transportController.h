@@ -186,6 +186,13 @@ public:
      */
     void setPosition(double position);
 
+    /**
+     * @brief Load the given track then call start().
+     *
+     * @param track
+     */
+    void playTrack(TrackInfo track);
+
 private:
     TransportState state;
     TrackInfo currentTrack;

@@ -3,13 +3,24 @@
 #include <string>
 #include <vector>
 
-void InMemLibrary::addTrack(TrackInfo track) {
+void InMemLibrary::addTrackWithNoBroadcast(TrackInfo track) {
     std::string path = track.getStringPath();
     if (filepaths.contains(path))
         return;
     filepaths.insert(path);
-    tracks.push_back(track);
+    trackList.push_back(track);
     db[track.getArtist()][track.getAlbum()].push_back(track);
+}
+
+void InMemLibrary::addTrack(TrackInfo track) {
+    addTrackWithNoBroadcast(track);
+    sendChangeMessage();
+}
+
+void InMemLibrary::addTracks(std::vector<TrackInfo> tracks) {
+    for (auto track : tracks)
+        addTrackWithNoBroadcast(track);
+    sendChangeMessage();
 }
 
 std::unordered_map<std::string, std::vector<TrackInfo>> InMemLibrary::getAlbumsByArtist(
@@ -60,14 +71,16 @@ TrackInfo InMemLibrary::getTrack(std::string title,
     return TrackInfo{};
 }
 
-std::vector<TrackInfo> InMemLibrary::getAllTracks() { return tracks; }
+std::vector<TrackInfo> InMemLibrary::getAllTracks() { return trackList; }
 
-void InMemLibrary::removeTrack(std::string title, std::string album, std::string artist) {
+void InMemLibrary::removeTrackWithNoBroadcast(std::string title,
+                                              std::string album,
+                                              std::string artist) {
     TrackInfo track = getTrack(title, album, artist);
     if (track.getTitle() == title) {
         filepaths.erase(track.getStringPath());
         std::erase_if(db[artist][album], [track](TrackInfo t) { return t == track; });
-        std::erase_if(tracks, [track](TrackInfo t) { return t == track; });
+        std::erase_if(trackList, [track](TrackInfo t) { return t == track; });
         if (db[artist][album].empty())
             db[artist].erase(album);
         if (db[artist].empty())
@@ -75,8 +88,19 @@ void InMemLibrary::removeTrack(std::string title, std::string album, std::string
     }
 }
 
+void InMemLibrary::removeTrack(std::string title, std::string album, std::string artist) {
+    removeTrackWithNoBroadcast(title, album, artist);
+    sendChangeMessage();
+}
+
+void InMemLibrary::removeTracks(std::vector<TrackInfo> tracks) {
+    for (auto track : tracks)
+        removeTrackWithNoBroadcast(track.getTitle(), track.getAlbum(), track.getArtist());
+    sendChangeMessage();
+}
+
 TrackInfo InMemLibrary::getRandomTrack() {
-    return tracks[(random.nextInt64() % tracks.size())];
+    return trackList[(random.nextInt64() % trackList.size())];
 }
 
 std::vector<TrackInfo> InMemLibrary::getRandomAlbumTracks() {

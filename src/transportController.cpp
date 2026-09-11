@@ -107,8 +107,8 @@ void TransportController::changeListenerCallback(juce::ChangeBroadcaster* source
         } else if (getState() == TransportState::PAUSING) {
             setState(TransportState::PAUSED);
         } else {
-            setState(TransportState::STOPPED);
             _hasActiveTrack = !trackFinished();
+            setState(TransportState::STOPPED);
         }
     }
 }
@@ -134,8 +134,8 @@ bool TransportController::loadTrack(juce::File file) {
     setCurrentTrack(file);
     currentTrack.setMetadata(reader->metadataValues);
     readerSource.reset(newSource.release());
-    setState(TransportState::READY);
     _hasActiveTrack = true;
+    setState(TransportState::READY);
     return true;
 }
 
@@ -147,7 +147,12 @@ bool TransportController::loadTrack(TrackInfo track) {
     transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
     readerSource.reset(newSource.release());
     setCurrentTrack(track);
-    setState(TransportState::READY);
     _hasActiveTrack = true;
+    setState(TransportState::READY);
     return true;
+}
+
+void TransportController::playTrack(TrackInfo track) {
+    loadTrack(track);
+    start();
 }

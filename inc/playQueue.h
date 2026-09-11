@@ -2,13 +2,14 @@
 
 #include <deque>
 #include <vector>
+#include <juce_events/juce_events.h>
 #include "trackInfo.h"
 
 /**
  * @brief Provides queueing for tracks.
  *
  */
-class PlayQueue {
+class PlayQueue : public juce::ChangeBroadcaster {
 public:
     ~PlayQueue() = default;
 
@@ -63,4 +64,6 @@ public:
 
 private:
     std::deque<TrackInfo> queue;
+
+    void addTrackWithNoBroadcast(TrackInfo track);
 };

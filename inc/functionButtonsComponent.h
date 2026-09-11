@@ -34,6 +34,8 @@ public:
      */
     void setTrackAdderWildcard(juce::String wildcard);
 
+    void addTrackAdderListener(juce::ChangeListener* listener);
+
 private:
     AddTracksComponent trackAdder;
     juce::TextButton viewLibrary;

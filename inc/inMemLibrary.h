@@ -16,6 +16,8 @@ class InMemLibrary : public Library {
 public:
     void addTrack(TrackInfo track) override;
 
+    void addTracks(std::vector<TrackInfo> tracks) override;
+
     std::unordered_map<std::string, std::vector<TrackInfo>> getAlbumsByArtist(
         std::string artist) override;
 
@@ -31,23 +33,20 @@ public:
 
     void removeTrack(std::string title, std::string album, std::string artist) override;
 
+    void removeTracks(std::vector<TrackInfo> tracks) override;
+
     TrackInfo getRandomTrack() override;
 
     std::vector<TrackInfo> getRandomAlbumTracks() override;
 
-    /**
-     * @brief Get the number of tracks in the library.
-     *
-     * @return size_t
-     */
-    size_t getTrackCount() { return tracks.size(); }
+    size_t getTrackCount() override { return trackList.size(); }
 
 private:
     // Used to determine if a track is already in the library
     std::unordered_set<std::string> filepaths;
     // Maintain all tracks in a vector so it doesn't have to be gotten
     // through iterating db map whenever it's needed
-    std::vector<TrackInfo> tracks;
+    std::vector<TrackInfo> trackList;
     // First key is artist name, the second key is the album title
     // Innermost value is the tracklist of the album
     // i.e. `std::vector<TrackInfo> tracks = db[artist][album];`
@@ -55,4 +54,10 @@ private:
                        std::unordered_map<std::string, std::vector<TrackInfo>>>
         db;
     juce::Random random;
+
+    void addTrackWithNoBroadcast(TrackInfo track);
+
+    void removeTrackWithNoBroadcast(std::string title,
+                                    std::string album,
+                                    std::string artist);
 };

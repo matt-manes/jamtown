@@ -96,6 +96,13 @@ public:
      */
     void updateLibraryViewTrackList(std::vector<TrackInfo> tracks);
 
+    /**
+     * @brief Update the track list of the play queue view.
+     *
+     * @param tracks
+     */
+    void updatePlayQueueViewTrackList(std::vector<TrackInfo> tracks);
+
     const std::unique_ptr<LibraryView> libraryView;
     const std::unique_ptr<PlayQueueView> playQueueView;
 

@@ -49,12 +49,16 @@ public:
      */
     void addSearchBoxActionListener(juce::ActionListener* listener);
 
+    void addSearchBoxChangeListener(juce::ChangeListener* listener);
+
     /**
      * @brief Get the files found during the last scan.
      *
      * @return juce::Array<juce::File>
      */
     juce::Array<juce::File> getTrackAdderFiles();
+
+    void addTrackAdderListener(juce::ChangeListener* listener);
 
 private:
     FunctionButtonsComponent functionButtons;
