@@ -7,6 +7,12 @@
 #include "trackController.h"
 #include "browserComponent.h"
 
+/**
+ * @brief Starts playback of the selected album.
+ *
+ * Responds to the album-play action by replacing the current queue with the tracks
+ * belonging to the album selected in the browser.
+ */
 class PlayAlbumListener : public juce::ActionListener {
 public:
     PlayAlbumListener(Library& library,

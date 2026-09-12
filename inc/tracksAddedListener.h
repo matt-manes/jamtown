@@ -9,6 +9,12 @@
 #include "fileProcessor.h"
 #include "actionMessages.h"
 
+/**
+ * @brief Processes newly added files and updates the library indexes.
+ *
+ * Responds to a track-add notification by processing the selected files, adding the
+ * resulting tracks to the library, and refreshing the search data.
+ */
 class TracksAddedListener : public juce::ChangeListener, public juce::ActionBroadcaster {
 public:
     TracksAddedListener(TopBarComponent& topBarComponent,

@@ -4,6 +4,12 @@
 #include "browserComponent.h"
 #include "transportController.h"
 
+/**
+ * @brief Keeps the browser UI in sync with the current playback selection.
+ *
+ * Tracks the active transport selection and updates the component state whenever a
+ * new track becomes the currently playing item.
+ */
 class NewTrackSelectedListener : public juce::ChangeListener {
 public:
     NewTrackSelectedListener(BrowserComponent& browserComponent,

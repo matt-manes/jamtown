@@ -5,6 +5,12 @@
 #include "searchService.h"
 #include "browserComponent.h"
 
+/**
+ * @brief Persists and refreshes the library after it changes.
+ *
+ * Saves the current track list to storage and updates the visible library or search
+ * results whenever a library update notification is broadcast.
+ */
 class LibraryUpdatedListener : public juce::ChangeListener {
 public:
     LibraryUpdatedListener(Library& library,

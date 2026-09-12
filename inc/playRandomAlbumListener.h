@@ -5,6 +5,12 @@
 #include "actionMessages.h"
 #include "trackController.h"
 
+/**
+ * @brief Starts playback of a random album.
+ *
+ * Listens for the random-album action and delegates the request to the track
+ * controller to begin playback from a shuffled selection.
+ */
 class PlayRandomAlbumListener : public juce::ActionListener {
 public:
     PlayRandomAlbumListener(TrackController& trackController)

@@ -6,6 +6,12 @@
 #include "trackController.h"
 #include "transportController.h"
 
+/**
+ * @brief Dispatches transport actions to the playback controllers.
+ *
+ * Listens for user transport commands such as play, pause, stop, restart, and next
+ * and forwards them to the corresponding controller objects.
+ */
 class TransportCommandListener : public juce::ActionListener {
 public:
     TransportCommandListener(TrackController& trackController,

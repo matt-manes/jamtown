@@ -6,6 +6,12 @@
 #include "transportController.h"
 #include "actionMessages.h"
 
+/**
+ * @brief Loads the selected library tracks into playback.
+ *
+ * Starts the first selected track and queues any additional selections behind it
+ * so the user can play a multi-track choice in sequence.
+ */
 class LoadSelectedTracksListener : public juce::ActionListener {
 public:
     LoadSelectedTracksListener(BrowserComponent& browserComponent,

@@ -6,6 +6,12 @@
 #include "actionMessages.h"
 #include "browserComponent.h"
 
+/**
+ * @brief Removes the currently selected tracks from the play queue.
+ *
+ * Listens for the dequeue action and deletes the selected items from the active
+ * play queue when the user chooses to remove them.
+ */
 class DequeueTrackListener : public juce::ActionListener {
 public:
     DequeueTrackListener(PlayQueue& playQueue, BrowserComponent& browserComponent)

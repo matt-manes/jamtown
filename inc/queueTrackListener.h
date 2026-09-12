@@ -8,6 +8,12 @@
 #include "transportController.h"
 #include "trackController.h"
 
+/**
+ * @brief Queues selected tracks and starts playback when needed.
+ *
+ * Handles the queue action by adding the user's selections to the play queue and
+ * beginning playback if no track is currently active.
+ */
 class QueueTrackActionListener : public juce::ActionListener {
 public:
     QueueTrackActionListener(PlayQueue& playQueue,

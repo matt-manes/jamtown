@@ -6,6 +6,12 @@
 #include "browserComponent.h"
 #include "actionMessages.h"
 
+/**
+ * @brief Removes selected tracks from the library and search indexes.
+ *
+ * Handles the library-removal action by deleting each selected item from the active
+ * library and from the search service used to filter the displayed results.
+ */
 class RemoveFromLibraryListener : public juce::ActionListener {
 public:
     RemoveFromLibraryListener(Library& library,

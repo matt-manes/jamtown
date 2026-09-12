@@ -4,6 +4,12 @@
 #include "searchService.h"
 #include "browserComponent.h"
 
+/**
+ * @brief Refreshes the visible track list after search updates.
+ *
+ * Recomputes the library view based on the current search query or the full library
+ * when the user clears the search.
+ */
 class SearchUpdatedListener : public juce::ChangeListener {
 public:
     SearchUpdatedListener(Library& library,

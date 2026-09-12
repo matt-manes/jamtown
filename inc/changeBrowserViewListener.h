@@ -5,6 +5,12 @@
 #include "actionMessages.h"
 #include "browserComponent.h"
 
+/**
+ * @brief Switches the browser between major views.
+ *
+ * Responds to library and play-queue view actions and updates the browser state to
+ * display the appropriate content.
+ */
 class ChangeBrowserViewListener : public juce::ActionListener {
 public:
     ChangeBrowserViewListener(BrowserComponent& browserComponent)

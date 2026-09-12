@@ -7,6 +7,12 @@
 #include "trackController.h"
 #include "browserComponent.h"
 
+/**
+ * @brief Starts playback for the selected artist.
+ *
+ * Handles the artist-play action by replacing the current queue with all tracks
+ * from the artist chosen in the browser.
+ */
 class PlayArtistListener : public juce::ActionListener {
 public:
     PlayArtistListener(Library& library,
