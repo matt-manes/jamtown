@@ -13,6 +13,7 @@
 #include "libraryView.h"
 #include "playQueueView.h"
 #include <utility>
+#include "visibleTracksDataComponent.h"
 
 enum View { LIBRARY, PLAYQUEUE };
 
@@ -21,8 +22,8 @@ enum View { LIBRARY, PLAYQUEUE };
  *
  */
 class BrowserComponent : public juce::Component,
-                         public juce::ActionBroadcaster,
-                         public juce::ActionListener {
+                         public juce::ActionListener,
+                         public juce::ChangeBroadcaster {
 public:
     BrowserComponent();
 
@@ -103,6 +104,12 @@ public:
      */
     void updatePlayQueueViewTrackList(std::vector<TrackInfo> tracks);
 
+    int getNumVisibleTracks();
+
+    double getTotalTimeOfVisibleTracks();
+
+    void updateVisibleTrackDataComponent();
+
     const std::unique_ptr<LibraryView> libraryView;
     const std::unique_ptr<PlayQueueView> playQueueView;
 
@@ -112,4 +119,9 @@ private:
     TrackInfo selectedTrack;
     int selectedTrackIndex = -1;
     BrowserView* currentView = nullptr;
+    VisibleTracksDataComponent visibleTrackDataComponent;
+
+    void initializeComponent();
+
+    void configureVisibleTrackDataComponent();
 };

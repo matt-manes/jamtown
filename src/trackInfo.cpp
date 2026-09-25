@@ -17,7 +17,7 @@ std::string TrackInfo::toString() const {
 }
 
 std::string TrackInfo::getLengthString() const {
-    return utilities::formatSeconds(lengthInSeconds);
+    return utilities::formatSecondsAsMMSS(lengthInSeconds);
 }
 
 bool TrackInfo::operator==(const TrackInfo& track) { return path == track.path; }

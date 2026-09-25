@@ -8,11 +8,7 @@
 BrowserComponent::BrowserComponent()
     : libraryView(std::make_unique<LibraryView>()),
       playQueueView(std::make_unique<PlayQueueView>()) {
-    addChildComponent(libraryView.get());
-    addChildComponent(playQueueView.get());
-    libraryView->addActionListener(this);
-    playQueueView->addActionListener(this);
-    setView(LIBRARY);
+    initializeComponent();
 }
 
 void BrowserComponent::setView(View view) {
@@ -31,6 +27,7 @@ void BrowserComponent::setView(View view) {
         break;
     }
     currentView->setVisible(true);
+    sendChangeMessage();
 }
 
 TrackInfo BrowserComponent::getNextLibraryViewTrack(TrackInfo currentTrack) {
@@ -38,8 +35,11 @@ TrackInfo BrowserComponent::getNextLibraryViewTrack(TrackInfo currentTrack) {
 }
 
 void BrowserComponent::resized() {
-    libraryView->setBounds(0, 0, getWidth(), getHeight());
-    playQueueView->setBounds(0, 0, getWidth(), getHeight());
+    auto bounds = getLocalBounds();
+    auto bottom = bounds.removeFromBottom(20);
+    visibleTrackDataComponent.setBounds(bottom);
+    libraryView->setBounds(bounds);
+    playQueueView->setBounds(bounds);
 }
 
 std::vector<TrackInfo> BrowserComponent::getSelectedTracks() {
@@ -80,4 +80,32 @@ void BrowserComponent::updateLibraryViewTrackList(std::vector<TrackInfo> tracks)
 
 void BrowserComponent::updatePlayQueueViewTrackList(std::vector<TrackInfo> tracks) {
     playQueueView->setTracklist(tracks);
+}
+
+int BrowserComponent::getNumVisibleTracks() { return currentView->getNumRows(); }
+
+double BrowserComponent::getTotalTimeOfVisibleTracks() {
+    return currentView->getTotalTrackListTime();
+}
+
+void BrowserComponent::updateVisibleTrackDataComponent() {
+    visibleTrackDataComponent.update(getNumVisibleTracks(),
+                                     getTotalTimeOfVisibleTracks());
+}
+
+void BrowserComponent::initializeComponent() {
+    // Don't make them visible
+    addChildComponent(libraryView.get());
+    addChildComponent(playQueueView.get());
+    libraryView->addActionListener(this);
+    playQueueView->addActionListener(this);
+
+    configureVisibleTrackDataComponent();
+    addAndMakeVisible(visibleTrackDataComponent);
+    setView(LIBRARY);
+}
+
+void BrowserComponent::configureVisibleTrackDataComponent() {
+    visibleTrackDataComponent.setColour(juce::Label::textColourId,
+                                        juce::Colours::hotpink);
 }

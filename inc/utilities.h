@@ -17,6 +17,6 @@ void toLower(std::string& src, std::string& dst);
  * @param seconds
  * @return std::string
  */
-std::string formatSeconds(double seconds);
+std::string formatSecondsAsMMSS(double seconds);
 
 }  // namespace utilities

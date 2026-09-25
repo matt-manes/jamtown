@@ -51,9 +51,9 @@ void ScrubSlider::update() {
                         juce::NotificationType::dontSendNotification);
         double elapsedSeconds = transportController->getCurrentPosition();
         TrackInfo track = transportController->getCurrentTrack();
-        elapsedLabel.setText(utilities::formatSeconds(elapsedSeconds), {});
+        elapsedLabel.setText(utilities::formatSecondsAsMMSS(elapsedSeconds), {});
         remainingLabel.setText(
-            utilities::formatSeconds(track.getLength() - elapsedSeconds), {});
+            utilities::formatSecondsAsMMSS(track.getLength() - elapsedSeconds), {});
     } else {
         slider.setValue(0, juce::NotificationType::dontSendNotification);
         elapsedLabel.setText("0:00", {});

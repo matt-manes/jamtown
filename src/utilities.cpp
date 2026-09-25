@@ -10,7 +10,7 @@ void utilities::toLower(std::string& src, std::string& dst) {
     });
 }
 
-std::string utilities::formatSeconds(double seconds) {
+std::string utilities::formatSecondsAsMMSS(double seconds) {
     int m = static_cast<int>(static_cast<int>(seconds / 60) % 60);
     int s = static_cast<int>(static_cast<int>(seconds) % 60);
     if (s == 0)

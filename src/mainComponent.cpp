@@ -32,7 +32,7 @@ MainComponent::MainComponent()
       playArtistListener(*library.get(), trackController, browser),
       playAlbumListener(*library.get(), trackController, browser),
       transportCommandListener(trackController, transportController),
-      changeBrowserViewListener(browser) {
+      changeBrowserViewListener(browser), visibleTracksChangedListener(browser) {
     initializeComponent();
 }
 
@@ -90,9 +90,13 @@ void MainComponent::configureListeners() {
     browser.libraryView->addActionListener(&queueTrackActionListener);
     browser.libraryView->addActionListener(&playArtistListener);
     browser.libraryView->addActionListener(&playAlbumListener);
+    browser.libraryView->addChangeListener(&visibleTracksChangedListener);
 
     browser.playQueueView->addActionListener(&loadSelectedTracksListener);
     browser.playQueueView->addActionListener(&dequeueTrackActionListener);
+    browser.playQueueView->addChangeListener(&visibleTracksChangedListener);
+
+    browser.addChangeListener(&visibleTracksChangedListener);
 
     transportComponent.addActionListener(&playRandomAlbumActionListener);
     transportComponent.addActionListener(&transportCommandListener);

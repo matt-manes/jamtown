@@ -13,7 +13,8 @@
  */
 class BrowserView : public juce::Component,
                     public juce::TableListBoxModel,
-                    public juce::ActionBroadcaster {
+                    public juce::ActionBroadcaster,
+                    public juce::ChangeBroadcaster {
 public:
     ~BrowserView() = default;
 
@@ -78,6 +79,8 @@ public:
     virtual void cellClicked(int rowNumber,
                              int columnId,
                              const juce::MouseEvent& mouseEvent) override;
+
+    virtual double getTotalTrackListTime();
 
 protected:
     juce::TableListBox table = juce::TableListBox({}, this);

@@ -34,7 +34,9 @@ target_sources(jamtown
     src/txtLibraryPersistanceService.cpp
     src/topBarComponent.cpp
     src/scrubSlider.cpp
-    src/trackController.cpp)
+    src/trackController.cpp
+    src/visibleTracksDataComponent.cpp
+    src/durationFormatter.cpp)
 
 target_include_directories(jamtown PUBLIC inc)
 

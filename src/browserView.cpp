@@ -61,6 +61,7 @@ void BrowserView::setTracklist(std::vector<TrackInfo> tracks) {
     tracklist = tracks;
     table.deselectAllRows();
     table.updateContent();
+    sendChangeMessage();
 }
 
 void BrowserView::cellDoubleClicked(int /*rowNumber*/,
@@ -84,3 +85,11 @@ std::vector<TrackInfo> BrowserView::getSelectedTracks() {
 }
 
 TrackInfo BrowserView::getTrack(int index) { return tracklist[index]; }
+
+double BrowserView::getTotalTrackListTime() {
+    double time = 0;
+    for (auto& track : tracklist) {
+        time += track.getLength();
+    }
+    return time;
+}

@@ -35,6 +35,7 @@
 #include "playAlbumListener.h"
 #include "transportCommandListener.h"
 #include "changeBrowserViewListener.h"
+#include "visibleTracksChangedListener.h"
 
 class MainComponent : public juce::Component {
 public:
@@ -93,6 +94,7 @@ private:
     PlayAlbumListener playAlbumListener;
     TransportCommandListener transportCommandListener;
     ChangeBrowserViewListener changeBrowserViewListener;
+    VisibleTracksChangedListener visibleTracksChangedListener;
     //  =================================
     void configureTransport();
     void configureTopBar();
