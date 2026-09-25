@@ -21,9 +21,7 @@ enum View { LIBRARY, PLAYQUEUE };
  * @brief Browser component that can be set to display various `BrowserView` objects.
  *
  */
-class BrowserComponent : public juce::Component,
-                         public juce::ActionListener,
-                         public juce::ChangeBroadcaster {
+class BrowserComponent : public juce::Component, public juce::ChangeBroadcaster {
 public:
     BrowserComponent();
 
@@ -37,8 +35,6 @@ public:
      * @return std::vector<TrackInfo>
      */
     std::vector<TrackInfo> getSelectedTracks();
-
-    void actionListenerCallback(const juce::String& message) override;
 
     /**
      * @brief Set the library instance to use.

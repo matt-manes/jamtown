@@ -46,14 +46,6 @@ std::vector<TrackInfo> BrowserComponent::getSelectedTracks() {
     return currentView->getSelectedTracks();
 }
 
-void BrowserComponent::actionListenerCallback(const juce::String& message) {
-    if (message == ActionMessages::libraryUpdated) {
-        libraryView->setTracklist(library->getAllTracks());
-    } else if (message == ActionMessages::playQueueUpdated) {
-        playQueueView->setTracklist(playQueue->getTrackList());
-    }
-}
-
 void BrowserComponent::setLibrary(Library* newLibrary) {
     library = newLibrary;
     libraryView->setTracklist(library->getAllTracks());
@@ -97,8 +89,6 @@ void BrowserComponent::initializeComponent() {
     // Don't make them visible
     addChildComponent(libraryView.get());
     addChildComponent(playQueueView.get());
-    libraryView->addActionListener(this);
-    playQueueView->addActionListener(this);
 
     configureVisibleTrackDataComponent();
     addAndMakeVisible(visibleTrackDataComponent);
