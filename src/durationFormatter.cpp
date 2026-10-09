@@ -1,4 +1,4 @@
-#include "DurationFormatter.h"
+#include "durationFormatter.h"
 
 #include <sstream>
 #include <string>
